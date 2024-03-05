@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Vehicle;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
 use App\Http\Resources\VehicleResourceCollection;
@@ -18,9 +19,9 @@ class VehicleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vehicles = new VehicleResourceCollection(Vehicle::paginate());
+        $vehicles = new VehicleResourceCollection($request->user()->currentTeam->vehicles()->paginate());
 
         return Inertia::render('Vehicles/Index', compact('vehicles'));
     }
