@@ -54,6 +54,9 @@ const logout = () => {
                                 <NavLink :href="route('tesla-accounts.index')" :active="route().current().startsWith('tesla-accounts.')">
                                     Tesla Account
                                 </NavLink>
+                                <NavLink :href="route('vehicles.index')" :active="route().current().startsWith('vehicles.')">
+                                    Vehicles
+                                </NavLink>
                             </div>
                         </div>
 
@@ -199,6 +202,9 @@ const logout = () => {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('tesla-accounts.index')" :active="route().current().startsWith('tesla-accounts.')">
                             Tesla Account
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('vehicles.index')" :active="route().current().startsWith('vehicles.')">
+                            Vehicles
                         </ResponsiveNavLink>
                     </div>
 

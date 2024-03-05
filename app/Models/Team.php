@@ -46,4 +46,9 @@ class Team extends JetstreamTeam
     {
         return $this->hasOne(TeslaAccount::class);
     }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
 }

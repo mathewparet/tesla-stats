@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Contracts\TeslaAPIService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use App\APIService\TeslaAPIService as APIServiceTeslaAPIService;
 
 class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
@@ -39,11 +40,13 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
 
     public function getVehicles(): Collection 
     {
-        $response = HTTP::withToken($this->token)->get(__(':url/vehicles', [
-            'url' => $this->config['url'],
-        ]));
-
-        return collect($response->json()['results']);
+        return Cache::remember('tesla-vehicles-'.request()->user()->currentTeam->id.'-'.sha1($this->token), 60, function() {
+            $response = HTTP::withToken($this->token)->get(__(':url/vehicles', [
+                'url' => $this->config['url'],
+            ]));
+    
+            return collect($response->json()['results']);
+        });
     }
 
     public function useAccount($config): TeslaAPIService

@@ -3,18 +3,16 @@
     import { Link } from '@inertiajs/vue3';
 
     defineProps({
-        teslaAccount: Object,
-        providers: Array,
-        can: Object,
+        vehicles: Object,
     });
 
 </script>
 
 <template>
-    <AppLayout title="Tesla Account API Providers">
+    <AppLayout title="Vehicles">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Tesla Account API Provider
+                Vehicles
             </h2>
         </template>
 
@@ -26,7 +24,13 @@
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        Provider
+                                        Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Plate
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        VIN
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-right">
                                         Action
@@ -34,13 +38,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="provider in providers" :key="provider" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                <tr v-for="vehicle in vehicles.data" :key="provider" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ provider }}
+                                        {{ vehicle.name }}
                                     </th>
+                                    <td class="px-6 py-4">
+                                        {{ vehicle.plate }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ vehicle.masked_vin }}
+                                    </td>
                                     <td class="px-6 py-4  text-right">
-                                        <Link v-if="teslaAccount?.provider == provider && teslaAccount.can.delete" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('tesla-accounts.unlink', { provider: provider })">Unlink</Link>
-                                        <Link v-else-if="!teslaAccount && can.link" class="font-medium text-green-600 dark:text-green-500 hover:underline" :href="route('tesla-accounts.link-form', { provider: provider})">Link</Link>
+                                        <!-- <Link v-if="vehicles?.provider == provider && vehicles.can.delete" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('tesla-accounts.unlink', { provider: provider })">Unlink</Link>
+                                        <Link v-else-if="!vehicles && can.link" class="font-medium text-green-600 dark:text-green-500 hover:underline" :href="route('tesla-accounts.link-form', { provider: provider})">Link</Link> -->
                                     </td>
                                 </tr>
                             </tbody>
