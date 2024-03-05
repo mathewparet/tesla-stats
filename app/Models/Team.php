@@ -41,4 +41,9 @@ class Team extends JetstreamTeam
         'updated' => TeamUpdated::class,
         'deleted' => TeamDeleted::class,
     ];
+
+    public function teslaAccount()
+    {
+        return $this->hasOne(TeslaAccount::class);
+    }
 }

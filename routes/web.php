@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\TeslaAccount;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\TeslaAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +31,18 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+
+    Route::middleware(['tesla.api.linked'])->group(function() {
+    
+        Route::get('/dashboard', function () {
+            return Inertia::render('Dashboard');
+        })->name('dashboard');
+
+    });
+    Route::post('tesla-accounts/{provider}/get-vehicles', [TeslaAccountController::class, 'getVehicles'])->name('tesla-accounts.get-vehicles');
+    Route::get('/tesla-accounts', [TeslaAccountController::class, 'index'])->name('tesla-accounts.index');
+    Route::get('/tesla-accounts/{provider}', [TeslaAccountController::class, 'linkForm'])->name('tesla-accounts.link-form');
+    Route::post('/tesla-accounts/{provider}/link', [TeslaAccountController::class, 'link'])->name('tesla-accounts.link');
+    Route::post('/tesla-accounts/{provider}/unlink', [TeslaAccountController::class, 'unlink'])->name('tesla-accounts.unlink');
+
 });

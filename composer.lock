@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d200a32f7b8ba3deba039db8eb6c2849",
+    "content-hash": "b1c868568e96f836ab39abebbf88d4c5",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2202,6 +2202,98 @@
                 }
             ],
             "time": "2024-01-28T23:22:08+00:00"
+        },
+        {
+            "name": "mathewparet/inertia-config-share",
+            "version": "v1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/mathewparet/inertia-config-share.git",
+                "reference": "4b2dfb1938e83630d74cb403703f9be2f972fd57"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/mathewparet/inertia-config-share/get/4b2dfb1938e83630d74cb403703f9be2f972fd57.zip",
+                "reference": "4b2dfb1938e83630d74cb403703f9be2f972fd57",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "*",
+                "inertiajs/inertia-laravel": "^0.6.9"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "mathewparet\\InertiaConfigAndFlashShare\\ShareConfigAndFlashProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "mathewparet\\InertiaConfigAndFlashShare\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathew Paret",
+                    "email": "mathewparet@gmail.com"
+                }
+            ],
+            "description": "Share certain configurations from Laravel to Inertia",
+            "homepage": "https://bitbucket.org/mathewparet/inertia-config-share",
+            "support": {
+                "source": "https://bitbucket.org/mathewparet/inertia-config-share/src/4b2dfb1938e83630d74cb403703f9be2f972fd57/?at=v1.0.6"
+            },
+            "time": "2023-08-16T01:12:28+00:00"
+        },
+        {
+            "name": "mathewparet/laravel-policy-abilities-export",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/mathewparet/laravel-policy-export.git",
+                "reference": "1944cf8f9455049394ac9414f0b03f2284be44b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/mathewparet/laravel-policy-export/get/1944cf8f9455049394ac9414f0b03f2284be44b2.zip",
+                "reference": "1944cf8f9455049394ac9414f0b03f2284be44b2",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "mathewparet\\LaravelPolicyAbilitiesExport\\Providers\\PolicyExportProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "mathewparet\\LaravelPolicyAbilitiesExport\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathew Paret",
+                    "email": "mathewparet@gmail.com"
+                }
+            ],
+            "description": "Export Laravel Policy abilities to JSON for use with VueJS front end",
+            "homepage": "https://bitbucket.org/mathewparet/laravel-policy-export",
+            "support": {
+                "source": "https://bitbucket.org/mathewparet/laravel-policy-export/src/1944cf8f9455049394ac9414f0b03f2284be44b2/?at=v2.0.1"
+            },
+            "time": "2023-08-07T12:23:27+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -6027,6 +6119,70 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.2.7"
             },
             "time": "2023-12-08T13:03:43+00:00"
+        },
+        {
+            "name": "timokoerber/laravel-one-time-operations",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TimoKoerber/laravel-one-time-operations.git",
+                "reference": "148fd0a05ddd4fbc2c8b65846cfb4a4cc788e37c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TimoKoerber/laravel-one-time-operations/zipball/148fd0a05ddd4fbc2c8b65846cfb4a4cc788e37c",
+                "reference": "148fd0a05ddd4fbc2c8b65846cfb4a4cc788e37c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.0|^10.0",
+                "illuminate/support": "^9.0|^10.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "7",
+                "phpunit/phpunit": "^9.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TimoKoerber\\LaravelOneTimeOperations\\Providers\\OneTimeOperationsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TimoKoerber\\LaravelOneTimeOperations\\": "src/",
+                    "TimoKoerber\\LaravelOneTimeOperations\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "timo.koerber",
+                    "email": "koerber.timo@gmail.com",
+                    "homepage": "https://www.timokoerber.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Run operations once after deployment - just like you do it with migrations!",
+            "homepage": "https://github.com/timokoerber/laravel-one-time-operations",
+            "keywords": [
+                "deployment",
+                "jobs",
+                "laravel",
+                "migrations",
+                "operations"
+            ],
+            "support": {
+                "issues": "https://github.com/TimoKoerber/laravel-one-time-operations/issues",
+                "source": "https://github.com/TimoKoerber/laravel-one-time-operations/tree/1.4.0"
+            },
+            "time": "2023-12-16T18:30:50+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
