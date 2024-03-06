@@ -52,11 +52,9 @@ class Team extends JetstreamTeam
         return $this->hasMany(Vehicle::class);
     }
 
-    public static function booted()
+    public function billingProfiles()
     {
-        static::deleting(function ($team) {
-            $team->vehicles()->delete();
-            $team->teslaAccount()->delete();
-        });
+        return $this->hasMany(BillingProfile::class);
     }
+
 }

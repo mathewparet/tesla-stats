@@ -32,6 +32,9 @@
                                     <th scope="col" class="px-6 py-3">
                                         VIN
                                     </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Billing Profile
+                                    </th>
                                     <th scope="col" class="px-6 py-3 text-right">
                                         Action
                                     </th>
@@ -47,6 +50,9 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ vehicle.masked_vin }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <Link class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.show', { billing_profile: vehicle.billing_profile.id })">{{ vehicle.billing_profile.name }}</Link>
                                     </td>
                                     <td class="px-6 py-4  text-right">
                                         <!-- <Link v-if="vehicles?.provider == provider && vehicles.can.delete" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('tesla-accounts.unlink', { provider: provider })">Unlink</Link>

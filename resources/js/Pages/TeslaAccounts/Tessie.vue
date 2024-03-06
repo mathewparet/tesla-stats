@@ -84,7 +84,7 @@
                                 autofocus
                                 @keyup.prevent="vehicles=null"
                             />
-                            <InputHelp class="mt-2">This data is encrypted with AES-256 bit.</InputHelp>
+                            <InputHelp class="mt-2">You can find the Tessie API key at <a class="underline text-sm text-blue-600 dark:text-blue-400" href="https://dash.tessie.com/settings/api" target="_blank">https://dash.tessie.com/settings/api</a></InputHelp>
                             <InputError :message="form.errors['config.token']" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4" v-if="vehicles">
