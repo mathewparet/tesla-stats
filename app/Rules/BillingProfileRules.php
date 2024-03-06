@@ -19,6 +19,7 @@ class BillingProfileRules extends FormRequest
             'activated_on' => 'required|date',
             'deactivated_on' => 'nullable|date|after:activated_on',
             'timezone' => 'required|string|in:'.implode(',', DateTimeZone::listIdentifiers()),
+            'vehicles.*' => 'required|exists:vehicles,id',
         ];
     }
 }

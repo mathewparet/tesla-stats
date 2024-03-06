@@ -34,6 +34,17 @@ class BillingProfile extends Model
     public function scopeActive($query)
     {
         return $query->where('activated_on', '<=', now())
-                    ->where('deactivated_on', '>=', now());
+                    ->where(fn($query) => $query->whereNull('deactivated_on')->orWhere('deactivated_on', '>=', now()));
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('activated_on', '>', now())
+                    ->orWhere(fn($query) => $query->whereNotNull('deactivated_on')->where('deactivated_on', '<=', now()));
+    }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
     }
 }

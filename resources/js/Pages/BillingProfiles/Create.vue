@@ -11,6 +11,7 @@
     import TextInput from '@/Components/TextInput.vue';
     import SelectInput from '@/Components/SelectInput.vue';
     import { computed, ref } from 'vue';
+    import Checkbox from '@/Components/Checkbox.vue';
 
     const props = defineProps({
         billingProfile: Object,
@@ -25,6 +26,7 @@
         bill_day: props.billingProfile?.bill_day || '',
         activated_on: props.billingProfile?.activated_on || '',
         deactivated_on: props.billingProfile?.deactivated_on || '',
+        vehicles: props.billingProfile?.vehicles.map(vehicle => vehicle.id) || [],
     })
 
     const vehicles = ref(null)
@@ -136,6 +138,19 @@
                                 @keyup.prevent="vehicles=null"
                             />
                             <InputError :message="form.errors.timezone" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <InputLabel value="Vehicles"/>
+                            <div class="flex items-center mt-1 block w-full" v-for="vehicle in props.vehicles.data" :key="vehicle">
+                                <Checkbox :id="'vehicles-' + vehicle.id" v-model:checked="form.vehicles" :value="vehicle.id" name="vehicles" />
+
+                                <div class="ms-2">
+                                    <InputLabel :for="'vehicles-' + vehicle.id">
+                                        {{ vehicle.name }} - {{ vehicle.plate }} / {{ vehicle.masked_vin }}
+                                    </InputLabel>
+                                </div>
+                            </div>
+                            <InputError :message="form.errors.vehicles" class="mt-2" />
                         </div>
                     </template>
 

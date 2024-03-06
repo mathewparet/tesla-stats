@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use DateTimeZone;
 use Inertia\Inertia;
+use App\Models\Vehicle;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\BillingProfile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreBillingProfileRequest;
 use App\Http\Resources\VehicleResourceCollection;
 use App\Http\Requests\UpdateBillingProfileRequest;
@@ -48,12 +51,32 @@ class BillingProfileController extends Controller
         return Inertia::render('BillingProfiles/Create', compact('vehicles', 'timeZones'));
     }
 
+    private function attachVehicles(BillingProfile $billingProfile, Request $request)
+    {
+        $billingProfile->vehicles()->update([
+            'billing_profile_id' => null
+        ]);
+
+        $vehicles = Arr::wrap(optional($request->safe())->vehicles);
+
+        $vehicles = Vehicle::findMany($vehicles);
+
+        DB::transaction(function() use($vehicles, $billingProfile) {
+            $vehicles->each(function($vehicle) use($billingProfile) {
+                $this->authorize('update',$vehicle);
+                $vehicle->update(['billing_profile_id' => $billingProfile->id]);
+            });
+        });
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreBillingProfileRequest $request)
     {
         $billing_profile = $request->user()->currentTeam->billingProfiles()->save(new BillingProfile($request->safe()->all()));
+
+        $this->attachVehicles($billing_profile, $request);
 
         return redirect()->intended(route('billing-profiles.edit', $billing_profile));
     }
@@ -69,13 +92,17 @@ class BillingProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(BillingProfile $billingProfile)
+    public function edit(Request $request, BillingProfile $billingProfile)
     {
+        $vehicles = new VehicleResourceCollection($request->user()->currentTeam->vehicles()->get());
+
+        $billingProfile->load('vehicles');
+
         $editMode = true;
 
         $timeZones = $this->generateTimezoneOptions();
 
-        return Inertia::render('BillingProfiles/Create', compact('billingProfile', 'editMode', 'timeZones'));
+        return Inertia::render('BillingProfiles/Create', compact('billingProfile', 'editMode', 'timeZones', 'vehicles'));
     }
 
     /**
@@ -84,6 +111,8 @@ class BillingProfileController extends Controller
     public function update(UpdateBillingProfileRequest $request, BillingProfile $billingProfile)
     {
         $billingProfile->update($request->safe()->all());
+
+        $this->attachVehicles($billingProfile, $request);
     }
 
     /**

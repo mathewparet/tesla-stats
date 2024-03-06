@@ -18,7 +18,8 @@ class Vehicle extends Model
     protected $fillable = [
         'name',
         'plate',
-        'vin'
+        'vin',
+        'billing_profile_id',
     ];
 
     protected $casts = [
@@ -51,5 +52,10 @@ class Vehicle extends Model
     public function team()
     {
         return $this->belongsTo(Team::class);
+    }
+
+    public function billingProfile()
+    {
+        return $this->belongsTo(BillingProfile::class);
     }
 }
