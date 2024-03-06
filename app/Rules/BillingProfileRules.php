@@ -1,6 +1,7 @@
 <?php
 namespace App\Rules;
 
+use DateTimeZone;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BillingProfileRules extends FormRequest
@@ -17,6 +18,7 @@ class BillingProfileRules extends FormRequest
             'bill_day' => 'required|numeric|min:1|max:31',
             'activated_on' => 'required|date',
             'deactivated_on' => 'nullable|date|after:activated_on',
+            'timezone' => 'required|string|in:'.implode(',', DateTimeZone::listIdentifiers()),
         ];
     }
 }

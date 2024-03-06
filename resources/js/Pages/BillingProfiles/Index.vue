@@ -29,6 +29,9 @@
                                     <th scope="col" class="px-6 py-3">
                                         Billing Day
                                     </th>
+                                    <th scope="col" class="px-6 py-">
+                                        Timezone
+                                    </th>
                                     <th scope="col" class="px-6 py-3">
                                         Activated On
                                     </th>
@@ -49,6 +52,9 @@
                                         {{ billing_profile.bill_day }}
                                     </td>
                                     <td class="px-6 py-4">
+                                        {{ billing_profile.timezone }}
+                                    </td>
+                                    <td class="px-6 py-4">
                                         {{ billing_profile.activated_on }}
                                     </td>
                                     <td class="px-6 py-4">
@@ -60,10 +66,10 @@
                                     </td>
                                 </tr>
                                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <td v-if="billing_profiles.data.length === 0" colspan="5" class="px-6 py-4 text-center">
+                                    <td v-if="billing_profiles.data.length === 0" colspan="6" class="px-6 py-4 text-center">
                                         You do not have any billing profiles, would you like to <Link v-if="billing_profiles.can.create" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.create')">create one</Link>?
                                     </td>
-                                    <td v-else colspan="5" class="px-6 py-4 text-center">
+                                    <td v-else colspan="6" class="px-6 py-4 text-center">
                                         Would you like to <Link v-if="billing_profiles.can.create" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.create')">create another</Link> one?
                                     </td>
                                 </tr>

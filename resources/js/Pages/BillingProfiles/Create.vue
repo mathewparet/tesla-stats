@@ -9,16 +9,19 @@
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import SecondaryButton from '@/Components/SecondaryButton.vue';
     import TextInput from '@/Components/TextInput.vue';
+    import SelectInput from '@/Components/SelectInput.vue';
     import { computed, ref } from 'vue';
 
     const props = defineProps({
         billingProfile: Object,
         vehicles: Array,
         editMode: Boolean,
+        timeZones: Array,
     });
 
     const form = useForm({
         name: props.billingProfile?.name || '',
+        timezone: props.billingProfile?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
         bill_day: props.billingProfile?.bill_day || '',
         activated_on: props.billingProfile?.activated_on || '',
         deactivated_on: props.billingProfile?.deactivated_on || '',
@@ -121,9 +124,23 @@
                             />
                             <InputError :message="form.errors.deactivated_on" class="mt-2" />
                         </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <InputLabel for="timezone" value="Timezone" />
+                            <SelectInput
+                                id="timezone"
+                                :options="timeZones"
+                                v-model="form.timezone"
+                                type="date"
+                                class="mt-1 block w-full"
+                                placeholder="1-31"
+                                @keyup.prevent="vehicles=null"
+                            />
+                            <InputError :message="form.errors.timezone" class="mt-2" />
+                        </div>
                     </template>
 
                     <template #actions>
+                        <ActionMessage :on="form.recentlySuccessful" class="mr-3">Saved.</ActionMessage>
                         <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                             {{ action }}
                         </PrimaryButton>

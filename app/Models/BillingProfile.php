@@ -18,6 +18,7 @@ class BillingProfile extends Model
         'activated_on',
         'deactivated_on',
         'bill_day',
+        'timezone',
     ];
 
     protected $casts = [

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use DateTimeZone;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\BillingProfile;
+use Illuminate\Support\Carbon;
 use App\Http\Requests\StoreBillingProfileRequest;
 use App\Http\Resources\VehicleResourceCollection;
 use App\Http\Requests\UpdateBillingProfileRequest;
@@ -26,6 +28,14 @@ class BillingProfileController extends Controller
         return Inertia::render('BillingProfiles/Index', compact('billing_profiles'));
     }
 
+    private function generateTimezoneOptions()
+    {
+        return collect(DateTimeZone::listIdentifiers())->map(fn($tz) => [
+            'label' => $tz .' - '.Carbon::now($tz)->format('d M, Y H:i:s'),
+            'value' => $tz
+        ])->all();
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -33,7 +43,9 @@ class BillingProfileController extends Controller
     {
         $vehicles = new VehicleResourceCollection($request->user()->currentTeam->vehicles()->get());
 
-        return Inertia::render('BillingProfiles/Create', compact('vehicles'));
+        $timeZones = $this->generateTimezoneOptions();
+
+        return Inertia::render('BillingProfiles/Create', compact('vehicles', 'timeZones'));
     }
 
     /**
@@ -61,7 +73,9 @@ class BillingProfileController extends Controller
     {
         $editMode = true;
 
-        return Inertia::render('BillingProfiles/Create', compact('billingProfile', 'editMode'));
+        $timeZones = $this->generateTimezoneOptions();
+
+        return Inertia::render('BillingProfiles/Create', compact('billingProfile', 'editMode', 'timeZones'));
     }
 
     /**
