@@ -36,8 +36,6 @@
         radius: props.billingProfile?.radius || 67,
     })
 
-    const pickAddress = ref(null)
-
     const createModel = () => {
         form.post(route('billing-profiles.store'), {
             preserveScroll: true,
@@ -150,7 +148,6 @@
                                     v-model:longitude="form.longitude"
                                     :radius="form.radius"
                                     :min-radius="25"
-                                    ref="pickAddress"
                                     v-model:address="form.address"
                                 />
                                 <div>{{ form.address }}</div>
