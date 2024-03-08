@@ -31,6 +31,15 @@ class BillingProfileController extends Controller
         return Inertia::render('BillingProfiles/Index', compact('billing_profiles'));
     }
 
+    public function list(Request $request)
+    {
+        $this->authorize('viewAny', BillingProfile::class);
+
+        $billing_profiles = new BillingProfileResourceCollection($request->user()->currentTeam->billingProfiles()->get());
+
+        return back()->with('flash', ['billing_profiles' => $billing_profiles]);
+    }
+
     private function generateTimezoneOptions()
     {
         return collect(DateTimeZone::listIdentifiers())->map(fn($tz) => [
@@ -78,7 +87,7 @@ class BillingProfileController extends Controller
 
         $this->attachVehicles($billing_profile, $request);
 
-        return redirect()->intended(route('billing-profiles.edit', $billing_profile));
+        return redirect()->intended(route('billing-profiles.index'));
     }
 
     /**
@@ -113,6 +122,21 @@ class BillingProfileController extends Controller
         $billingProfile->update($request->safe()->all());
 
         $this->attachVehicles($billingProfile, $request);
+
+        return redirect()->intended(route('billing-profiles.index'));
+    }
+    
+    public function link(Request $request, BillingProfile $billingProfile)
+    {
+        $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id'
+        ]);
+
+        $vehicle = Vehicle::find($request->vehicle_id);
+        
+        $this->authorize('update', $vehicle);
+
+        $vehicle->update(['billing_profile_id' => $billingProfile->id]);
     }
 
     /**

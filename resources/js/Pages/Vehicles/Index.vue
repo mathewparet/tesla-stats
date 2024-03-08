@@ -1,6 +1,10 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
     import { Link } from '@inertiajs/vue3';
+    import BillingProfilesPopup from '@/Pages/BillingProfiles/Popup.vue';
+    import { ref } from 'vue';
+
+    const profileSelector = ref(null);
 
     defineProps({
         vehicles: Object,
@@ -52,7 +56,13 @@
                                         {{ vehicle.masked_vin }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <Link class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.show', { billing_profile: vehicle.billing_profile.id })">{{ vehicle.billing_profile.name }}</Link>
+                                        <span v-if="vehicle.billing_profile">
+                                            <Link v-if="vehicle.billing_profile.can.view" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.show', { billing_profile: vehicle.billing_profile.id })">{{ vehicle.billing_profile.name }}</Link>
+                                            <span v-if="vehicle.can.update"> / </span>
+                                            <Link v-if="vehicle.can.update" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.unlink', {vehicle: vehicle.id})">Unlink</Link>
+                                            <span v-if="vehicle.can.update"> / </span>
+                                        </span>
+                                        <button v-if="vehicle.can.update" class="font-medium hover:underline" :class="{'text-gray-600 dark:text-gray-500': vehicle.billing_profile, 'text-green-600 dark:text-green-500': !vehicle.billing_profile}" @click.prevent="() => profileSelector.show(vehicle)"><span v-if="vehicle.billing_profile">Change</span><span v-else>Link</span></button>
                                     </td>
                                     <td class="px-6 py-4  text-right">
                                         <!-- <Link v-if="vehicles?.provider == provider && vehicles.can.delete" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('tesla-accounts.unlink', { provider: provider })">Unlink</Link>
@@ -66,4 +76,5 @@
             </div>
         </div>
     </AppLayout>
+    <BillingProfilesPopup ref="profileSelector"/>
 </template>

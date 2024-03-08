@@ -26,6 +26,13 @@ class VehicleController extends Controller
         return Inertia::render('Vehicles/Index', compact('vehicles'));
     }
 
+    public function unlink(Vehicle $vehicle)
+    {
+        $this->authorize('update', $vehicle);
+
+        $vehicle->update(['billing_profile_id' => null]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

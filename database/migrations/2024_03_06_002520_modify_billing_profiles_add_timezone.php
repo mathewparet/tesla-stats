@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::table('billing_profiles', function (Blueprint $table) {
             $table->string('timezone');
+            $table->double('latitude');
+            $table->double('longitude');
+            $table->integer('radius');
         });
     }
 
@@ -23,6 +26,10 @@ return new class extends Migration
     {
         Schema::table('billing_profiles', function (Blueprint $table) {
             $table->dropColumn('timezone');
+            $table->dropColumn('location');
+            $table->dropColumn('latitude');
+            $table->dropColumn('longitude');
+            $table->dropColumn('radius');
         });
     }
 };

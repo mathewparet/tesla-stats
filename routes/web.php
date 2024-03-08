@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\TeslaAccountController;
 use App\Http\Controllers\VehicleController;
+use App\Models\BillingProfile;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,8 +41,11 @@ Route::middleware([
             return Inertia::render('Dashboard');
         })->name('dashboard');
 
+        Route::post('vehicles/{vehicle}/unlink', [VehicleController::class, 'unlink'])->name('vehicles.unlink');
         Route::resource('vehicles', VehicleController::class);
         
+        Route::get('billing-profiles/list', [BillingProfileController::class, 'list'])->name('billing-profiles.list');
+        Route::post('billing-profiles/{billingProfile}/link', [BillingProfileController::class, 'link'])->name('billing-profiles.link');
         Route::resource('billing-profiles', BillingProfileController::class);
     });
     Route::post('/tesla-account/{provider}/get-vehicles', [TeslaAccountController::class, 'getVehicles'])->name('tesla-accounts.get-vehicles');

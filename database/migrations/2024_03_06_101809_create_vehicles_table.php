@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('key')->unique();
             $table->softDeletes();
             $table->timestamps();
+            $table->foreignId('billing_profile_id')->nullable()->constrained()->nullOnDelete();
         });
     }
 

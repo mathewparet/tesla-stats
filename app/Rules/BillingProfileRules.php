@@ -19,7 +19,11 @@ class BillingProfileRules extends FormRequest
             'activated_on' => 'required|date',
             'deactivated_on' => 'nullable|date|after:activated_on',
             'timezone' => 'required|string|in:'.implode(',', DateTimeZone::listIdentifiers()),
-            'vehicles.*' => 'required|exists:vehicles,id',
+            'vehicles.*' => 'nullable|exists:vehicles,id',
+            'address' => 'required|string',
+            'latitude' => ['required', 'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'longitude' => ['required', 'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
+            'radius' => 'required|numeric|min:0',
         ];
     }
 }
