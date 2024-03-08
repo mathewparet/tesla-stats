@@ -7,7 +7,6 @@
     import InputHelp from '@/Components/InputHelp.vue';
     import InputLabel from '@/Components/InputLabel.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
-    import SecondaryButton from '@/Components/SecondaryButton.vue';
     import TextInput from '@/Components/TextInput.vue';
     import SelectInput from '@/Components/SelectInput.vue';
     import { computed, ref, onMounted } from 'vue';
@@ -16,7 +15,7 @@
     import 'mapbox-gl/dist/mapbox-gl.css';
     import '@mapbox/mapbox-gl-geocoder/lib/mapbox-gl-geocoder.css';
     import MapboxCircle from 'mapbox-gl-circle'
-    import { initFlowbite } from 'flowbite';
+    import RangeInput from '@/Components/RangeInput.vue';
 
     const props = defineProps({
         billingProfile: Object,
@@ -26,8 +25,6 @@
     });
 
     var myCircle = null;
-
-    onMounted(() => initFlowbite())
 
     const mapLoaded = (map) => {
         myCircle = new MapboxCircle({lat:  0, lng: 0}, form.radius, {
@@ -203,7 +200,12 @@
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="radius" value="Radius" />
-                            <input @input="updateCircle" type="range" min="25" max="500" v-model="form.radius" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                            <RangeInput
+                                min="25" 
+                                max="500" 
+                                v-model="form.radius"
+                                @input="updateCircle"
+                            />
                             <InputHelp>Radius in meters. Any cost related to charging within this radius from your address will be considered in the bill.</InputHelp>
                             <InputError :message="form.errors.radius" class="mt-2" />
                         </div>
