@@ -1,22 +1,18 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
-    import { Link, useForm, usePage } from '@inertiajs/vue3';
+    import { Link, useForm } from '@inertiajs/vue3';
     import ActionMessage from '@/Components/ActionMessage.vue';
     import FormSection from '@/Components/FormSection.vue';
     import InputError from '@/Components/InputError.vue';
     import InputHelp from '@/Components/InputHelp.vue';
     import InputLabel from '@/Components/InputLabel.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
-    import SecondaryButton from '@/Components/SecondaryButton.vue';
     import TextInput from '@/Components/TextInput.vue';
     import SelectInput from '@/Components/SelectInput.vue';
-    import { computed, ref, onMounted } from 'vue';
+    import { computed, ref } from 'vue';
     import Checkbox from '@/Components/Checkbox.vue';
-    import { MapboxMap, MapboxGeocoder, MapboxGeolocateControl, MapboxMarker } from '@studiometa/vue-mapbox-gl';
-    import 'mapbox-gl/dist/mapbox-gl.css';
-    import '@mapbox/mapbox-gl-geocoder/lib/mapbox-gl-geocoder.css';
-    import MapboxCircle from 'mapbox-gl-circle'
-    import { initFlowbite } from 'flowbite';
+    import AddressSelector from '@/Components/AddressSelector.vue';
+    import RangeInput from '@/Components/RangeInput.vue';
 
     const props = defineProps({
         billingProfile: Object,
@@ -24,22 +20,6 @@
         editMode: Boolean,
         timeZones: Array,
     });
-
-    var myCircle = null;
-
-    onMounted(() => initFlowbite())
-
-    const mapLoaded = (map) => {
-        myCircle = new MapboxCircle({lat:  0, lng: 0}, form.radius, {
-            minRadius: form.radius,
-            fillColor: 'blue'
-        }).addTo(map);
-        
-        if(form.address)
-        {
-            updateCircle();
-        }
-    }
 
     const currentVehicle = computed(() => (new URLSearchParams(window.location.search)).get('vehicle_id'));
 
@@ -56,27 +36,7 @@
         radius: props.billingProfile?.radius || 67,
     })
 
-
-    const vehicles = ref(null)
-    const mbox = ref(null)
-    const map = ref(null)
-
-    const setCoords = (latitude, longitude) => {
-        form.latitude = latitude
-        form.longitude = longitude
-        form.address = latitude + '°, ' + longitude +'°'
-        updateCircle()
-    }
-
-    const updateCircle = () => {
-        myCircle.setCenter({lat: form.latitude, lng: form.longitude});
-        myCircle.setRadius(form.radius);
-    }
-
-    const setAddress = (result) => {
-        setCoords(result.geometry.coordinates[1], result.geometry.coordinates[0])
-        form.address = result.place_name
-    }
+    const pickAddress = ref(null)
 
     const createModel = () => {
         form.post(route('billing-profiles.store'), {
@@ -183,27 +143,27 @@
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="address" value="Service Address" />
                             <div>
-                                <MapboxMap 
+                                <AddressSelector
                                     class="mt-1 block w-full rounded"
-                                    style="margin-top: 1em; height: 300px;"
                                     :access-token="$page.props.config.geocode.mapbox.key"
-                                    ref="map"
-                                    :center="[form.longitude || 0, form.latitude || 0]"
-                                    :zoom="15"
-                                    @mb-created="mapLoaded"
-                                    @mb-click="(e) => setCoords(e.lngLat.lat, e.lngLat.lng)"
-                                    map-style="mapbox://styles/mapbox/streets-v11">
-                                    <MapboxGeolocateControl position="top-left" @mb-geolocate="(e) => setCoords(e.coords.latitude, e.coords.longitude)"/>
-                                    <MapboxMarker v-if="form.address" :lng-lat="[form.longitude, form.latitude]"/>
-                                    <MapboxGeocoder type="address"  :proximity="{latitude: form.latitude, longitude: form.longitude}" class="mt-4" types="address" ref="mbox" @mb-result="(result) => setAddress(result.result) "/>
-                                </MapboxMap>
+                                    v-model:latitude="form.latitude"
+                                    v-model:longitude="form.longitude"
+                                    :radius="form.radius"
+                                    :min-radius="25"
+                                    ref="pickAddress"
+                                    v-model:address="form.address"
+                                />
                                 <div>{{ form.address }}</div>
                             </div>
                             <InputError :message="form.errors.address" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="radius" value="Radius" />
-                            <input @input="updateCircle" type="range" min="25" max="500" v-model="form.radius" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                            <RangeInput
+                                min="25" 
+                                max="500" 
+                                v-model="form.radius"
+                            />
                             <InputHelp>Radius in meters. Any cost related to charging within this radius from your address will be considered in the bill.</InputHelp>
                             <InputError :message="form.errors.radius" class="mt-2" />
                         </div>
