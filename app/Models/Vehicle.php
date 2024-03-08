@@ -20,6 +20,7 @@ class Vehicle extends Model
         'plate',
         'vin',
         'billing_profile_id',
+        'key',
     ];
 
     protected $casts = [
@@ -42,12 +43,12 @@ class Vehicle extends Model
         );
     }
 
-    public static function booted()
-    {
-        static::creating(function ($vehicle) {
-            $vehicle->key = sha1($vehicle->vin);
-        });
-    }
+    // public static function booted()
+    // {
+    //     static::creating(function ($vehicle) {
+    //         $vehicle->key = sha1($vehicle->vin);
+    //     });
+    // }
 
     public function team()
     {

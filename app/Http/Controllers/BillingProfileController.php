@@ -36,7 +36,6 @@ class BillingProfileController extends Controller
         $this->authorize('viewAny', BillingProfile::class);
 
         $billing_profiles = new BillingProfileResourceCollection($request->user()->currentTeam->billingProfiles()->get());
-
         return back()->with('flash', ['billing_profiles' => $billing_profiles]);
     }
 

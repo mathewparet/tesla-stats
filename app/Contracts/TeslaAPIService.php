@@ -39,4 +39,22 @@ interface TeslaAPIService
      * @return boolean
      */
     public function validateCredentials($config);
+
+    /**
+     * Set the location of charge
+     * 
+     * @param $latitude
+     * @param $longitude
+     * @param radius
+     * @return TeslaAPIService
+     */
+    public function location($latitude, $longitude, $radius);
+    
+    /**
+     * Set the timezone for the charge
+     * 
+     * @param timezone
+     * @return TeslaAPIservice
+     */
+    public function timezone($timezone);
 }

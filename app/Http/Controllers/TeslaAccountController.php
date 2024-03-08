@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Vehicle;
 use App\Models\TeslaAccount;
 use Illuminate\Http\Request;
 use App\Contracts\TeslaAPIServiceManager;
 use App\Http\Requests\LinkTessieAPIRequest;
-use Illuminate\Database\UniqueConstraintViolationException;
 
 class TeslaAccountController extends Controller
 {
@@ -63,20 +61,9 @@ class TeslaAccountController extends Controller
 
         $vehicles =  $this->getVehiclesList($provider, $request);
 
-        foreach($vehicles->all() as $vehicle)
+        foreach($vehicles as $vehicle)
         {
-            try
-            {
-                $request->user()->currentTeam->vehicles()->save(new Vehicle([
-                    'plate'  => $vehicle['plate'],
-                    'vin'  => $vehicle['vin'],
-                    'name' => $vehicle['last_state']['display_name']
-                ]));
-            }
-            catch(UniqueConstraintViolationException $e)
-            {
-                // do nothing
-            }
+            $request->user()->currentTeam->updateOrCreateVehicle($vehicle);
         }
 
         return redirect()->intended(route('tesla-accounts.index'));
@@ -131,17 +118,6 @@ class TeslaAccountController extends Controller
 
         $vehicles = $this->getVehiclesList($provider, $request);
 
-        $v = collect();
-
-        foreach($vehicles->all() as $vehicle)
-        {
-            $v->push([
-                'plate'  => $vehicle['plate'],
-                'vin'  => $vehicle['vin'],
-                'display_name' => $vehicle['last_state']['display_name']
-            ]);
-        }
-
-        return back()->with('flash', ['vehicles' => $v->all()]);
+        return back()->with('flash', ['vehicles' => $vehicles]);
     }
 }

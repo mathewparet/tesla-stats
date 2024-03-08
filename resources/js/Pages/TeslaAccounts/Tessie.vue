@@ -90,7 +90,7 @@
                         <div class="col-span-6 sm:col-span-4" v-if="vehicles">
                             <InputLabel for="vehicles" value="Vehicles" />
                             <ol class="text-gray-600 dark:text-gray-400 list-decimal pl-4">
-                                <li v-for="vehicle in vehicles" :key="vehicle.vin">{{ vehicle.display_name }} - {{ vehicle.plate }} / {{ vehicle.vin }}</li>
+                                <li v-for="vehicle in vehicles" :key="vehicle.vin">{{ vehicle.name }} - {{ vehicle.plate }} / {{ vehicle.vin }}</li>
                             </ol>
                         </div>
                     </template>

@@ -13,7 +13,7 @@ class BillPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class BillPolicy
      */
     public function view(User $user, Bill $bill): bool
     {
-        //
+        return $user->currentTeam->userHasPermission($user, 'read') && $bill->team->is($user->currentTeam);
     }
 
     /**
@@ -29,7 +29,7 @@ class BillPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -37,7 +37,7 @@ class BillPolicy
      */
     public function update(User $user, Bill $bill): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -45,7 +45,7 @@ class BillPolicy
      */
     public function delete(User $user, Bill $bill): bool
     {
-        //
+        return $user->currentTeam->userHasPermission($user, 'delete') && $bill->team->is($user->currentTeam);
     }
 
     /**
@@ -53,7 +53,7 @@ class BillPolicy
      */
     public function restore(User $user, Bill $bill): bool
     {
-        //
+        return $user->currentTeam->userHasPermission($user, 'delete') && $bill->team->is($user->currentTeam);
     }
 
     /**
@@ -61,6 +61,6 @@ class BillPolicy
      */
     public function forceDelete(User $user, Bill $bill): bool
     {
-        //
+        return $user->currentTeam->userHasPermission($user, 'delete') && $bill->team->is($user->currentTeam);
     }
 }

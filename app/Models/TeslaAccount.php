@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use mathewparet\LaravelPolicyAbilitiesExport\Traits\ExportsPermissions;
 
+/**
+ * @property string $config
+ */
 class TeslaAccount extends Model
 {
     use HasFactory;

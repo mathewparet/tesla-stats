@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use mathewparet\LaravelPolicyAbilitiesExport\Traits\ExportsPermissions;
 
+/**
+ * @property \App\Models\Team $team
+ * @property string $name
+ * @property \Carbon\Carbon $activated_on
+ * @property \Carbon\Carbon $deactivated_on
+ * @property int $bill_day
+ * @property string $timezone
+ * @property double $latitude
+ * @property double $longitude
+ * @property int $radius
+ * @property string $address
+ * @property array[\App\Models\Vehicle] $vehicles
+ * @property array[\App\Models\Bill] $bills
+ */
 class BillingProfile extends Model
 {
     use HasFactory;
@@ -50,5 +64,10 @@ class BillingProfile extends Model
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class);
+    }
+
+    public function bills()
+    {
+        return $this->hasMany(Bill::class);
     }
 }

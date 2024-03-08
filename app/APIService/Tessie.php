@@ -28,14 +28,31 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
 
     public function getCharges(string $vin, Carbon $from, Carbon $to): Collection
     {
-        $response = HTTP::withToken($this->token)->get(__(':url/:vin/charges?from=:from&to=:to', [
+        $params = [
             'url' => $this->config['url'],
             'vin'=> $vin,
             'from' => $from->timestamp,
             'to' => $to->timestamp,
-        ]));
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'radius' => $this->radius,
+            'timezone' => $this->timezone,
+        ];
 
-        return collect($response->json()['results']);
+        $response = HTTP::withToken($this->token)->get(__(':url/:vin/charges?from=:from&to=:to&origin_latitude=:latitude&origin_longitude=:longitude&origin_radius=:radius&timezone=:timezone', $params));
+
+        $charges = collect($response->json()['results']);
+
+        return $charges->map(fn($charge) => [
+            'started_at' => $charge['started_at'],
+            'ended_at' => $charge['ended_at'],
+            'latitude' => $charge['latitude'],
+            'longitude' => $charge['longitude'],
+            'cost' => $charge['cost'],
+            'starting_battery' => $charge['starting_battery'],
+            'ending_battery' => $charge['ending_battery'],
+            'energy_used' => $charge['energy_used'],
+        ]);
     }
 
     public function getVehicles(): Collection 
@@ -45,7 +62,13 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
                 'url' => $this->config['url'],
             ]));
     
-            return collect($response->json()['results']);
+            $results = collect($response->json()['results']);
+
+            return $results->map(fn($vehicle) => [
+                    'plate' => $vehicle['plate'],
+                    'vin'  => $vehicle['vin'],
+                    'name' => $vehicle['last_state']['display_name']
+            ]);
         });
     }
 

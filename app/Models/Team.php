@@ -8,6 +8,11 @@ use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 
+/**
+ * @property \App\Models\TeslaAccount $teslaAccount
+ * @property array[\App\Models\Vehicle] $vehicles
+ * @property array[\App\Models\BillingProfile] $billingProfiles
+ */
 class Team extends JetstreamTeam
 {
     use HasFactory;
@@ -55,6 +60,11 @@ class Team extends JetstreamTeam
     public function billingProfiles()
     {
         return $this->hasMany(BillingProfile::class);
+    }
+
+    public function updateOrCreateVehicle($attributes)
+    {
+        return $this->vehicles()->updateOrCreate(['key' => sha1($attributes['vin'])], $attributes);
     }
 
 }
