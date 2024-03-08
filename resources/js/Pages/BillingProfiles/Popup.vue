@@ -75,7 +75,7 @@
                         :class="{'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none rounded-b-none': i > 0 && canCreateNewProfile, 'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none': i > 0 && !canCreateNewProfile , 'rounded-b-none': i != Object.keys(billingProfiles).length - 1}"
                         @click="currentSelection = billingProfile.id"
                     >
-                        <div :class="{'opacity-50': billingProfile.id != currentSelection}">
+                        <div :class="{'opacity-50': currentSelection && billingProfile.id != currentSelection}">
                             <div class="flex items-center">
                                 <div class="text-sm text-gray-600 dark:text-gray-400" :class="{'font-semibold': billingProfile.id == currentSelection}">
                                     {{ billingProfile.name }}
@@ -96,7 +96,7 @@
                         class="border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600"
                         :href="route('billing-profiles.create', {vehicle_id: currentVehicle.id, returnTo: route(route().current())})"
                     >
-                        <div class="opacity-50">
+                        <div :class="{'opacity-50': currentSelection}">
                             <div class="flex items-center">
                                 <div class="text-sm text-orange-600 dark:text-orange-400 font-semibold">
                                     New
