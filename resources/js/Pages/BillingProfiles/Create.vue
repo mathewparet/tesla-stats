@@ -15,6 +15,8 @@
     import { MapboxMap, MapboxGeocoder, MapboxGeolocateControl, MapboxMarker } from '@studiometa/vue-mapbox-gl';
     import 'mapbox-gl/dist/mapbox-gl.css';
     import '@mapbox/mapbox-gl-geocoder/lib/mapbox-gl-geocoder.css';
+    import MapboxCircle from 'mapbox-gl-circle'
+    import { initFlowbite } from 'flowbite';
 
     const props = defineProps({
         billingProfile: Object,
@@ -22,6 +24,22 @@
         editMode: Boolean,
         timeZones: Array,
     });
+
+    var myCircle = null;
+
+    onMounted(() => initFlowbite())
+
+    const mapLoaded = (map) => {
+        myCircle = new MapboxCircle({lat:  0, lng: 0}, form.radius, {
+            minRadius: form.radius,
+            fillColor: 'blue'
+        }).addTo(map);
+        
+        if(form.address)
+        {
+            updateCircle();
+        }
+    }
 
     const currentVehicle = computed(() => (new URLSearchParams(window.location.search)).get('vehicle_id'));
 
@@ -33,9 +51,9 @@
         deactivated_on: props.billingProfile?.deactivated_on || '',
         vehicles: props.billingProfile?.vehicles.map(vehicle => vehicle.id) || [currentVehicle.value],
         address: props.billingProfile?.address || '',
-        latitude: props.billingProfile?.latitude || '',
-        longitude: props.billingProfile?.longitude || '',
-        radius: props.billingProfile?.radius || 100,
+        latitude: props.billingProfile?.latitude || -33.86150144690208,
+        longitude: props.billingProfile?.longitude || 151.21060996939127,
+        radius: props.billingProfile?.radius || 67,
     })
 
 
@@ -47,6 +65,12 @@
         form.latitude = latitude
         form.longitude = longitude
         form.address = latitude + '°, ' + longitude +'°'
+        updateCircle()
+    }
+
+    const updateCircle = () => {
+        myCircle.setCenter({lat: form.latitude, lng: form.longitude});
+        myCircle.setRadius(form.radius);
     }
 
     const setAddress = (result) => {
@@ -105,7 +129,6 @@
                                 required
                                 autofocus
                                 placeholder="My Electric Company"
-                                @keyup.prevent="vehicles=null"
                             />
                             <InputError :message="form.errors.name" class="mt-2" />
                         </div>
@@ -120,7 +143,6 @@
                                 class="mt-1 block w-full"
                                 required
                                 placeholder="1-31"
-                                @keyup.prevent="vehicles=null"
                             />
                             <InputError :message="form.errors.bill_day" class="mt-2" />
                         </div>
@@ -133,7 +155,6 @@
                                 required
                                 class="mt-1 block w-full"
                                 placeholder="1-31"
-                                @keyup.prevent="vehicles=null"
                             />
                             <InputError :message="form.errors.activated_on" class="mt-2" />
                         </div>
@@ -145,7 +166,6 @@
                                 type="date"
                                 class="mt-1 block w-full"
                                 placeholder="1-31"
-                                @keyup.prevent="vehicles=null"
                             />
                             <InputError :message="form.errors.deactivated_on" class="mt-2" />
                         </div>
@@ -157,7 +177,6 @@
                                 v-model="form.timezone"
                                 class="mt-1 block w-full"
                                 placeholder="1-31"
-                                @keyup.prevent="vehicles=null"
                             />
                             <InputError :message="form.errors.timezone" class="mt-2" />
                         </div>
@@ -171,6 +190,7 @@
                                     ref="map"
                                     :center="[form.longitude || 0, form.latitude || 0]"
                                     :zoom="15"
+                                    @mb-created="mapLoaded"
                                     @mb-click="(e) => setCoords(e.lngLat.lat, e.lngLat.lng)"
                                     map-style="mapbox://styles/mapbox/streets-v11">
                                     <MapboxGeolocateControl position="top-left" @mb-geolocate="(e) => setCoords(e.coords.latitude, e.coords.longitude)"/>
@@ -183,15 +203,7 @@
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="radius" value="Radius" />
-                            <TextInput
-                                id="radius"
-                                v-model="form.radius"
-                                type="number"
-                                class="mt-1 block w-full"
-                                ref="map"
-                                placeholder="100"
-                                @keyup.prevent="vehicles=null"
-                            />
+                            <input @input="updateCircle" type="range" min="25" max="500" v-model="form.radius" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
                             <InputHelp>Radius in meters. Any cost related to charging within this radius from your address will be considered in the bill.</InputHelp>
                             <InputError :message="form.errors.radius" class="mt-2" />
                         </div>
