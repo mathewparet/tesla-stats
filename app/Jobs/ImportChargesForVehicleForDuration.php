@@ -15,7 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 /**
- * @method static \Illuminate\Foundation\Bus\PendingDispatch  dispatch(\App\Models\Vehicle $vehicle, ?\Carbon\Carbon $from, ?\Carbon\Carbon $to)
+ * @method static \Illuminate\Foundation\Bus\PendingDispatch  dispatch(\App\Models\Vehicle $vehicle, ?\Carbon\Carbon $from = null, ?\Carbon\Carbon $to = null)
  */
 class ImportChargesForVehicleForDuration implements ShouldQueue
 {
@@ -24,7 +24,7 @@ class ImportChargesForVehicleForDuration implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(private Vehicle $vehicle, private ?Carbon $from, private ?Carbon $to = null)
+    public function __construct(private Vehicle $vehicle, private ?Carbon $from = null, private ?Carbon $to = null)
     {
         $this->to = $to ?? now();
     }

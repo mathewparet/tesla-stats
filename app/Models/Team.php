@@ -64,7 +64,7 @@ class Team extends JetstreamTeam
 
     public function updateOrCreateVehicle($attributes)
     {
-        return $this->vehicles()->updateOrCreate(['key' => sha1($attributes['vin'])], $attributes);
+        return $this->vehicles()->updateOrCreate(['key' => sha1($attributes['vin'].'-'.$this->id)], $attributes);
     }
 
 }

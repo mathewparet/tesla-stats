@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\ImportChargesForVehicleForDuration;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,6 +47,11 @@ class Vehicle extends Model
     public function scopeBillable($query)
     {
         return $query->whereNotNull('billing_profile_id');
+    }
+
+    public static function booted()
+    {
+        static::updated(fn($vehicle) => array_key_exists('billing_profile_id', $vehicle->getChanges()) && $vehicle->getChanges()['billing_profile_id'] != null ? ImportChargesForVehicleForDuration::dispatch($vehicle) : null );
     }
 
     public function team()
