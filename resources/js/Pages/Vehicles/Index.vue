@@ -65,8 +65,7 @@
                                         <button v-if="vehicle.can.update" class="font-medium hover:underline" :class="{'text-gray-600 dark:text-gray-500': vehicle.billing_profile, 'text-green-600 dark:text-green-500': !vehicle.billing_profile}" @click.prevent="() => profileSelector.show(vehicle)"><span v-if="vehicle.billing_profile">Change</span><span v-else>Link</span></button>
                                     </td>
                                     <td class="px-6 py-4  text-right">
-                                        <!-- <Link v-if="vehicles?.provider == provider && vehicles.can.delete" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('tesla-accounts.unlink', { provider: provider })">Unlink</Link>
-                                        <Link v-else-if="!vehicles && can.link" class="font-medium text-green-600 dark:text-green-500 hover:underline" :href="route('tesla-accounts.link-form', { provider: provider})">Link</Link> -->
+                                        <Link v-if="vehicle.can.delete" as="button" method="delete" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.destroy', { vehicle: vehicle.id })">Archive</Link>
                                     </td>
                                 </tr>
                             </tbody>

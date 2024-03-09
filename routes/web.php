@@ -36,13 +36,8 @@ Route::middleware([
 ])->group(function () {
 
     Route::middleware(['tesla.api.linked'])->group(function() {
-    
-        Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard');
-        })->name('dashboard');
-
         Route::post('vehicles/{vehicle}/unlink', [VehicleController::class, 'unlink'])->name('vehicles.unlink');
-        Route::resource('vehicles', VehicleController::class);
+        Route::resource('vehicles', VehicleController::class)->except(['create', 'store', 'edit', 'update']);
         
         Route::get('billing-profiles/list', [BillingProfileController::class, 'list'])->name('billing-profiles.list');
         Route::post('billing-profiles/{billingProfile}/link', [BillingProfileController::class, 'link'])->name('billing-profiles.link');

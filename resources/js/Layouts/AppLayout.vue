@@ -41,19 +41,13 @@ const logout = () => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('vehicles.index')">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                                <NavLink :href="route('tesla-accounts.index')" :active="route().current().startsWith('tesla-accounts.')">
-                                    Tesla Account
-                                </NavLink>
                                 <NavLink :href="route('vehicles.index')" :active="route().current().startsWith('vehicles.')">
                                     Vehicles
                                 </NavLink>
@@ -150,6 +144,10 @@ const logout = () => {
                                         <DropdownLink :href="route('profile.show')">
                                             Profile
                                         </DropdownLink>
+                                        
+                                        <DropdownLink :href="route('tesla-accounts.index')">
+                                            Tesla Account
+                                        </DropdownLink>
 
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
                                             API Tokens
@@ -200,12 +198,6 @@ const logout = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('tesla-accounts.index')" :active="route().current().startsWith('tesla-accounts.')">
-                            Tesla Account
-                        </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('vehicles.index')" :active="route().current().startsWith('vehicles.')">
                             Vehicles
                         </ResponsiveNavLink>
