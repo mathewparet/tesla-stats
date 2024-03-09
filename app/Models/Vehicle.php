@@ -43,12 +43,10 @@ class Vehicle extends Model
         );
     }
 
-    // public static function booted()
-    // {
-    //     static::creating(function ($vehicle) {
-    //         $vehicle->key = sha1($vehicle->vin);
-    //     });
-    // }
+    public function scopeBillable($query)
+    {
+        return $query->whereNotNull('billing_profile_id');
+    }
 
     public function team()
     {
@@ -58,5 +56,10 @@ class Vehicle extends Model
     public function billingProfile()
     {
         return $this->belongsTo(BillingProfile::class);
+    }
+
+    public function charges()
+    {
+        return $this->hasMany(Charge::class);
     }
 }

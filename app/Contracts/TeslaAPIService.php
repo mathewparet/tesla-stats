@@ -15,7 +15,7 @@ interface TeslaAPIService
      * @param Carbon $to
      * @return Collection
      */
-    public function getCharges(String $vin, Carbon $from, Carbon $to): Collection;
+    public function getCharges(String $vin, ?Carbon $from, ?Carbon $to): Collection;
 
     /**
      * Get vehicles.
