@@ -2,12 +2,8 @@
 
 namespace App\Jobs;
 
-use Carbon\Carbon;
-use App\Models\Bill;
-use App\Models\Charge;
 use App\Models\Vehicle;
 use Illuminate\Bus\Queueable;
-use App\Models\BillingProfile;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Contracts\TeslaAPIServiceManager;

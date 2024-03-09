@@ -50,7 +50,7 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
         $response = HTTP::withToken($this->token)->get(__(':url/:vin/charges?from=:from&to=:to&origin_latitude=:latitude&origin_longitude=:longitude&origin_radius=:radius&timezone=:timezone', $params));
 
         Log::debug('Response received', compact('response'));
-        
+
         $charges = collect($response->json()['results']);
 
 
@@ -68,7 +68,7 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
 
     public function getVehicles(): Collection 
     {
-        return Cache::remember('tesla-vehicles-'.request()->user()->currentTeam->id.'-'.sha1($this->token), 60, function() {
+        return Cache::remember('tesla-vehicles-'.sha1($this->token), 60, function() {
             $response = HTTP::withToken($this->token)->get(__(':url/vehicles', [
                 'url' => $this->config['url'],
             ]));

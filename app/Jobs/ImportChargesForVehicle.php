@@ -2,14 +2,10 @@
 
 namespace App\Jobs;
 
-use App\Models\Charge;
 use App\Models\Vehicle;
 use Illuminate\Bus\Queueable;
-use App\Models\BillingProfile;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Contracts\TeslaAPIServiceManager;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 

@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\ImportCharges;
+use App\Jobs\SyncVehicles;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(ImportCharges::class)->everyTenMinutes();
+        $schedule->job(SyncVehicles::class)->everyTenMinutes();
     }
 
     /**

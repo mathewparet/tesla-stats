@@ -7,6 +7,7 @@ use App\Models\TeslaAccount;
 use Illuminate\Http\Request;
 use App\Contracts\TeslaAPIServiceManager;
 use App\Http\Requests\LinkTessieAPIRequest;
+use App\Jobs\SyncVehiclesForAccount;
 
 class TeslaAccountController extends Controller
 {
@@ -59,12 +60,7 @@ class TeslaAccountController extends Controller
             'config' => $request->config
         ]));
 
-        $vehicles =  $this->getVehiclesList($provider, $request);
-
-        foreach($vehicles as $vehicle)
-        {
-            $request->user()->currentTeam->updateOrCreateVehicle($vehicle);
-        }
+        SyncVehiclesForAccount::dispatchSync($request->user()->currentTeam->teslaAccount);
 
         return redirect()->intended(route('tesla-accounts.index'));
     }
