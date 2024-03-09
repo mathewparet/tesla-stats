@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Contracts\TeslaAPIServiceManager;
+use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -17,7 +18,7 @@ use Illuminate\Database\UniqueConstraintViolationException;
  */
 class SyncVehiclesForAccount implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
@@ -32,6 +33,8 @@ class SyncVehiclesForAccount implements ShouldQueue
      */
     public function handle(TeslaAPIServiceManager $teslaAPIServiceManager): void
     {
+        if ($this->batch()->cancelled()) return;
+
         $vehicles =  $this->getVehiclesList($teslaAPIServiceManager);
 
         foreach($vehicles as $vehicle)
