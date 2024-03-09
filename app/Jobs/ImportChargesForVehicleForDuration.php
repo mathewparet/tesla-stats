@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Contracts\TeslaAPIServiceManager;
 use Carbon\Carbon;
+use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
@@ -18,7 +19,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
  */
 class ImportChargesForVehicleForDuration implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
@@ -42,6 +43,8 @@ class ImportChargesForVehicleForDuration implements ShouldQueue
      */
     public function handle(TeslaAPIServiceManager $teslaAPIServiceManager): void
     {
+        if ($this->batch()->cancelled()) return;
+        
         $vehicle_identifier = $this->generateVehicleIdentifierForLogging();
 
         Log::info('Importing charges for vehicle', $vehicle_identifier);

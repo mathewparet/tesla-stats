@@ -3,11 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\TeslaAccount;
+use Illuminate\Bus\Batch;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 
 class SyncVehicles implements ShouldQueue
 {
@@ -26,9 +29,13 @@ class SyncVehicles implements ShouldQueue
      */
     public function handle(): void
     {
-        foreach(TeslaAccount::get() as $teslaAccount)
-        {
-            SyncVehiclesForAccount::dispatch($teslaAccount);
-        }
+        $jobs = TeslaAccount::get()->map(fn($teslaAccount) => new SyncVehiclesForAccount($teslaAccount));
+
+        $batch = Bus::batch($jobs)
+                    ->before(fn(Batch $batch) => Log::info('Starting Sync Vehicles Batch', ['batch_id' => $batch->id]))
+                    ->progress(fn(Batch $batch) => Log::info('Sync Vehicles Progress', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'pending' => $batch->pendingJobs, 'total' => $batch->totalJobs]))
+                    ->then(fn(Batch $batch) => Log::info('Sync Vehicles Batch completed successfully.', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'total' => $batch->totalJobs, 'failed' => $batch->failedJobs]))
+                    ->name('Sync Vehicles')
+                    ->dispatch();
     }
 }

@@ -15,7 +15,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(ImportCharges::class)->everyTenMinutes();
+
         $schedule->job(SyncVehicles::class)->everyTenMinutes();
+
+        $schedule->command('queue:prune-batches --unfinished=72 --cancelled=72')->daily();
     }
 
     /**
