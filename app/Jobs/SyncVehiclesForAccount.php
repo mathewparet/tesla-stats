@@ -33,7 +33,7 @@ class SyncVehiclesForAccount implements ShouldQueue
      */
     public function handle(TeslaAPIServiceManager $teslaAPIServiceManager): void
     {
-        if ($this->batch()->cancelled()) return;
+        if ($this->batch() && $this->batch()->cancelled()) return;
 
         $vehicles =  $this->getVehiclesList($teslaAPIServiceManager);
 

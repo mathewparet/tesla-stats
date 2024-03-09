@@ -43,8 +43,8 @@ class ImportChargesForVehicleForDuration implements ShouldQueue
      */
     public function handle(TeslaAPIServiceManager $teslaAPIServiceManager): void
     {
-        if ($this->batch()->cancelled()) return;
-        
+        if ($this->batch() && $this->batch()->cancelled()) return;
+
         $vehicle_identifier = $this->generateVehicleIdentifierForLogging();
 
         Log::info('Importing charges for vehicle', $vehicle_identifier);
