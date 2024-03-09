@@ -33,8 +33,8 @@ class SyncVehicles implements ShouldQueue
 
         $batch = Bus::batch($jobs)
                     ->before(fn(Batch $batch) => Log::info('Starting Sync Vehicles Batch', ['batch_id' => $batch->id]))
-                    ->progress(fn(Batch $batch) => Log::info('Sync Vhicles Progress', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'total' => $batch->totalJobs]))
-                    ->then(fn(Batch $batch) => Log::info('Sync Vehicles Job completed successfully.', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'total' => $batch->totalJobs, 'failed' => $batch->failedJobs]))
+                    ->progress(fn(Batch $batch) => Log::info('Sync Vehicles Progress', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'pending' => $batch->pendingJobs, 'total' => $batch->totalJobs]))
+                    ->then(fn(Batch $batch) => Log::info('Sync Vehicles Batch completed successfully.', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'total' => $batch->totalJobs, 'failed' => $batch->failedJobs]))
                     ->name('Sync Vehicles')
                     ->dispatch();
     }
