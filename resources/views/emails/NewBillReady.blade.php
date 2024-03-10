@@ -12,7 +12,7 @@ Charging Location: {{ $bill->billingProfile->address }}
 
 Period: {{ $bill->from->format('d-M-Y') }} to {{ $bill->to->format('d-M-Y') }}
 
-Total Energy Used: {{ number_format($bill->energy_used, 2) }} kwh
+Total Energy Used: {{ number_format($bill->energy_consumed, 2) }} kwh
 
 Total Cost of charging at this location: {{ number_format($bill->total_cost, 2) }}
 

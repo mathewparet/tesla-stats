@@ -31,7 +31,22 @@ class Bill extends Model
 
     public static function booted()
     {
+        static::creating(fn($bill) => $bill->storeSummary());
+
         static::created(fn($bill) => $bill->sendBill());
+    }
+
+    public function storeSummary()
+    {
+        $charges = tap($this->getCharges(), function($charges) {
+            Log::debug('Charges SQL', [
+                'sql' => $charges->toSql(),
+                'bindings' => $charges->getBindings()
+            ]);
+        });
+
+        $this->total_cost = $charges->sum('cost');
+        $this->energy_consumed = $charges->sum('energy_consumed');
     }
 
     public function sendBill()
@@ -42,31 +57,10 @@ class Bill extends Model
         }
     }
 
-    public function energyUsed(): Attribute
-    {
-        return new Attribute(
-            get: fn() => $this->getCharges()->sum('energy_consumed')
-        );
-    }
-
-    public function totalCost(): Attribute
-    {
-        return new Attribute(
-            get: fn() => $this->getCharges()->sum('cost')
-        );
-    }
-
     private function getCharges()
     {
-        $query = Charge::whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('id'))
+        return Charge::whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('id'))
             ->where('started_at', '>=', $this->from->setTimezone($this->billingProfile->setTimezone))
             ->where('ended_at', '<', $this->to->addDay()->setTimezone($this->billingProfile->setTimezone));
-
-        return tap($query, function($query) {
-            Log::debug('Charges SQL', [
-                'sql' => $query->toSql(),
-                'bindings' => $query->getBindings()
-            ]);
-        });
     }
 }
