@@ -33,33 +33,23 @@ class GenerateBills implements ShouldQueue
     {
         foreach(BillingProfile::active()->get() as $billingProfile)
         {
-            /**
-             * @var BillingProfile $billingProfile
-             */
-            for($from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); $from->lte(now()); $from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
+            if($billingProfile->vehicles()->count() > 0)
             {
-                $account = $billingProfile->team->teslaAccount;
-
-                $provider = $account->provider;
-
-                $from = $this->getFromDate($billingProfile);
-
-                $to = $this->getToDate($billingProfile);
-
-                if($billingProfile->vehicles()->count() > 0)
+                /**
+                 * @var BillingProfile $billingProfile
+                 */
+                for($from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); $from->lte(now()); $from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
                 {
-                    $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));
+                    $account = $billingProfile->team->teslaAccount;
 
-                    foreach($billingProfile->vehicles as $vehicle)
-                    {
-                        $charges = $teslaAPIServiceManager
-                                        ->provider($provider)
-                                        ->useAccount($account->config)
-                                        ->timezone($billingProfile->timezone)
-                                        ->location($billingProfile->latitude, $billingProfile->longitude, $billingProfile->radius)
-                                        ->getCharges($vehicle->vin, $from, $to);
+                    $provider = $account->provider;
 
-                    }
+                    $from = $this->getFromDate($billingProfile)->shiftTimezone($billingProfile->timezone);
+
+                    $to = $this->getToDate($billingProfile)->shiftTimezone($billingProfile->timezone);
+
+                    if(!$to->isFuture())
+                        $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));
                 }
             }
         }
@@ -79,11 +69,7 @@ class GenerateBills implements ShouldQueue
 
         $to = $latestBill
                 ? $this->getNextDay($latestBill->to, $billingProfile->bill_day -1)
-                : (
-                    $billDateThisMonth->lte($billingProfile->activated_on)
-                        ? $this->getNextDay($billingProfile->activated_on, $billingProfile->bill_day - 1)
-                        : $billDateThisMonth
-                    );
+                : $billingProfile->activated_on->firstOfMonth()->addDay($billingProfile->bill_day - 2);
 
         return !$billingProfile->deactivated_on 
                     ? $to
@@ -117,7 +103,7 @@ class GenerateBills implements ShouldQueue
         $latestBill = $this->getLatestBill($billingProfile);
 
         return $latestBill
-                ? $this->getNextDay($latestBill->to, $billingProfile->bill_day)
+                ? $this->nextNthNoOverflow($billingProfile->bill_day, $latestBill->to)
                 : $billingProfile->activated_on;
     }
 
@@ -133,6 +119,12 @@ class GenerateBills implements ShouldQueue
         return $ref->lastOfMonth()->addDays($day);
     }
 
+    private function nextNthNoOverflow(int $nth, Carbon $from)
+    {
+        $day_in_month = $from->copy()->setUnitNoOverflow('day', $nth, 'month');
+        return $day_in_month->gt($from) ? $day_in_month : $day_in_month->addMonthNoOverflow();
+    }
+
     /**
      * Get the latest bill generated for this profile
      * 
@@ -141,6 +133,6 @@ class GenerateBills implements ShouldQueue
      */
     private function getLatestBill(BillingProfile $billingProfile)
     {
-        return $billingProfile->bills()->latest()->first();
+        return $billingProfile->bills()->latest('id')->first();
     }
 }

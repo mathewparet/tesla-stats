@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillController;
 use App\Http\Controllers\BillingProfileController;
 use App\Http\Controllers\DefaultTeamController;
 use Inertia\Inertia;
@@ -51,4 +52,6 @@ Route::middleware([
     Route::post('/tesla-account/{provider}/unlink', [TeslaAccountController::class, 'unlink'])->name('tesla-accounts.unlink');
 
     Route::post('/teams/{team}/make-default', DefaultTeamController::class)->name('teams.make-default');
+
+    Route::resource('/bills', BillController::class);
 });
