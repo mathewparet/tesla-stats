@@ -16,6 +16,7 @@ use mathewparet\LaravelPolicyAbilitiesExport\Traits\ExportsPermissions;
  * @property string $timezone
  * @property double $latitude
  * @property double $longitude
+ * @property string $currency
  * @property int $radius
  * @property string $address
  * @property array[\App\Models\Vehicle] $vehicles
@@ -37,6 +38,7 @@ class BillingProfile extends Model
         'longitude',
         'radius',
         'address',
+        'currency',
     ];
 
     protected $casts = [

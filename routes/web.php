@@ -44,6 +44,8 @@ Route::middleware([
         Route::get('billing-profiles/list', [BillingProfileController::class, 'list'])->name('billing-profiles.list');
         Route::post('billing-profiles/{billingProfile}/link', [BillingProfileController::class, 'link'])->name('billing-profiles.link');
         Route::resource('billing-profiles', BillingProfileController::class);
+        
+        Route::resource('/bills', BillController::class);
     });
     Route::post('/tesla-account/{provider}/get-vehicles', [TeslaAccountController::class, 'getVehicles'])->name('tesla-accounts.get-vehicles');
     Route::get('/tesla-account', [TeslaAccountController::class, 'index'])->name('tesla-accounts.index');
@@ -53,5 +55,4 @@ Route::middleware([
 
     Route::post('/teams/{team}/make-default', DefaultTeamController::class)->name('teams.make-default');
 
-    Route::resource('/bills', BillController::class);
 });

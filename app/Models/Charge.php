@@ -36,7 +36,7 @@ class Charge extends Model
 
     public function vehicle()
     {
-        $this->belongsTo(Vehicle::class);
+        return $this->belongsTo(Vehicle::class);
     }
 
     public function scopeFrom($query, Carbon $from)

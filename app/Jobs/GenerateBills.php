@@ -38,7 +38,7 @@ class GenerateBills implements ShouldQueue
                 /**
                  * @var BillingProfile $billingProfile
                  */
-                for($from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); $from->lte(now()); $from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
+                for($from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); $to->lte(now()); $from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
                 {
                     $account = $billingProfile->team->teslaAccount;
 
@@ -69,7 +69,7 @@ class GenerateBills implements ShouldQueue
 
         $to = $latestBill
                 ? $this->getNextDay($latestBill->to, $billingProfile->bill_day -1)
-                : $billingProfile->activated_on->firstOfMonth()->addDay($billingProfile->bill_day - 2);
+                :  $this->getNextDay($billingProfile->activated_on, $billingProfile->bill_day -1);
 
         return !$billingProfile->deactivated_on 
                     ? $to

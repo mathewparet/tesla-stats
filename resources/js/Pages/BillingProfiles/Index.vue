@@ -1,6 +1,7 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
     import { Link } from '@inertiajs/vue3';
+    import { DateTime } from 'luxon';
 
     defineProps({
         billing_profiles: Object,
@@ -29,7 +30,7 @@
                                     <th scope="col" class="px-6 py-3">
                                         Billing Day
                                     </th>
-                                    <th scope="col" class="px-6 py-">
+                                    <th scope="col" class="px-6 py-3">
                                         Timezone
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -55,10 +56,10 @@
                                         {{ billing_profile.timezone }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ billing_profile.activated_on }}
+                                        {{ DateTime.fromISO(billing_profile.activated_on).toLocaleString(DateTime.DATE_MED) }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ billing_profile.deactivated_on }}
+                                        {{ billing_profile.deactivated_on ? DateTime.fromISO(billing_profile.deactivated_on).toLocaleString(DateTime.DATE_MED) : '' }}
                                     </td>
                                     <td class="px-6 py-4  text-right">
                                         <Link v-if="billing_profile.can.update" class="ml-2 font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.edit', { billing_profile: billing_profile.id })">Update</Link>
@@ -69,8 +70,8 @@
                                     <td v-if="billing_profiles.data.length === 0" colspan="6" class="px-6 py-4 text-center">
                                         You do not have any billing profiles, would you like to <Link v-if="billing_profiles.can.create" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.create')">create one</Link>?
                                     </td>
-                                    <td v-else colspan="6" class="px-6 py-4 text-center">
-                                        Would you like to <Link v-if="billing_profiles.can.create" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.create')">create another</Link> one?
+                                    <td v-else-if="billing_profiles.can.create" colspan="6" class="px-6 py-4 text-center">
+                                        Would you like to <Link class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.create')">create another</Link> one?
                                     </td>
                                 </tr>
                             </tbody>

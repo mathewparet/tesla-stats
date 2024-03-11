@@ -34,6 +34,7 @@
         latitude: props.billingProfile?.latitude || -33.86150144690208,
         longitude: props.billingProfile?.longitude || 151.21060996939127,
         radius: props.billingProfile?.radius || 67,
+        currency: props.billingProfile?.currency || '',
     })
 
     const createModel = () => {
@@ -60,7 +61,7 @@
     <AppLayout :title="title">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                <Link :href="route('billing-profiles.index')" class="font-medium text-gray-600 dark:text-gray-500 hover:underline">Billing Profiles</Link> <span class="font-medium text-gray-600 dark:text-gray-500" v-if="billingProfile?.id"> / <Link :href="route('billing-profiles.show', {billing_profile: billingProfile.id})" class="font-medium text-gray-600 dark:text-gray-500 hover:underline">{{ billingProfile.name }}</Link></span> / {{ action }}
+                <Link :href="route('billing-profiles.index')" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">Billing Profiles</Link> <span class="font-medium text-gray-400 dark:text-gray-500" v-if="billingProfile?.id"> / <Link :href="route('billing-profiles.show', {billing_profile: billingProfile.id})" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">{{ billingProfile.name }}</Link></span> / {{ action }}
             </h2>
         </template>
 
@@ -126,6 +127,17 @@
                                 placeholder="1-31"
                             />
                             <InputError :message="form.errors.deactivated_on" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <InputLabel for="currency" value="Currency Code" />
+                            <TextInput
+                                id="currency"
+                                v-model="form.currency"
+                                type="text"
+                                class="mt-1 block w-full"
+                                placeholder="E.g. USD"
+                            />
+                            <InputError :message="form.errors.currency" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="timezone" value="Timezone" />

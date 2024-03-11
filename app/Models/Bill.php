@@ -20,8 +20,8 @@ class Bill extends Model
     ];
 
     protected $casts = [
-        'from' => 'date:Y-md-d',
-        'to' => 'date:Y-md-d',
+        'from' => 'date:Y-m-d',
+        'to' => 'date:Y-m-d',
     ];
 
     public function billingProfile()
@@ -57,7 +57,7 @@ class Bill extends Model
         }
     }
 
-    private function getCharges()
+    public function getCharges()
     {
         return Charge::whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('id'))
             ->where('started_at', '>=', $this->from->setTimezone($this->billingProfile->setTimezone))
