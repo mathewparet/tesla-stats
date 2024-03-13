@@ -55,8 +55,8 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
 
 
         return $charges->map(fn($charge) => [
-            'started_at' => $charge['started_at'],
-            'ended_at' => $charge['ended_at'],
+            'started_at' => Carbon::createFromTimestamp($charge['started_at']),
+            'ended_at' => Carbon::createFromTimestamp($charge['ended_at']),
             'latitude' => $charge['latitude'],
             'longitude' => $charge['longitude'],
             'cost' => $charge['cost'],

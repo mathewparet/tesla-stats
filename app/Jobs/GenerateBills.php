@@ -38,7 +38,7 @@ class GenerateBills implements ShouldQueue
                 /**
                  * @var BillingProfile $billingProfile
                  */
-                for($from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); $to->lte(now()); $from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
+                for($from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); $to->endOfDay()->lte(now()); $from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
                 {
                     $account = $billingProfile->team->teslaAccount;
 
@@ -48,7 +48,7 @@ class GenerateBills implements ShouldQueue
 
                     $to = $this->getToDate($billingProfile)->shiftTimezone($billingProfile->timezone);
 
-                    if(!$to->isFuture())
+                    if(!$to->endOfDay()->isFuture())
                         $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));
                 }
             }
@@ -63,13 +63,11 @@ class GenerateBills implements ShouldQueue
      */
     private function getToDate(BillingProfile $billingProfile)
     {
-        $billDateThisMonth = $this->getBillDayThisMonth($billingProfile->activated_on, $billingProfile->bill_day - 1);
-
         $latestBill = $this->getLatestBill($billingProfile);
 
         $to = $latestBill
                 ? $this->getNextDay($latestBill->to, $billingProfile->bill_day -1)
-                :  $this->getNextDay($billingProfile->activated_on, $billingProfile->bill_day -1);
+                :  $this->nextNthNoOverflow($billingProfile->bill_day -1, $billingProfile->activated_on);
 
         return !$billingProfile->deactivated_on 
                     ? $to
@@ -78,18 +76,6 @@ class GenerateBills implements ShouldQueue
                         ? $billingProfile->deactivated_on
                         : $to
                     );
-    }
-
-    /**
-     * Get the full billing day for this month
-     * 
-     * @param Carbon $ref Reference date
-     * @param int $day
-     * @return Carbon
-     */
-    private function getBillDayThisMonth(Carbon $ref, $day)
-    {
-        return $ref->firstOfMonth()->addDays($day);
     }
 
     /**

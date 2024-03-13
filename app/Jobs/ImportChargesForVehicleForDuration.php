@@ -2,15 +2,16 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use App\Models\Charge;
 use App\Models\Vehicle;
+use Illuminate\Support\Arr;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Contracts\TeslaAPIServiceManager;
-use Carbon\Carbon;
-use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
@@ -55,7 +56,14 @@ class ImportChargesForVehicleForDuration implements ShouldQueue
 
         Log::info('Adding charges to database for', $vehicle_identifier);
 
-        $charges->sortBy('started_at', SORT_NUMERIC)->each(fn($charge) => $this->vehicle->charges()->save(new Charge($charge)));
+        $charges->sortBy('started_at')->each(
+            fn($charge) => $this->vehicle
+                                ->charges()
+                                ->updateOrCreate(
+                                    Arr::only($charge, ['started_at', 'ended_at']), 
+                                    Arr::except($charge, ['started_at', 'ended_at'])
+                                )
+        );
 
         Log::info('importing charges completed for', $vehicle_identifier);
     }

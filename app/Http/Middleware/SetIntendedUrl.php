@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetIntendedUrl
@@ -17,7 +18,7 @@ class SetIntendedUrl
     {
         if($request->has('returnTo'))
         {
-            $request->session()->put('url.intended', $request->get('returnTo'));
+            Session::flash('url.intended', $request->get('returnTo'));
         }
 
         return $next($request);
