@@ -43,7 +43,7 @@ class TeslaAccountController extends Controller
 
         $this->abortIfProviderIsInvalid($provider);
 
-        return Inertia::render("TeslaAccounts/${provider}");
+        return Inertia::render("TeslaAccounts/{$provider}");
     }
 
     /**

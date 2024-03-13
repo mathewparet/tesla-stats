@@ -19,7 +19,7 @@ class HasTeslaAPILinked
             return $next($request);
         else
         {
-            session()->put('url.intended', $request->url());
+            session()->flash('url.intended', $request->url());
             return redirect()->route('tesla-accounts.index');
         }
     }
