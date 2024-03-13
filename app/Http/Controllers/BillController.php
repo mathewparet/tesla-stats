@@ -12,15 +12,13 @@ use App\Http\Resources\ChargeResourceCollection;
 
 class BillController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(Bill::class, 'bill');
-    }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Bill::class);
+
         $bills = new BillResourceCollection(Bill::whereIn('billing_profile_id', $request->user()->currentTeam->billingProfiles->pluck('id'))->orderBy('id', 'desc')->paginate());
 
         return Inertia::render('Bills/Index', compact('bills'));
@@ -31,6 +29,8 @@ class BillController extends Controller
      */
     public function show(Bill $bill)
     {
+        $this->authorize('view', $bill);
+
         $charges = new ChargeResourceCollection($bill->getCharges()->orderBy('id', 'desc')->get());
 
         return Inertia::render('Bills/View', compact('bill', 'charges'));
@@ -41,7 +41,7 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        //
+        $this->authorize('update', $bill);
     }
 
     /**
@@ -49,7 +49,7 @@ class BillController extends Controller
      */
     public function update(UpdateBillRequest $request, Bill $bill)
     {
-        //
+        $this->authorize('update', $bill);
     }
 
     /**
@@ -57,6 +57,6 @@ class BillController extends Controller
      */
     public function destroy(Bill $bill)
     {
-        //
+        $this->authorize('delete', $bill);
     }
 }

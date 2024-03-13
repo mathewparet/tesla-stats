@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 
 class NewBillReady extends Notification 
 {
@@ -37,8 +38,13 @@ class NewBillReady extends Notification
     {
         return (new MailMessage)->markdown('emails.NewBillReady', [
             'bill' => $this->bill,
-            'url' => route('bills.show', $this->bill)
+            'url' => $this->generateURL()
         ]);
+    }
+
+    private function generateURL()
+    {
+        return route('bills.show', ['bill' => $this->bill->id, 'switchToTeam' => $this->bill->billingProfile->team->id]);
     }
 
     /**
