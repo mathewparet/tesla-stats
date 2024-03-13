@@ -64,7 +64,8 @@ class Bill extends Model
 
     public function getCharges()
     {
-        return Charge::whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('id'))
+        return Charge::withinLocation($this->billingProfile->latitude, $this->billingProfile->longitude, $this->billingProfile->radius)
+            ->whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('id'))
             ->where('started_at', '>=', $this->from)
             ->where('ended_at', '<', $this->to);
     }

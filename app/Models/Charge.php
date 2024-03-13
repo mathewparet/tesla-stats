@@ -53,7 +53,7 @@ class Charge extends Model
     {
         return $query->select('*')
                 ->selectRaw($this->haversineFormula($latitude, $longitude))
-                ->having('disatance', '<', $radius);
+                ->having('distance', '<', $radius);
 
     }
 
