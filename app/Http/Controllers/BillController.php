@@ -28,10 +28,8 @@ class BillController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($bill)
+    public function show(Bill $bill)
     {
-        $bill = Bill::find(Hashids::decode($bill)[0]);
-        
         $this->authorize('view', $bill);
 
         $charges = new ChargeResourceCollection($bill->getCharges()->orderBy('id', 'desc')->get());

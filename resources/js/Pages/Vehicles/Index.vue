@@ -64,7 +64,7 @@
                                         </button>
                                     </td>
                                     <td class="px-6 py-4  text-right">
-                                        <Link v-if="vehicle.can.delete" as="button" method="delete" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.destroy', { vehicle: vehicle.id })">Archive</Link>
+                                        <Link v-if="vehicle.can.delete" as="button" method="delete" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.destroy', { vehicle: vehicle.hash_id })">Archive</Link>
                                     </td>
                                 </tr>
                             </tbody>

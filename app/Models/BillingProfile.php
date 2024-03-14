@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasHashId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,6 +28,12 @@ class BillingProfile extends Model
     use HasFactory;
     use ExportsPermissions;
     use SoftDeletes;
+    use HasHashId;
+
+    protected function getHashIdConnection()
+    {
+        return 'billing-profile';
+    }
 
     protected $fillable = [
         'name',

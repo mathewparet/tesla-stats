@@ -62,8 +62,8 @@
                                         {{ billing_profile.deactivated_on ? DateTime.fromISO(billing_profile.deactivated_on).toLocaleString(DateTime.DATE_MED) : '' }}
                                     </td>
                                     <td class="px-6 py-4  text-right">
-                                        <Link v-if="billing_profile.can.update" class="ml-2 font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.edit', { billing_profile: billing_profile.id })">Update</Link>
-                                        <Link v-if="billing_profile.can.delete" as="button" method="delete" class="ml-2 font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('billing-profiles.destroy', { billing_profile: billing_profile.id })">Archive</Link>
+                                        <Link v-if="billing_profile.can.update" class="ml-2 font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.edit', { billing_profile: billing_profile.hash_id })">Update</Link>
+                                        <Link v-if="billing_profile.can.delete" as="button" method="delete" class="ml-2 font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('billing-profiles.destroy', { billing_profile: billing_profile.hash_id })">Archive</Link>
                                     </td>
                                 </tr>
                                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">

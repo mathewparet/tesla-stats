@@ -44,7 +44,7 @@
     }
 
     const updateModel = () => {
-        form.put(route('billing-profiles.update', {billing_profile: props.billingProfile.id}), {
+        form.put(route('billing-profiles.update', {billing_profile: props.billingProfile.hash_id}), {
             preserveScroll: true,
         })
     }
@@ -61,7 +61,7 @@
     <AppLayout :title="title">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                <Link :href="route('billing-profiles.index')" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">Billing Profiles</Link> <span class="font-medium text-gray-400 dark:text-gray-500" v-if="billingProfile?.id"> / <Link :href="route('billing-profiles.show', {billing_profile: billingProfile.id})" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">{{ billingProfile.name }}</Link></span> / {{ action }}
+                <Link :href="route('billing-profiles.index')" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">Billing Profiles</Link> <span class="font-medium text-gray-400 dark:text-gray-500" v-if="billingProfile?.hash_id"> / <Link :href="route('billing-profiles.show', {billing_profile: billingProfile.hash_id})" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">{{ billingProfile.name }}</Link></span> / {{ action }}
             </h2>
         </template>
 

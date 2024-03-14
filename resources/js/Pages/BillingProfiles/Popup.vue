@@ -25,7 +25,7 @@
     });
 
     const linkVehicle = () => {
-        form.post(route('billing-profiles.link', {billingProfile: currentSelection.value}), {
+        form.post(route('billing-profiles.link'), {
             preserveScroll: true,
             onSuccess: () => {
                 showModal.value = false;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Jobs\ImportChargesForVehicleForDuration;
+use App\Traits\HasHashId;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,12 @@ class Vehicle extends Model
     use HasFactory;
     use ExportsPermissions;
     use SoftDeletes;
+    use HasHashId;
+
+    protected function getHashIdConnection()
+    {
+        return 'vehicles';
+    }
 
     protected $fillable = [
         'name',

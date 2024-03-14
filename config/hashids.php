@@ -34,9 +34,15 @@ return [
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 
-        'alternative' => [
-            'salt' => 'your-salt-string',
-            'length' => 'your-length-integer',
+        'billing-profile' => [
+            'salt' => env('HASH_ID_SALT_BILLING_PROFILE',''),
+            'length' => 10,
+            // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+        ],
+
+        'vehicles' => [
+            'salt' => env('HASH_ID_SALT_VEHICLES',''),
+            'length' => 10,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 

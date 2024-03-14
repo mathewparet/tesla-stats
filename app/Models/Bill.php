@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
+use App\Traits\HasHashId;
 use App\Notifications\NewBillReady;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\Cache;
 use mathewparet\LaravelPolicyAbilitiesExport\Traits\ExportsPermissions;
-use Vinkla\Hashids\Facades\Hashids;
 
 class Bill extends Model
 {
     use HasFactory;
     use ExportsPermissions;
+    use HasHashId;
 
     protected $fillable = [
         'from',
@@ -28,7 +30,6 @@ class Bill extends Model
 
     protected $appends = [
         'total_cost',
-        'hash_id',
         'energy_consumed',
     ];
 
@@ -54,12 +55,6 @@ class Bill extends Model
     {
         return Attribute::make(
             get: fn() => Cache::remember("bills-total-cost-".$this->id, now()->addSeconds(config('bill.summary.cache')), fn() => $this->getCharges()->sum('cost'))
-        );
-    }
-    public function hashId(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => Hashids::encode($this->id)
         );
     }
 
