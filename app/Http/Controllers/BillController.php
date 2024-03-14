@@ -9,6 +9,7 @@ use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
 use App\Http\Resources\BillResourceCollection;
 use App\Http\Resources\ChargeResourceCollection;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BillController extends Controller
 {
@@ -27,8 +28,10 @@ class BillController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Bill $bill)
+    public function show($bill)
     {
+        $bill = Bill::find(Hashids::decode($bill)[0]);
+        
         $this->authorize('view', $bill);
 
         $charges = new ChargeResourceCollection($bill->getCharges()->orderBy('id', 'desc')->get());

@@ -62,7 +62,7 @@
                                         {{ bill.energy_consumed.toFixed(2) }} kWh
                                     </td>
                                     <td class="px-6 py-4  text-right">
-                                        <Link v-if="bill.can.view" class="ml-2 font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('bills.show', { bill: bill.id })">View</Link>
+                                        <Link v-if="bill.can.view" class="ml-2 font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('bills.show', { bill: bill.hash_id })">View</Link>
                                     </td>
                                 </tr>
                                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
