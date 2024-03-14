@@ -66,7 +66,7 @@ class Bill extends Model
     {
         return Charge::withinLocation($this->billingProfile->latitude, $this->billingProfile->longitude, $this->billingProfile->radius)
             ->whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('id'))
-            ->where('started_at', '>=', $this->from)
-            ->where('ended_at', '<', $this->to);
+            ->where('started_at', '>=', $this->from->shiftTimezone($this->billingProfile->timezone)->subDay()->startOfDay())
+            ->where('ended_at', '<', $this->to->shiftTimezone($this->billingProfile->timezone)->startOfDay());
     }
 }

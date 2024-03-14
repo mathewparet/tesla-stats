@@ -36,10 +36,12 @@ class NewBillReady extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)->markdown('emails.NewBillReady', [
-            'bill' => $this->bill,
-            'url' => $this->generateURL()
-        ]);
+        return (new MailMessage)
+                    ->subject('Tesla Electricity Usage for ' . $this->bill->billingProfile->name .' for the period ' . $this->bill->from->format('d-M-Y') . ' to ' . $this->bill->to->format('d-M-Y'))
+                    ->markdown('emails.NewBillReady', [
+                        'bill' => $this->bill,
+                        'url' => $this->generateURL()
+                    ]);
     }
 
     private function generateURL()

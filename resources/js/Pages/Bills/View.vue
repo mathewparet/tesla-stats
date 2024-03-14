@@ -11,10 +11,10 @@
 </script>
 
 <template>
-    <AppLayout title="Bills">
+    <AppLayout title="Usage">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                <Link :href="route('bills.index')" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">Bills</Link> / {{ DateTime.fromISO(bill.from).toLocaleString(DateTime.DATE_MED) }} - {{ DateTime.fromISO(bill.to).toLocaleString(DateTime.DATE_MED) }} ({{ bill.billing_profile.name }}) <span class="font-medium text-gray-600 dark:text-gray-500">| Total Cost: {{ bill.billing_profile.currency }} {{ bill.total_cost.toFixed(2) }} | Total Energy: {{ bill.energy_consumed.toFixed(2) }} kWh</span>
+                <Link :href="route('bills.index')" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">Usage</Link> / {{ DateTime.fromISO(bill.from).toLocaleString(DateTime.DATE_MED) }} - {{ DateTime.fromISO(bill.to).toLocaleString(DateTime.DATE_MED) }} ({{ bill.billing_profile.name }}) <span class="font-medium text-gray-600 dark:text-gray-500">| Total Cost: {{ bill.billing_profile.currency }} {{ bill.total_cost.toFixed(2) }} | Total Energy: {{ bill.energy_consumed.toFixed(2) }} kWh</span>
             </h2>
         </template>
 

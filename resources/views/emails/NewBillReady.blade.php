@@ -8,13 +8,14 @@
     @endforeach
 </ol>
 
-Charging Location: {{ $bill->billingProfile->address }}
+Location: {{ $bill->billingProfile->address }}
 
-Period: {{ $bill->from->format('d-M-Y') }} to {{ $bill->to->format('d-M-Y') }}
-
-Total Energy Used: {{ number_format($bill->energy_consumed, 2) }} kWh
-
-Total Cost of charging at this location: {{ number_format($bill->total_cost, 2) }}
+|  |  |
+|:---|---:|
+| **From** | {{ $bill->from->format('d-M-Y') }} |
+| **To** | {{ $bill->to->format('d-M-Y') }} |
+| **Total Energy** | {{ number_format($bill->energy_consumed, 2) }} kWh |
+| **Total Cost** | {{ $bill->billingProfile->currency }} {{ number_format($bill->total_cost, 2) }} |
 
 <x-mail::button :url="$url">
 View Breakdown
