@@ -31,7 +31,7 @@ class GenerateBills implements ShouldQueue
      */
     public function handle(TeslaAPIServiceManager $teslaAPIServiceManager): void
     {
-        foreach(BillingProfile::active()->get() as $billingProfile)
+        foreach(BillingProfile::get() as $billingProfile)
         {
             if($billingProfile->vehicles()->count() > 0)
             {
@@ -47,6 +47,9 @@ class GenerateBills implements ShouldQueue
                     $from = $this->getFromDate($billingProfile)->shiftTimezone($billingProfile->timezone);
 
                     $to = $this->getToDate($billingProfile)->shiftTimezone($billingProfile->timezone);
+
+                    if($from->gt($billingProfile->deactivated_on))
+                        break;
 
                     if(!$to->endOfDay()->isFuture())
                         $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));

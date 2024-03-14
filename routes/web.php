@@ -42,7 +42,8 @@ Route::middleware([
         Route::resource('vehicles', VehicleController::class)->except(['create', 'store', 'edit', 'update']);
         
         Route::get('billing-profiles/list', [BillingProfileController::class, 'list'])->name('billing-profiles.list');
-        Route::post('billing-profiles/{billingProfile}/link', [BillingProfileController::class, 'link'])->name('billing-profiles.link');
+        Route::post('billing-profiles/link', [BillingProfileController::class, 'link'])->name('billing-profiles.link');
+        // Route::post('billing-profiles/{billing_profile}/unlink', [BillingProfileController::class, 'unlink'])->name('billing-profiles.unlink');
         Route::resource('billing-profiles', BillingProfileController::class);
         
         Route::resource('/bills', BillController::class);

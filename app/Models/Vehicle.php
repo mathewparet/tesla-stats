@@ -46,12 +46,7 @@ class Vehicle extends Model
 
     public function scopeBillable($query)
     {
-        return $query->whereNotNull('billing_profile_id');
-    }
-
-    public static function booted()
-    {
-        static::updated(fn($vehicle) => array_key_exists('billing_profile_id', $vehicle->getChanges()) && $vehicle->getChanges()['billing_profile_id'] != null ? ImportChargesForVehicleForDuration::dispatch($vehicle) : null );
+        return $query->has('billingProfiles');
     }
 
     public function team()
@@ -59,9 +54,9 @@ class Vehicle extends Model
         return $this->belongsTo(Team::class);
     }
 
-    public function billingProfile()
+    public function billingProfiles()
     {
-        return $this->belongsTo(BillingProfile::class);
+        return $this->belongsToMany(BillingProfile::class);
     }
 
     public function charges()

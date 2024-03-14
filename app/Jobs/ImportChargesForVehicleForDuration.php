@@ -8,6 +8,7 @@ use App\Models\Vehicle;
 use Illuminate\Support\Arr;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
+use App\Models\BillingProfile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,10 +33,8 @@ class ImportChargesForVehicleForDuration implements ShouldQueue
 
     private function getCharges(TeslaAPIServiceManager $teslaAPIServiceManager)
     {
-        return $teslaAPIServiceManager->provider($this->getBillingProfile()->team->teslaAccount->provider)
-                ->timezone($this->getBillingProfile()->timezone)
-                ->location($this->getBillingProfile()->latitude, $this->getBillingProfile()->longitude, $this->getBillingProfile()->radius)
-                ->useAccount($this->getBillingProfile()->team->teslaAccount->config)
+        return $teslaAPIServiceManager->provider($this->vehicle->team->teslaAccount->provider)
+                ->useAccount($this->vehicle->team->teslaAccount->config)
                 ->getCharges($this->vehicle->vin, $this->from, $this->to);
     }
 
@@ -72,17 +71,13 @@ class ImportChargesForVehicleForDuration implements ShouldQueue
     {
         return [
             'vehicle'=>$this->vehicle->id, 
-            'billing_profile' => $this->getBillingProfile()->id,
             'from' => $this->from,
             'to' => $this->to,
-            'latitude' => $this->getBillingProfile()->latitude,
-            'longitude' => $this->getBillingProfile()->longitude,
-            'radius' => $this->getBillingProfile()->radius,
         ];
     }
 
     private function getBillingProfile()
     {
-        return $this->vehicle->billingProfile;
+        // return $this->billingProfile;
     }
 }

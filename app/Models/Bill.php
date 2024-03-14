@@ -51,22 +51,22 @@ class Bill extends Model
     public function totalCost(): Attribute
     {
         return Attribute::make(
-            get: fn() => Cache::remember("bills-total-cost-".$this->id, now()->addSeconds(60), fn() => $this->getCharges()->sum('cost'))
+            get: fn() => Cache::remember("bills-total-cost-".$this->id, now()->addSeconds(config('bill.summary.cache')), fn() => $this->getCharges()->sum('cost'))
         );
     }
 
     public function energyConsumed(): Attribute
     {
         return Attribute::make(
-            get: fn() => Cache::remember("bills-energ-consumed-".$this->id, now()->addSeconds(60), fn() => $this->getCharges()->sum('energy_consumed'))
+            get: fn() => Cache::remember("bills-energ-consumed-".$this->id, now()->addSeconds(config('bill.summary.cache')), fn() => $this->getCharges()->sum('energy_consumed'))
         );
     }
 
     public function getCharges()
     {
-        return Charge::withinLocation($this->billingProfile->latitude, $this->billingProfile->longitude, $this->billingProfile->radius)
-            ->whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('id'))
-            ->where('started_at', '>=', $this->from->shiftTimezone($this->billingProfile->timezone)->subDay()->startOfDay())
-            ->where('ended_at', '<', $this->to->shiftTimezone($this->billingProfile->timezone)->startOfDay());
+        return Charge::whereIn('vehicle_id', $this->billingProfile->vehicles()->pluck('vehicles.id'))
+                    ->withinLocation($this->billingProfile->latitude, $this->billingProfile->longitude, $this->billingProfile->radius)
+                    ->where('started_at', '>=', $this->from->shiftTimezone($this->billingProfile->timezone)->subDay()->startOfDay())
+                    ->where('ended_at', '<', $this->to->shiftTimezone($this->billingProfile->timezone)->startOfDay());
     }
 }

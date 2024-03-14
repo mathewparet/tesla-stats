@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BillingProfileMappingChanged;
 use DateTimeZone;
 use Inertia\Inertia;
 use App\Models\Vehicle;
@@ -59,22 +60,13 @@ class BillingProfileController extends Controller
         return Inertia::render('BillingProfiles/Create', compact('vehicles', 'timeZones'));
     }
 
-    private function attachVehicles(BillingProfile $billingProfile, Request $request)
+    private function attachVehicles(BillingProfile $billingProfile, $vehicles)
     {
-        $billingProfile->vehicles()->update([
-            'billing_profile_id' => null
-        ]);
-
-        $vehicles = Arr::wrap(optional($request->safe())->vehicles);
+        $vehicles = Arr::wrap($vehicles);
 
         $vehicles = Vehicle::findMany($vehicles);
 
-        DB::transaction(function() use($vehicles, $billingProfile) {
-            $vehicles->each(function($vehicle) use($billingProfile) {
-                $this->authorize('update',$vehicle);
-                $vehicle->update(['billing_profile_id' => $billingProfile->id]);
-            });
-        });
+        $billingProfile->vehicles()->sync($vehicles);
     }
 
     /**
@@ -84,7 +76,7 @@ class BillingProfileController extends Controller
     {
         $billing_profile = $request->user()->currentTeam->billingProfiles()->save(new BillingProfile($request->safe()->all()));
 
-        $this->attachVehicles($billing_profile, $request);
+        $this->attachVehicles($billing_profile, optional($request->safe())->vehicles);
 
         return redirect()->intended(route('billing-profiles.index'));
     }
@@ -120,22 +112,37 @@ class BillingProfileController extends Controller
     {
         $billingProfile->update($request->safe()->all());
 
-        $this->attachVehicles($billingProfile, $request);
+        $this->attachVehicles($billingProfile, optional($request->safe())->vehicles);
 
         return redirect()->intended(route('billing-profiles.index'));
     }
     
-    public function link(Request $request, BillingProfile $billingProfile)
+    public function link(Request $request)
     {
+        $this->authorize('link', BillingProfile::class);
+
+        $request->validate([
+            'billingProfiles.*' => 'required|exists:billing_profiles,id',
+            'vehicle' => 'required|exists:vehicles,id'
+        ]);
+
+        $vehicle = Vehicle::find($request->vehicle);
+        $vehicle->billingProfiles()->sync($request->billingProfiles);
+
+        if(count($request->billingProfiles) > 0) {
+            BillingProfileMappingChanged::dispatch($vehicle);
+        }
+    }
+    
+    public function unlink(Request $request, BillingProfile $billingProfile)
+    {
+        $this->authorize('update', $billingProfile);
+
         $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id'
         ]);
 
-        $vehicle = Vehicle::find($request->vehicle_id);
-        
-        $this->authorize('update', $vehicle);
-
-        $vehicle->update(['billing_profile_id' => $billingProfile->id]);
+        $billingProfile->vehicles()->detach(Vehicle::find($request->safe()->vehicle_id));
     }
 
     /**

@@ -37,7 +37,7 @@
                                         VIN
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Billing Profile
+                                        Billing Profiles
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-right">
                                         Action
@@ -56,13 +56,12 @@
                                         {{ vehicle.masked_vin }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span v-if="vehicle.billing_profile">
-                                            <Link v-if="vehicle.billing_profile.can.view" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.show', { billing_profile: vehicle.billing_profile.id })">{{ vehicle.billing_profile.name }}</Link>
-                                            <span v-if="vehicle.can.update"> / </span>
-                                            <Link v-if="vehicle.can.update" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.unlink', {vehicle: vehicle.id})">Unlink</Link>
-                                            <span v-if="vehicle.can.update"> / </span>
-                                        </span>
-                                        <button v-if="vehicle.can.update" class="font-medium hover:underline" :class="{'text-gray-600 dark:text-gray-500': vehicle.billing_profile, 'text-green-600 dark:text-green-500': !vehicle.billing_profile}" @click.prevent="() => profileSelector.show(vehicle)"><span v-if="vehicle.billing_profile">Change</span><span v-else>Link</span></button>
+                                        {{ vehicle.billing_profiles.map((billing_profile) => billing_profile.name).join(', ') }}
+                                        <span v-if="vehicle.billing_profiles.length"> / </span>
+                                        <button class="font-medium hover:underline text-green-600 dark:text-green-500" @click.prevent="() => profileSelector.show(vehicle)">
+                                            <span v-if="!vehicle.billing_profiles.length">Link</span>
+                                            <span v-else>Change</span>
+                                        </button>
                                     </td>
                                     <td class="px-6 py-4  text-right">
                                         <Link v-if="vehicle.can.delete" as="button" method="delete" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.destroy', { vehicle: vehicle.id })">Archive</Link>

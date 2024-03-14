@@ -31,6 +31,11 @@ class BillingProfilePolicy
     {
         return $user->currentTeam->userHasPermission($user, 'create');
     }
+    
+    public function link(User $user): bool
+    {
+        return $user->currentTeam->userHasPermission($user, 'update');
+    }
 
     /**
      * Determine whether the user can update the model.

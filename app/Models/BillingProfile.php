@@ -65,7 +65,7 @@ class BillingProfile extends Model
 
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class);
+        return $this->belongsToMany(Vehicle::class);
     }
 
     public function bills()
