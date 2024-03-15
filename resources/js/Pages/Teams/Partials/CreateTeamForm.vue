@@ -45,7 +45,7 @@ const createTeam = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Team Name" />
+                <InputLabel for="name" value="Group Name" />
                 <TextInput
                     id="name"
                     v-model="form.name"

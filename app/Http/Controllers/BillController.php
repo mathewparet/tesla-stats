@@ -28,13 +28,18 @@ class BillController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Bill $bill)
+    public function show(Request $request, Bill $bill)
     {
         $this->authorize('view', $bill);
 
         $charges = new ChargeResourceCollection($bill->getCharges()->orderBy('id', 'desc')->get());
 
-        return Inertia::render('Bills/View', compact('bill', 'charges'));
+        $latestBills = Bill::whereIn('billing_profile_id', $request->user()->currentTeam->billingProfiles->pluck('id'))->orderBy('id', 'desc')->limit(2)->get();
+
+        $isCurrent = $bill->is($latestBills[0]);
+        $isLatest = $bill->is($latestBills[1]);
+
+        return Inertia::render('Bills/View', compact('bill', 'charges', 'isCurrent', 'isLatest'));
     }
 
     /**

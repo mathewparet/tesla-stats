@@ -33,26 +33,17 @@ class GenerateBills implements ShouldQueue
     {
         foreach(BillingProfile::get() as $billingProfile)
         {
+            /**
+             * @var BillingProfile $billingProfile
+             */
             if($billingProfile->vehicles()->count() > 0)
             {
-                /**
-                 * @var BillingProfile $billingProfile
-                 */
-                for($from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); $to->endOfDay()->lte(now()); $from = $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
+                for(
+                    $from =  $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); 
+                    $to->endOfDay()->lte(now()), $from->lte($billingProfile->deactivated_on); 
+                    $from =  $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
                 {
-                    $account = $billingProfile->team->teslaAccount;
-
-                    $provider = $account->provider;
-
-                    $from = $this->getFromDate($billingProfile)->shiftTimezone($billingProfile->timezone);
-
-                    $to = $this->getToDate($billingProfile)->shiftTimezone($billingProfile->timezone);
-
-                    if($from->gt($billingProfile->deactivated_on))
-                        break;
-
-                    if(!$to->endOfDay()->isFuture())
-                        $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));
+                    $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));
                 }
             }
         }
@@ -72,13 +63,13 @@ class GenerateBills implements ShouldQueue
                 ? $this->getNextDay($latestBill->to, $billingProfile->bill_day -1)
                 :  $this->nextNthNoOverflow($billingProfile->bill_day -1, $billingProfile->activated_on);
 
-        return !$billingProfile->deactivated_on 
+        return (!$billingProfile->deactivated_on 
                     ? $to
                     : (
                         $to->gt($billingProfile->deactivated_on)
                         ? $billingProfile->deactivated_on
                         : $to
-                    );
+                    ))->shiftTimezone($billingProfile->timezone);
     }
 
     /**
@@ -91,9 +82,9 @@ class GenerateBills implements ShouldQueue
     {
         $latestBill = $this->getLatestBill($billingProfile);
 
-        return $latestBill
+        return ($latestBill
                 ? $this->nextNthNoOverflow($billingProfile->bill_day, $latestBill->to)
-                : $billingProfile->activated_on;
+                : $billingProfile->activated_on)->shiftTimezone($billingProfile->timezone);
     }
 
     /**

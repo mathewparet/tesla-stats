@@ -45,9 +45,11 @@ class Bill extends Model
 
     public function sendBill()
     {
-        if($this->to->lte(now()))
+        $lastBill = $this->billingProfile->bills()->latest('id')->limit(2)->get();
+
+        if($lastBill->count() == 2)
         {
-            $this->billingProfile->team->owner->notify(new NewBillReady($this));
+            $this->billingProfile->team->owner->notify(new NewBillReady($lastBill[1]));
         }
     }
 
