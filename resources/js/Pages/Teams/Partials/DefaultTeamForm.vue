@@ -22,16 +22,16 @@ const makeDefault = () => {
 <template>
     <ActionSection>
         <template #title>
-            Make Default Team
+            Make Default Group
         </template>
 
         <template #description>
-            Make this your default Team
+            Make this your default Group
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
-                Once marked as default, you will not be able to delete this team. Your current default team will then be deletable.
+                Once marked as default, you will not be able to delete this team. Your current default group will then be deletable.
             </div>
 
             <div class="mt-5">

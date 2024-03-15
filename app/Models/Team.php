@@ -69,4 +69,8 @@ class Team extends JetstreamTeam
         return $this->vehicles()->updateOrCreate(['key' => sha1($attributes['vin'].'-'.$this->id)], $attributes);
     }
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->resolveRouteBindingQuery($this, $value, $field)->first();
+    }
 }
