@@ -46,7 +46,7 @@ class NewBillReady extends Notification
 
     private function generateURL()
     {
-        return route('bills.show', ['bill' => $this->bill->hash_id, 'switchToTeam' => $this->bill->billingProfile->team->id]);
+        return route('bills.show', ['bill' => $this->bill->hash_id, 'switchToTeam' => $this->bill->billingProfile->team->hash_id]);
     }
 
     /**

@@ -18,7 +18,7 @@ class SwitchTeam
     {
         if($request->has('switchToTeam') && $request->user() && $request->user()->id)
         {
-            $request->user()->switchTeam(Team::find($request->get('switchToTeam')));
+            $request->user()->switchTeam(Team::findByHashID($request->get('switchToTeam')));
         }
 
         return $next($request);

@@ -33,6 +33,12 @@ return [
             'length' => 10,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
+        
+        'Team' => [
+            'salt' => env('HASH_ID_SALT_TEAM',''),
+            'length' => 10,
+            // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+        ],
 
         'BillingProfile' => [
             'salt' => env('HASH_ID_SALT_BILLING_PROFILE',''),

@@ -2,6 +2,7 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import { Link } from '@inertiajs/vue3';
     import { DateTime } from 'luxon';
+    import Card from '@/Components/Card.vue';
 
     defineProps({
         bill: Object,
@@ -14,12 +15,26 @@
     <AppLayout title="Usage">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                <Link :href="route('bills.index')" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">Usage</Link> / {{ DateTime.fromISO(bill.from).toLocaleString(DateTime.DATE_MED) }} - {{ DateTime.fromISO(bill.to).toLocaleString(DateTime.DATE_MED) }} ({{ bill.billing_profile.name }}) <span class="font-medium text-gray-600 dark:text-gray-500">| Total Cost: {{ bill.billing_profile.currency }} {{ bill.total_cost.toFixed(2) }} | Total Energy: {{ bill.energy_consumed.toFixed(2) }} kWh</span>
+                <Link :href="route('bills.index')" class="font-medium text-gray-400 dark:text-gray-500 hover:underline">Usage</Link> / {{ DateTime.fromISO(bill.from).toLocaleString(DateTime.DATE_MED) }} - {{ DateTime.fromISO(bill.to).toLocaleString(DateTime.DATE_MED) }} ({{ bill.billing_profile.name }})
             </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="mb-4 flex justify-between gap-4">
+                    <div class="grow">
+                        <Card title="From">{{ DateTime.fromISO(bill.from).toLocaleString(DateTime.DATE_MED) }}</Card>
+                    </div>
+                    <div class="grow">
+                        <Card title="To">{{ DateTime.fromISO(bill.to).toLocaleString(DateTime.DATE_MED) }}</Card>
+                    </div>
+                    <div class="grow">
+                        <Card title="Total Usage">{{ bill.energy_consumed.toFixed(2) }} kWh</Card>
+                    </div>
+                    <div class="grow">
+                        <Card title="Total Cost">{{ bill.billing_profile.currency }} {{ bill.total_cost.toFixed(2) }}</Card>
+                    </div>
+                </div>
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

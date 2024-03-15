@@ -6,18 +6,18 @@ use Vinkla\Hashids\Facades\Hashids as LaravelHashids;
 
 trait HasHashId
 {
-    protected function getHashIdConnection()
+    protected static function getHashIdConnection()
     {
-        $connection = $this->autoResolveConnectionName();
+        $connection = self::autoResolveConnectionName();
 
         return config('hashids.connections.'. $connection) 
             ? $connection
             : config('hasids.default');
     }
 
-    private function autoResolveConnectionName()
+    private static function autoResolveConnectionName()
     {
-        return class_basename($this);
+        return class_basename(self::class);
     }
 
     public function initializeHasHashId()
@@ -27,13 +27,18 @@ trait HasHashId
 
     public function resolveRouteBinding($value, $field = null)
     {
-        return self::findOrFail(LaravelHashids::connection($this->getHashIdConnection())->decode($value)[0]);
+        return self::findOrFail(LaravelHashids::connection(self::getHashIdConnection())->decode($value)[0]);
     }
 
     public function hashId(): Attribute
     {
         return Attribute::make(
-            get: fn() => LaravelHashids::connection($this->getHashIdConnection())->encode($this->id)
+            get: fn() => LaravelHashids::connection(self::getHashIdConnection())->encode($this->id)
         );
+    }
+
+    public static function findByHashID($hash_id)
+    {
+        return self::findOrFail(LaravelHashids::connection(self::getHashIdConnection())->decode($hash_id)[0]);
     }
 }

@@ -131,7 +131,7 @@
             <SecondaryButton @click="showModal = false" class="mr-2" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Close
             </SecondaryButton>
-            <PrimaryButton @click="linkVehicle">
+            <PrimaryButton @click="linkVehicle" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Update
             </PrimaryButton>
         </template>
