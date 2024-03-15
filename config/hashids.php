@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => 'main',
+    'default' => 'Bill',
 
     /*
     |--------------------------------------------------------------------------
@@ -28,19 +28,19 @@ return [
 
     'connections' => [
 
-        'main' => [
-            'salt' => env('HASH_ID_SALT',''),
+        'Bill' => [
+            'salt' => env('HASH_ID_SALT_BILL',''),
             'length' => 10,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 
-        'billing-profile' => [
+        'BillingProfile' => [
             'salt' => env('HASH_ID_SALT_BILLING_PROFILE',''),
             'length' => 10,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 
-        'vehicles' => [
+        'Vehicle' => [
             'salt' => env('HASH_ID_SALT_VEHICLES',''),
             'length' => 10,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'

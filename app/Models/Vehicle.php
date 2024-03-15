@@ -18,11 +18,6 @@ class Vehicle extends Model
     use SoftDeletes;
     use HasHashId;
 
-    protected function getHashIdConnection()
-    {
-        return 'vehicles';
-    }
-
     protected $fillable = [
         'name',
         'plate',

@@ -8,12 +8,22 @@ trait HasHashId
 {
     protected function getHashIdConnection()
     {
-        return 'main';
+        $connection = $this->autoResolveConnectionName();
+
+        return config('hashids.connections.'. $connection) 
+            ? $connection
+            : config('hasids.default');
+    }
+
+    private function autoResolveConnectionName()
+    {
+        return class_basename($this);
     }
 
     public function initializeHasHashId()
     {
         $this->append('hash_id');
+        $this->makeHidden('id');
     }
 
     public function resolveRouteBinding($value, $field = null)

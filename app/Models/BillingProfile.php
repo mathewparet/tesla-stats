@@ -30,11 +30,6 @@ class BillingProfile extends Model
     use SoftDeletes;
     use HasHashId;
 
-    protected function getHashIdConnection()
-    {
-        return 'billing-profile';
-    }
-
     protected $fillable = [
         'name',
         'activated_on',
