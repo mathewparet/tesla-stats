@@ -23,7 +23,6 @@ trait HasHashId
     public function initializeHasHashId()
     {
         $this->append('hash_id');
-        $this->makeHidden('id');
     }
 
     public function resolveRouteBinding($value, $field = null)
