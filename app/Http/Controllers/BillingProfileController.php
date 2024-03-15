@@ -27,7 +27,7 @@ class BillingProfileController extends Controller
      */
     public function index(Request $request)
     {
-        $billing_profiles = new BillingProfileResourceCollection($request->user()->currentTeam->billingProfiles()->paginate());
+        $billing_profiles = new BillingProfileResourceCollection($request->user()->currentTeam->billingProfiles()->latest()->paginate());
 
         return Inertia::render('BillingProfiles/Index', compact('billing_profiles'));
     }

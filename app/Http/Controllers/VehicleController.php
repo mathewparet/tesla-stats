@@ -21,7 +21,7 @@ class VehicleController extends Controller
      */
     public function index(Request $request)
     {
-        $vehicles = new VehicleResourceCollection($request->user()->currentTeam->vehicles()->with('billingProfiles')->paginate());
+        $vehicles = new VehicleResourceCollection($request->user()->currentTeam->vehicles()->latest()->with('billingProfiles')->paginate());
 
         return Inertia::render('Vehicles/Index', compact('vehicles'));
     }
