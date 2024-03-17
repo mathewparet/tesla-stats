@@ -41,18 +41,21 @@ const logout = () => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('bills.index')">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                <NavLink :href="route('bills.index')" :active="route().current().startsWith('bills.')">
+                                    Usage
                                 </NavLink>
-                                <NavLink :href="route('tesla-accounts.index')" :active="route().current().startsWith('tesla-accounts.')">
-                                    Tesla Account
+                                <NavLink :href="route('vehicles.index')" :active="route().current().startsWith('vehicles.')">
+                                    Vehicles
+                                </NavLink>
+                                <NavLink :href="route('billing-profiles.index')" :active="route().current().startsWith('billing-profiles.')">
+                                    Billing Profiles
                                 </NavLink>
                             </div>
                         </div>
@@ -77,16 +80,16 @@ const logout = () => {
                                         <div class="w-60">
                                             <!-- Team Management -->
                                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                                Manage Team
+                                                Manage Group
                                             </div>
 
                                             <!-- Team Settings -->
                                             <DropdownLink :href="route('teams.show', $page.props.auth.user.current_team)">
-                                                Team Settings
+                                                Group Settings
                                             </DropdownLink>
 
                                             <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
-                                                Create New Team
+                                                Create New Group
                                             </DropdownLink>
 
                                             <!-- Team Switcher -->
@@ -144,6 +147,10 @@ const logout = () => {
                                         <DropdownLink :href="route('profile.show')">
                                             Profile
                                         </DropdownLink>
+                                        
+                                        <DropdownLink :href="route('tesla-accounts.index')">
+                                            Tesla Account
+                                        </DropdownLink>
 
                                         <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
                                             API Tokens
@@ -194,11 +201,14 @@ const logout = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                        <ResponsiveNavLink :href="route('bills.index')" :active="route().current().startsWith('bills.')">
+                            Usage
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('tesla-accounts.index')" :active="route().current().startsWith('tesla-accounts.')">
-                            Tesla Account
+                        <ResponsiveNavLink :href="route('vehicles.index')" :active="route().current().startsWith('vehicles.')">
+                            Vehicles
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('billing-profiles.index')" :active="route().current().startsWith('billing-profiles.')">
+                            Billing Profiles
                         </ResponsiveNavLink>
                     </div>
 
@@ -240,16 +250,16 @@ const logout = () => {
                                 <div class="border-t border-gray-200 dark:border-gray-600" />
 
                                 <div class="block px-4 py-2 text-xs text-gray-400">
-                                    Manage Team
+                                    Manage Group
                                 </div>
 
                                 <!-- Team Settings -->
                                 <ResponsiveNavLink :href="route('teams.show', $page.props.auth.user.current_team)" :active="route().current('teams.show')">
-                                    Team Settings
+                                    Group Settings
                                 </ResponsiveNavLink>
 
                                 <ResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')" :active="route().current('teams.create')">
-                                    Create New Team
+                                    Create New Group
                                 </ResponsiveNavLink>
 
                                 <!-- Team Switcher -->

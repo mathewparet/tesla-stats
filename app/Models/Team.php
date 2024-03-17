@@ -2,15 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\HasHashId;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * @property \App\Models\TeslaAccount $teslaAccount
+ * @property array[\App\Models\Vehicle] $vehicles
+ * @property array[\App\Models\BillingProfile] $billingProfiles
+ */
 class Team extends JetstreamTeam
 {
     use HasFactory;
+    use HasHashId;
 
     /**
      * The attributes that should be cast.
@@ -45,5 +52,25 @@ class Team extends JetstreamTeam
     public function teslaAccount()
     {
         return $this->hasOne(TeslaAccount::class);
+    }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+
+    public function billingProfiles()
+    {
+        return $this->hasMany(BillingProfile::class);
+    }
+
+    public function updateOrCreateVehicle($attributes)
+    {
+        return $this->vehicles()->updateOrCreate(['key' => sha1($attributes['vin'].'-'.$this->id)], $attributes);
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->resolveRouteBindingQuery($this, $value, $field)->first();
     }
 }

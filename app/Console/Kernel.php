@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Jobs\ImportCharges;
+use App\Jobs\SyncVehicles;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -12,7 +14,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->job(ImportCharges::class)->everyTenMinutes();
+
+        $schedule->job(SyncVehicles::class)->everyTenMinutes();
+
+        $schedule->command('queue:prune-batches --unfinished=72 --cancelled=72')->daily();
     }
 
     /**

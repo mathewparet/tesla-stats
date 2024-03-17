@@ -5,7 +5,9 @@ use Exception;
 use Carbon\Carbon;
 use App\Contracts\TeslaAPIService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use App\APIService\TeslaAPIService as APIServiceTeslaAPIService;
 
 class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
@@ -25,25 +27,60 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
         return true;
     }
 
-    public function getCharges(string $vin, Carbon $from, Carbon $to): Collection
+    public function getCharges(string $vin, ?Carbon $from, ?Carbon $to): Collection
     {
-        $response = HTTP::withToken($this->token)->get(__(':url/:vin/charges?from=:from&to=:to', [
+        Log::debug('Parameters', compact('vin','from','to'));
+
+        $params = [
             'url' => $this->config['url'],
             'vin'=> $vin,
-            'from' => $from->timestamp,
-            'to' => $to->timestamp,
-        ]));
+            'from' => optional($from)->timestamp ?: 0,
+            'to' => optional($to)->timestamp,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'radius' => $this->radius,
+            'timezone' => $this->timezone,
+        ];
 
-        return collect($response->json()['results']);
+        
+        $url = __(':url/:vin/charges?from=:from&to=:to&origin_latitude=:latitude&origin_longitude=:longitude&origin_radius=:radius&timezone=:timezone', $params);
+                
+        Log::debug('API Call', compact('url'));
+
+        $response = HTTP::withToken($this->token)->get(__(':url/:vin/charges?from=:from&to=:to&origin_latitude=:latitude&origin_longitude=:longitude&origin_radius=:radius&timezone=:timezone', $params));
+
+        Log::debug('Response received', compact('response'));
+
+        $charges = collect($response->json()['results']);
+
+
+        return $charges->map(fn($charge) => [
+            'started_at' => Carbon::createFromTimestamp($charge['started_at']),
+            'ended_at' => Carbon::createFromTimestamp($charge['ended_at']),
+            'latitude' => $charge['latitude'],
+            'longitude' => $charge['longitude'],
+            'cost' => $charge['cost'],
+            'starting_battery' => $charge['starting_battery'],
+            'ending_battery' => $charge['ending_battery'],
+            'energy_consumed' => $charge['energy_used'],
+        ]);
     }
 
     public function getVehicles(): Collection 
     {
-        $response = HTTP::withToken($this->token)->get(__(':url/vehicles', [
-            'url' => $this->config['url'],
-        ]));
+        return Cache::remember('tesla-vehicles-'.sha1($this->token), 60, function() {
+            $response = HTTP::withToken($this->token)->get(__(':url/vehicles', [
+                'url' => $this->config['url'],
+            ]));
+    
+            $results = collect($response->json()['results']);
 
-        return collect($response->json()['results']);
+            return $results->map(fn($vehicle) => [
+                    'plate' => $vehicle['plate'],
+                    'vin'  => $vehicle['vin'],
+                    'name' => $vehicle['last_state']['display_name']
+            ]);
+        });
     }
 
     public function useAccount($config): TeslaAPIService

@@ -171,6 +171,7 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         App\Providers\TeslaAPIServiceProvider::class,
+        App\Providers\GeoCodeServiceProvider::class,
     ])->toArray(),
 
     /*

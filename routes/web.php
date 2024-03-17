@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\BillController;
+use App\Http\Controllers\BillingProfileController;
+use App\Http\Controllers\DefaultTeamController;
 use Inertia\Inertia;
 use App\Models\TeslaAccount;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\TeslaAccountController;
+use App\Http\Controllers\VehicleController;
+use App\Models\BillingProfile;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,16 +38,22 @@ Route::middleware([
 ])->group(function () {
 
     Route::middleware(['tesla.api.linked'])->group(function() {
-    
-        Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard');
-        })->name('dashboard');
-
+        Route::post('vehicles/{vehicle}/unlink', [VehicleController::class, 'unlink'])->name('vehicles.unlink');
+        Route::resource('vehicles', VehicleController::class)->except(['create', 'store', 'edit', 'update']);
+        
+        Route::get('billing-profiles/list', [BillingProfileController::class, 'list'])->name('billing-profiles.list');
+        Route::post('billing-profiles/link', [BillingProfileController::class, 'link'])->name('billing-profiles.link');
+        // Route::post('billing-profiles/{billing_profile}/unlink', [BillingProfileController::class, 'unlink'])->name('billing-profiles.unlink');
+        Route::resource('billing-profiles', BillingProfileController::class);
+        
+        Route::resource('/bills', BillController::class);
     });
-    Route::post('tesla-accounts/{provider}/get-vehicles', [TeslaAccountController::class, 'getVehicles'])->name('tesla-accounts.get-vehicles');
-    Route::get('/tesla-accounts', [TeslaAccountController::class, 'index'])->name('tesla-accounts.index');
-    Route::get('/tesla-accounts/{provider}', [TeslaAccountController::class, 'linkForm'])->name('tesla-accounts.link-form');
-    Route::post('/tesla-accounts/{provider}/link', [TeslaAccountController::class, 'link'])->name('tesla-accounts.link');
-    Route::post('/tesla-accounts/{provider}/unlink', [TeslaAccountController::class, 'unlink'])->name('tesla-accounts.unlink');
+    Route::post('/tesla-account/{provider}/get-vehicles', [TeslaAccountController::class, 'getVehicles'])->name('tesla-accounts.get-vehicles');
+    Route::get('/tesla-account', [TeslaAccountController::class, 'index'])->name('tesla-accounts.index');
+    Route::get('/tesla-account/{provider}', [TeslaAccountController::class, 'linkForm'])->name('tesla-accounts.link-form');
+    Route::post('/tesla-account/{provider}/link', [TeslaAccountController::class, 'link'])->name('tesla-accounts.link');
+    Route::post('/tesla-account/{provider}/unlink', [TeslaAccountController::class, 'unlink'])->name('tesla-accounts.unlink');
+
+    Route::post('/teams/{team}/make-default', DefaultTeamController::class)->name('teams.make-default');
 
 });

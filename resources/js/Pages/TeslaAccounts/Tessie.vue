@@ -84,13 +84,13 @@
                                 autofocus
                                 @keyup.prevent="vehicles=null"
                             />
-                            <InputHelp class="mt-2">This data is encrypted with AES-256 bit.</InputHelp>
+                            <InputHelp class="mt-2">You can find the Tessie API key at <a class="underline text-sm text-blue-600 dark:text-blue-400" href="https://dash.tessie.com/settings/api" target="_blank">https://dash.tessie.com/settings/api</a></InputHelp>
                             <InputError :message="form.errors['config.token']" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4" v-if="vehicles">
                             <InputLabel for="vehicles" value="Vehicles" />
                             <ol class="text-gray-600 dark:text-gray-400 list-decimal pl-4">
-                                <li v-for="vehicle in vehicles" :key="vehicle.vin">{{ vehicle.display_name }} - {{ vehicle.plate }} / {{ vehicle.vin }}</li>
+                                <li v-for="vehicle in vehicles" :key="vehicle.vin">{{ vehicle.name }} - {{ vehicle.plate }} / {{ vehicle.vin }}</li>
                             </ol>
                         </div>
                     </template>

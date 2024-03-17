@@ -7,42 +7,51 @@ use App\Models\TeslaAccount;
 use Illuminate\Http\Request;
 use App\Contracts\TeslaAPIServiceManager;
 use App\Http\Requests\LinkTessieAPIRequest;
-use App\Http\Resources\TeslaAccountCollection;
-use App\Http\Requests\StoreTeslaAccountRequest;
-use App\Http\Requests\UpdateTeslaAccountRequest;
+use App\Jobs\SyncVehiclesForAccount;
 
 class TeslaAccountController extends Controller
 {
+    public function __construct(
+        private TeslaAPIServiceManager $teslaAPIServiceManager
+    )
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, TeslaAPIServiceManager $teslaAPIServiceManager)
+    public function index(Request $request)
     {
         $teslaAccount = $request->user()->currentTeam->teslaAccount;
 
-        $providers = $teslaAPIServiceManager->getProviders();
+        $providers = $this->teslaAPIServiceManager->getProviders();
 
-        return Inertia::render('TeslaAccounts/Index', compact('teslaAccount', 'providers'));
+        $can = [
+            'link' => $request->user()->can('create', TeslaAccount::class),
+        ];
+
+        return Inertia::render('TeslaAccounts/Index', compact('teslaAccount', 'providers', 'can'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function linkForm(TeslaAPIServiceManager $teslaAPIServiceManager, $provider)
+    public function linkForm($provider)
     {
         $this->authorize('create', TeslaAccount::class);
 
-        abort_if(!in_array($provider, $teslaAPIServiceManager->getProviders()), 404);
+        $this->abortIfProviderIsInvalid($provider);
 
-        return Inertia::render("TeslaAccounts/${provider}");
+        return Inertia::render("TeslaAccounts/{$provider}");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function link($provider, LinkTessieAPIRequest $request, TeslaAPIServiceManager $teslaAPIServiceManager)
+    public function link($provider, LinkTessieAPIRequest $request)
     {
-        abort_if(!in_array($provider, $teslaAPIServiceManager->getProviders()), 404);
+        $this->abortIfProviderIsInvalid($provider);
 
         $this->authorize('create', TeslaAccount::class);
 
@@ -50,6 +59,8 @@ class TeslaAccountController extends Controller
             'provider' => $provider,
             'config' => $request->config
         ]));
+
+        SyncVehiclesForAccount::dispatchSync($request->user()->currentTeam->teslaAccount);
 
         return redirect()->intended(route('tesla-accounts.index'));
     }
@@ -73,37 +84,36 @@ class TeslaAccountController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function unlink($provider, Request $request, TeslaAPIServiceManager $teslaAPIServiceManager)
+    public function unlink($provider, Request $request)
     {
-        abort_if(!in_array($provider, $teslaAPIServiceManager->getProviders()), 404);
+        $this->abortIfProviderIsInvalid($provider);
 
         $this->authorize('delete', $request->user()->currentTeam->teslaAccount);
         
         $request->user()->currentTeam->teslaAccount->delete();
     }
 
-    public function getVehicles($provider, LinkTessieAPIRequest $request, TeslaAPIServiceManager $teslaAPIServiceManager)
+    private function getVehiclesList($provider, $request)
+    {
+        return $this->teslaAPIServiceManager
+                    ->provider($provider)
+                    ->useAccount($request->config)
+                    ->getVehicles();
+    }
+
+    private function abortIfProviderIsInvalid($provider)
+    {
+        abort_if(!in_array($provider, $this->teslaAPIServiceManager->getProviders()), 404);
+    }
+
+    public function getVehicles($provider, LinkTessieAPIRequest $request)
     {
         $this->authorize('create', TeslaAccount::class);
 
-        abort_if(!in_array($provider, $teslaAPIServiceManager->getProviders()), 404);
+        $this->abortIfProviderIsInvalid($provider);
 
-        $vehicles = $teslaAPIServiceManager
-                        ->provider($provider)
-                        ->useAccount($request->config)
-                        ->getVehicles();
+        $vehicles = $this->getVehiclesList($provider, $request);
 
-        $v = collect();
-
-        foreach($vehicles->all() as $vehicle)
-        {
-            $v->push([
-                'plate'  => $vehicle['plate'],
-                'vin'  => $vehicle['vin'],
-                'display_name' => $vehicle['last_state']['display_name']
-            ]);
-        }
-
-        return back()->with('flash', ['vehicles' => $v->all()]);
+        return back()->with('flash', ['vehicles' => $vehicles]);
     }
 }
