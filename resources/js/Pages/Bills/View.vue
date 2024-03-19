@@ -14,30 +14,39 @@
     });
 
     /**
-     * Calculate daily totals based on the input data.
+     * Calculate daily totals based on the provided data.
      *
-     * @param {array} data - The input data array
-     * @return {array} An array of daily totals
+     * @param {Array} data - The data to calculate totals from.
+     *     Each item in the array should have the following properties:
+     *     - started_at: The start date and time of the item (ISO 8601 formatted string).
+     *     - cost: The cost of the item (string representing a number).
+     *     - energy_consumed: The energy consumed of the item (string representing a number).
+     * @return {Array} An array of objects containing the calculated daily totals.
+     *     Each object in the array has the following properties:
+     *     - date: The date of the daily total (formatted as a medium-length date).
+     *     - totalCost: The total cost for the day (number).
+     *     - totalEnergy: The total energy consumed for the day (number).
      */
     const calculateDailyTotals = (data) => {
-        const dailyTotals = {};
-
-        data.forEach((item) => {
-            // Convert the date to the user's local date
-            const localDate = DateTime.fromISO(item.started_at).toLocaleString(DateTime.DATE_MED);
-
-            if (!dailyTotals[localDate]) {
-                dailyTotals[localDate] = {
-                    date: localDate,
-                    totalCost: 0,
-                    totalEnergy: 0
-                };
+        // Reduce the data array into an object, grouping items by date.
+        // For each item, add its cost and energy consumed to the corresponding date's total.
+        const totalsByDate = data.reduce((acc, item) => {
+            const date = DateTime.fromISO(item.started_at).toLocaleString(DateTime.DATE_MED);
+            
+            // If the date hasn't been encountered before, initialize its totals to 0.
+            if (!acc[date]) {
+                acc[date] = { date, totalCost: 0, totalEnergy: 0 };
             }
-            dailyTotals[localDate].totalCost += parseFloat(item.cost);
-            dailyTotals[localDate].totalEnergy += parseFloat(item.energy_consumed);
-        });
-
-        return Object.values(dailyTotals);
+            
+            // Add the item's cost and energy consumed to the date's totals.
+            acc[date].totalCost += parseFloat(item.cost);
+            acc[date].totalEnergy += parseFloat(item.energy_consumed);
+            
+            return acc;
+        }, {});
+        
+        // Return the array of daily totals, extracting the values from the object.
+        return Object.values(totalsByDate);
     }
 
     const chartCharges = computed(() => {
@@ -57,7 +66,7 @@
                     label: 'Energy',
                     backgroundColor: '#679900',
                     data: data.map((item) => item.totalEnergy.toFixed(2))
-                }
+                },
             ]
         }
     })
@@ -118,7 +127,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="charge in charges.data" :key="provider" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                <tr v-for="(charge, index) in charges.data" :key="provider" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                     <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATETIME_MED) }}
                                     </td>
