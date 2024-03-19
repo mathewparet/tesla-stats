@@ -13,42 +13,54 @@
         isLatest: Boolean,
     });
 
-    const reverseCharges = ref([])
+    /**
+     * Calculate daily totals based on the input data.
+     *
+     * @param {array} data - The input data array
+     * @return {array} An array of daily totals
+     */
+    const calculateDailyTotals = (data) => {
+        const dailyTotals = {};
 
-    onMounted(() => {
-        reverseCharges.value = props.charges.data.reverse();
-    })
+        data.forEach((item) => {
+            // Convert the date to the user's local date
+            const localDate = DateTime.fromISO(item.started_at).toLocaleString(DateTime.DATE_MED);
+
+            if (!dailyTotals[localDate]) {
+                dailyTotals[localDate] = {
+                    date: localDate,
+                    totalCost: 0,
+                    totalEnergy: 0
+                };
+            }
+            dailyTotals[localDate].totalCost += parseFloat(item.cost);
+            dailyTotals[localDate].totalEnergy += parseFloat(item.energy_consumed);
+        });
+
+        return Object.values(dailyTotals);
+    }
 
     const chartCharges = computed(() => {
-        const labels = reverseCharges.value.map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
+        const data = calculateDailyTotals(props.charges.data);
+
+        console.log(data);
 
         return {
-            labels: labels,
+            labels: data.map((item) => item.date),
             datasets: [
                 {
                     label: 'Cost',
                     backgroundColor: '#6775F5',
-                    data: reverseCharges.value.map((charge) => charge.cost.toFixed(2))
+                    data: data.map((item) => item.totalCost.toFixed(2))
                 },
-            ]
-        }
-    })
-    
-    const chartEnergy = computed(() => {
-        const labels = reverseCharges.value.map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
-
-        return {
-            labels,
-            datasets: [
                 {
                     label: 'Energy',
-                    backgroundColor: '#6775F5',
-                    data: reverseCharges.value.map((charge) => charge.energy_consumed.toFixed(2))
+                    backgroundColor: '#679900',
+                    data: data.map((item) => item.totalEnergy.toFixed(2))
                 }
             ]
         }
     })
-
 </script>
 
 <template>
@@ -75,12 +87,9 @@
                         <Card title="Total Cost">{{ bill.billing_profile.currency }} {{ bill.total_cost.toFixed(2) }}</Card>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4 justify-between mb-4">
+                <div class="grid grid-cols-1 gap-4 justify-between mb-4">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                        <LineChart key="charge" :data="chartCharges" :options="{responsive: true, maintainAspectRatio: true, plugins: {tooltip: {callbacks: { label: (context) => bill.billing_profile.currency +' '+context.formattedValue}}}, scales: {y: {title:{ display: true, text: 'Cost in '+bill.billing_profile.currency}, ticks: {stepSize: 1}}}}" />
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                        <LineChart key="energy" :data="chartEnergy" :options="{responsive: true, maintainAspectRatio: true, plugins: {tooltip: {callbacks: { label: (context) => context.formattedValue + ' kWh'}}}, scales: { y: {title:{ display: true, text: 'kWh'}, ticks: {stepSize: 5}}}}" />
+                        <LineChart key="charge" :data="chartCharges" :options="{responsive: true, maintainAspectRatio: true, scales: {y: { ticks: {stepSize: 1}}}}" />
                     </div>
                 </div>
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
