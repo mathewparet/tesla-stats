@@ -4,7 +4,7 @@
     import { DateTime } from 'luxon';
     import Card from '@/Components/Card.vue';
     import LineChart from '@/Components/LineChart.vue';
-    import { computed } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
 
     const props = defineProps({
         bill: Object,
@@ -13,23 +13,29 @@
         isLatest: Boolean,
     });
 
+    const reverseCharges = ref([])
+
+    onMounted(() => {
+        reverseCharges.value = props.charges.data.reverse();
+    })
+
     const chartCharges = computed(() => {
-        const labels = props.charges.data.reverse().map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
+        const labels = reverseCharges.value.map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
 
         return {
-            labels,
+            labels: labels,
             datasets: [
                 {
                     label: 'Cost',
                     backgroundColor: '#6775F5',
-                    data: props.charges.data.reverse().map((charge) => charge.cost.toFixed(2))
+                    data: reverseCharges.value.map((charge) => charge.cost.toFixed(2))
                 },
             ]
         }
     })
     
     const chartEnergy = computed(() => {
-        const labels = props.charges.data.reverse().map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
+        const labels = reverseCharges.value.map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
 
         return {
             labels,
@@ -37,7 +43,7 @@
                 {
                     label: 'Energy',
                     backgroundColor: '#6775F5',
-                    data: props.charges.data.reverse().map((charge) => charge.energy_consumed.toFixed(2))
+                    data: reverseCharges.value.map((charge) => charge.energy_consumed.toFixed(2))
                 }
             ]
         }
