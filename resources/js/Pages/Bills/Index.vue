@@ -18,7 +18,9 @@
             return billDate >= twelveMonthsAgo && billDate <= currentDate;
         });
 
-        const labels = lastTwelveMonthsData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
+        const reversedData = lastTwelveMonthsData.slice().reverse(); // Reverse the data array
+
+        const labels = reversedData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
 
         return {
             labels,
@@ -26,7 +28,7 @@
                 {
                     label: 'Cost',
                     backgroundColor: '#6775F5',
-                    data: lastTwelveMonthsData.map((bill) => bill.total_cost.toFixed(2))
+                    data: reversedData.map((bill) => bill.total_cost.toFixed(2))
                 },
             ]
         }
@@ -41,7 +43,9 @@
             return billDate >= twelveMonthsAgo && billDate <= currentDate;
         });
 
-        const labels = lastTwelveMonthsData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
+        const reversedData = lastTwelveMonthsData.slice().reverse(); // Reverse the data array
+
+        const labels = reversedData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
 
         return {
             labels,
@@ -49,7 +53,7 @@
                 {
                     label: 'Energy',
                     backgroundColor: '#679900',
-                    data: lastTwelveMonthsData.map((bill) => bill.energy_consumed.toFixed(2))
+                    data: reversedData.map((bill) => bill.energy_consumed.toFixed(2))
                 }
             ]
         }

@@ -52,20 +52,20 @@
     const chartCharges = computed(() => {
         const data = calculateDailyTotals(props.charges.data);
 
-        console.log(data);
+        const reversedData = data.slice().reverse(); // Reverse the data array
 
         return {
-            labels: data.map((item) => item.date),
+            labels: reversedData.map((item) => item.date),
             datasets: [
                 {
                     label: 'Cost',
                     backgroundColor: '#6775F5',
-                    data: data.map((item) => item.totalCost.toFixed(2))
+                    data: reversedData.map((item) => item.totalCost.toFixed(2))
                 },
                 {
                     label: 'Energy',
                     backgroundColor: '#679900',
-                    data: data.map((item) => item.totalEnergy.toFixed(2))
+                    data: reversedData.map((item) => item.totalEnergy.toFixed(2))
                 },
             ]
         }
