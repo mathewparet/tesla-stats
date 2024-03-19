@@ -10,7 +10,15 @@
     });
 
     const chartCharges = computed(() => {
-        const labels = props.bills.data.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
+        const currentDate = DateTime.now();
+        const twelveMonthsAgo = currentDate.minus({ months: 12 });
+
+        const lastTwelveMonthsData = props.bills.data.filter((bill) => {
+            const billDate = DateTime.fromISO(bill.from);
+            return billDate >= twelveMonthsAgo && billDate <= currentDate;
+        });
+
+        const labels = lastTwelveMonthsData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
 
         return {
             labels,
@@ -18,22 +26,30 @@
                 {
                     label: 'Cost',
                     backgroundColor: '#6775F5',
-                    data: props.bills.data.map((bill) => bill.total_cost.toFixed(2))
+                    data: lastTwelveMonthsData.map((bill) => bill.total_cost.toFixed(2))
                 },
             ]
         }
     })
-    
+
     const chartEnergy = computed(() => {
-        const labels = props.bills.data.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
+        const currentDate = DateTime.now();
+        const twelveMonthsAgo = currentDate.minus({ months: 12 });
+
+        const lastTwelveMonthsData = props.bills.data.filter((bill) => {
+            const billDate = DateTime.fromISO(bill.from);
+            return billDate >= twelveMonthsAgo && billDate <= currentDate;
+        });
+
+        const labels = lastTwelveMonthsData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
 
         return {
             labels,
             datasets: [
                 {
                     label: 'Energy',
-                    backgroundColor: '#6775F5',
-                    data: props.bills.data.map((bill) => bill.energy_consumed.toFixed(2))
+                    backgroundColor: '#679900',
+                    data: lastTwelveMonthsData.map((bill) => bill.energy_consumed.toFixed(2))
                 }
             ]
         }
