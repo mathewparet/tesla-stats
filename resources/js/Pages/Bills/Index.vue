@@ -2,10 +2,62 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import { Link } from '@inertiajs/vue3';
     import { DateTime } from 'luxon';
+    import { computed, ref } from 'vue';
+    import LineChart from '@/Components/LineChart.vue';
 
-    defineProps({
+    const props = defineProps({
         bills: Object,
     });
+
+    const chartCharges = computed(() => {
+        const currentDate = DateTime.now();
+        const twelveMonthsAgo = currentDate.minus({ months: 12 });
+
+        const lastTwelveMonthsData = props.bills.data.filter((bill) => {
+            const billDate = DateTime.fromISO(bill.from);
+            return billDate >= twelveMonthsAgo && billDate <= currentDate;
+        });
+
+        const reversedData = lastTwelveMonthsData.slice().reverse(); // Reverse the data array
+
+        const labels = reversedData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Cost',
+                    backgroundColor: '#6775F5',
+                    data: reversedData.map((bill) => bill.total_cost.toFixed(2))
+                },
+            ]
+        }
+    })
+
+    const chartEnergy = computed(() => {
+        const currentDate = DateTime.now();
+        const twelveMonthsAgo = currentDate.minus({ months: 12 });
+
+        const lastTwelveMonthsData = props.bills.data.filter((bill) => {
+            const billDate = DateTime.fromISO(bill.from);
+            return billDate >= twelveMonthsAgo && billDate <= currentDate;
+        });
+
+        const reversedData = lastTwelveMonthsData.slice().reverse(); // Reverse the data array
+
+        const labels = reversedData.map((bill) => DateTime.fromISO(bill.from).monthShort + '-' + DateTime.fromISO(bill.to).monthShort + ' \'' + DateTime.fromISO(bill.to).year);
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Energy',
+                    backgroundColor: '#679900',
+                    data: reversedData.map((bill) => bill.energy_consumed.toFixed(2))
+                }
+            ]
+        }
+    })
 </script>
 
 <template>
@@ -18,6 +70,14 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 gap-4 justify-between mb-4">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+                        <LineChart key="charge" :data="chartCharges" :options="{responsive: true, maintainAspectRatio: true}" />
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+                        <LineChart key="energy" :data="chartEnergy" :options="{responsive: true, maintainAspectRatio: true}" />
+                    </div>
+                </div>
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

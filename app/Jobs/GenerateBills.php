@@ -38,12 +38,15 @@ class GenerateBills implements ShouldQueue
              */
             if($billingProfile->vehicles()->count() > 0)
             {
-                for(
-                    $from =  $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile); 
-                    $to->endOfDay()->lte(now()), $from->lte($billingProfile->deactivated_on); 
-                    $from =  $this->getFromDate($billingProfile), $to = $this->getToDate($billingProfile))
+                $from = $this->getFromDate($billingProfile); // Initialize $from outside the loop
+
+                while($from->lte($billingProfile->deactivated_on)) // Use while loop instead of for loop
                 {
+                    $to = $this->getToDate($billingProfile); // Calculate $to inside the loop
+
                     $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));
+
+                    $from = $this->getFromDate($billingProfile); // Update $from for the next iteration
                 }
             }
         }
