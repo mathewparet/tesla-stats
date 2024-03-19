@@ -3,13 +3,45 @@
     import { Link } from '@inertiajs/vue3';
     import { DateTime } from 'luxon';
     import Card from '@/Components/Card.vue';
+    import LineChart from '@/Components/LineChart.vue';
+    import { computed } from 'vue';
 
-    defineProps({
+    const props = defineProps({
         bill: Object,
         charges: Array,
         isCurrent: Boolean,
         isLatest: Boolean,
     });
+
+    const chartCharges = computed(() => {
+        const labels = props.charges.data.reverse().map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Cost',
+                    backgroundColor: '#6775F5',
+                    data: props.charges.data.reverse().map((charge) => charge.cost.toFixed(2))
+                },
+            ]
+        }
+    })
+    
+    const chartEnergy = computed(() => {
+        const labels = props.charges.data.reverse().map((charge) => DateTime.fromISO(charge.started_at).toLocaleString(DateTime.DATE_MED));
+
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Energy',
+                    backgroundColor: '#6775F5',
+                    data: props.charges.data.reverse().map((charge) => charge.energy_consumed.toFixed(2))
+                }
+            ]
+        }
+    })
 
 </script>
 
@@ -35,6 +67,14 @@
                     </div>
                     <div class="grow">
                         <Card title="Total Cost">{{ bill.billing_profile.currency }} {{ bill.total_cost.toFixed(2) }}</Card>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 justify-between mb-4">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+                        <LineChart key="charge" :data="chartCharges" :options="{responsive: true, maintainAspectRatio: true, plugins: {tooltip: {callbacks: { label: (context) => bill.billing_profile.currency +' '+context.formattedValue}}}, scales: {y: {title:{ display: true, text: 'Cost in '+bill.billing_profile.currency}, ticks: {stepSize: 1}}}}" />
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+                        <LineChart key="energy" :data="chartEnergy" :options="{responsive: true, maintainAspectRatio: true, plugins: {tooltip: {callbacks: { label: (context) => context.formattedValue + ' kWh'}}}, scales: { y: {title:{ display: true, text: 'kWh'}, ticks: {stepSize: 5}}}}" />
                     </div>
                 </div>
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
