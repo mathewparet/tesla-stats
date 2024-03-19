@@ -30,7 +30,7 @@ defineProps({
                 <rect x="9" y="10" width="6" height="5" fill="#FFFFFF"/>
                 <path d="M8 15h8v2H8z" fill="#FFFFFF"/>
             </svg>
-            <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to the Tesla Energy Billing App</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to {{$page.props.config.app.name}}</h1>
             <p class="text-lg text-gray-600 mb-8">Track your energy consumption and billing cycle easily with our app!</p>
             <Link :href="route('register')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Get Started</Link>
             
@@ -48,7 +48,7 @@ defineProps({
         </div>
     </div>
     <footer class="bg-gray-800 text-white text-center py-4">
-        <p>&copy; {{ new Date().getFullYear() }} Tesla Energy Billing App. All rights reserved.</p>
+        <p>&copy; {{ new Date().getFullYear() }} {{$page.props.config.app.name}}. All rights reserved.</p>
     </footer>
 
 </template>
