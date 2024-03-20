@@ -99,7 +99,8 @@ services:
     image: ${DEPLOYMENT_IMAGE_PHP}
     # Switch to "webuser" before running `php artisan`
     # Declare command in list manner for environment variable expansion
-    command: ["su", "www-data", "-c", "php artisan schedule:work"]
+    # command: ["su", "www-data", "-c", "php artisan schedule:work"]
+    command: ["php", "artisan", "schedule:work"]
     environment:
       PHP_FPM_POOL_NAME: "my-app_task"
 
@@ -107,7 +108,8 @@ services:
     image: ${DEPLOYMENT_IMAGE_PHP}
     # Switch to "webuser" before running `php artisan`
     # Declare command in list manner for environment variable expansion
-    command: ["su", "www-data", "-c", "php artisan queue:work --tries=3"]
+    # command: ["su", "www-data", "-c", "php artisan queue:work --tries=3"]
+    command: ["php", "artisan", "queue:work --tries=3"]
     environment:
       PHP_FPM_POOL_NAME: "my-app_queue"
 
