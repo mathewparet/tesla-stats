@@ -73,6 +73,8 @@ services:
       - "storage_logs:/var/www/html/storage/logs"
     environment:
       PHP_POOL_NAME: "my-php-app"
+      AUTORUN_ENABLED: true
+      AUTORUN_LARAVEL_MIGRATION: true
     deploy:
       replicas: 2
       update_config:
