@@ -30,6 +30,8 @@ class GenerateBillsForBillingProfile implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('Starting bill generation for ', ['billing_profile_id' => $this->billingProfile->id]);
+
         if ($this->batch() && $this->batch()->cancelled()) return;
 
         $from = $this->getFromDate(); // Initialize $from outside the loop
@@ -45,6 +47,8 @@ class GenerateBillsForBillingProfile implements ShouldQueue
 
             $from = $this->getFromDate(); // Update $from for the next iteration
         }
+
+        Log::info('Bill generation completed for ', ['billing_profile_id' => $this->billingProfile->id]);
     }
 
     private function isFromDateBeforeOrEqualToDeactivationDate($from)
