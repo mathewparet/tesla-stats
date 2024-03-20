@@ -53,7 +53,11 @@ class GenerateBillsForBillingProfile implements ShouldQueue
 
     private function isFromDateBeforeOrEqualToDeactivationDate($from)
     {
-        return tap($from->lte($this->billingProfile->deactivated_on), fn($not_deactivated) => Log::debug('Checking if deactivated date of '. $this->billingProfile->deactivated_on.' is before from date of '.$from, compact('not_deactivated')));
+        return tap(
+            $from->lte($this->billingProfile->deactivated_on), 
+            fn($not_deactivated) 
+                => Log::debug('Checking if deactivated date of '. $this->billingProfile->deactivated_on.' is before from date of '.$from, compact('not_deactivated'))
+        );
     }
 
     /**
