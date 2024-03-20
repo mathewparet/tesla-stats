@@ -120,14 +120,59 @@ configs:
 
 volumes:
   certificates:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/certificates'
   database_data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/database_data'
   database_custom_conf:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/certificates'
   database_shared:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/database_shared'
   storage_private:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/storage_private'
   storage_public:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/storage_public'
   storage_sessions:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/storage_sessions'
   storage_logs:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/storage_logs'
   tunnel_ssh_host_keys:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/tesla_stats_volume_syd1_01/tunnel_ssh_host_keys'
 
 networks:
   web-public:
