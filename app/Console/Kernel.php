@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\GenerateBills;
 use App\Jobs\ImportCharges;
 use App\Jobs\SyncVehicles;
 use Illuminate\Console\Scheduling\Schedule;
@@ -17,6 +18,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(ImportCharges::class)->everyTenMinutes();
 
         $schedule->job(SyncVehicles::class)->everyTenMinutes();
+
+        $schedule->job(GenerateBills::class)->everyTenMinutes();
 
         $schedule->command('queue:prune-batches --unfinished=72 --cancelled=72')->daily();
     }
