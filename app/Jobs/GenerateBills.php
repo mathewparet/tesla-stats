@@ -6,11 +6,13 @@ use Carbon\Carbon;
 use App\Models\Bill;
 use App\Models\Charge;
 use App\Models\Vehicle;
+use Illuminate\Bus\Batch;
 use Illuminate\Bus\Queueable;
 use App\Models\BillingProfile;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Contracts\TeslaAPIServiceManager;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
@@ -29,27 +31,24 @@ class GenerateBills implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(TeslaAPIServiceManager $teslaAPIServiceManager): void
+    public function handle(): void
     {
-        foreach(BillingProfile::get() as $billingProfile)
-        {
-            /**
-             * @var BillingProfile $billingProfile
-             */
-            if($billingProfile->vehicles()->count() > 0)
-            {
-                $from = $this->getFromDate($billingProfile); // Initialize $from outside the loop
+        Log::info("Starting job");
 
-                while($from->lte($billingProfile->deactivated_on)) // Use while loop instead of for loop
-                {
-                    $to = $this->getToDate($billingProfile); // Calculate $to inside the loop
+        $billing_profiles = tap(BillingProfile::get(), fn($profiles) => Log::info('Found '. $profiles->count() . ' billing profiles'));
 
-                    $bill = $billingProfile->bills()->save(new Bill(compact('from','to')));
+        $jobs = $billing_profiles
+                    ->filter(fn($profile) => $profile->vehicles()->count())
+                    ->map(fn($profile) => new GenerateBillsForBillingProfile($profile));
 
-                    $from = $this->getFromDate($billingProfile); // Update $from for the next iteration
-                }
-            }
-        }
+        $batch = Bus::batch($jobs)
+                    ->before(fn(Batch $batch) => Log::info('Starting Bill Generation Batch', ['batch_id' => $batch->id]))
+                    ->progress(fn(Batch $batch) => Log::info('Bill Generation Progress', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'pending' => $batch->pendingJobs, 'total' => $batch->totalJobs]))
+                    ->then(fn(Batch $batch) => Log::info('Bill Generation Batch completed successfully.', ['batch_id' => $batch->id, 'processed' => $batch->processedJobs(), 'total' => $batch->totalJobs, 'failed' => $batch->failedJobs]))
+                    ->name('Bill Generation')
+                    ->dispatch();
+
+        Log::info('Ending Job');
     }
 
     /**
