@@ -136,7 +136,7 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/mnt/tesla_stats_volume_syd1_01/certificates'
+      device: '/mnt/tesla_stats_volume_syd1_01/database_custom_conf'
   database_shared:
     driver: local
     driver_opts:
