@@ -56,7 +56,7 @@ services:
          ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQChAZM4K0T5zUU+mxm4fpbNQScCxRXfipom0cOXPyyGXh8eTCJLu2vaeCQli4cd/2y51JwAun9O2go6ejPS5ETXDFm+E9K/LKE3Ea0k/W4ol6fOuBzILNdedJI2rltpqv8w9K8Xn+VrvK/q7zF2JzkajZxHknwKTGhbllVoM8RZRRUYJSj7EYyAeZCYXLAH4DacxV4yWyhY/cca5YRRFnnxuvVByvBp87eN6Yt/6FwwV1pp7p6mx9S80xlJQP/T3nk7EEGOQpC9RW82aNk0IjZsbZnF0RNob9f8z50JjF+M9iDz5wkzO+9WThOohwFXgmXsCl5Dw8HauLUOc46019m38tXR5j62vZuc6jWvqKm8WffxMtg8P/3uhiuKOPNV0fFlfVOh2pOnHCN5JmMZr6KHcYfeeeH5nOeiKQx3vx4ndh1ZVoRuZgs0WrXGgYZd56NAxB4zXyvnQs4MeZQBeZAma+1v6Hw1Vs0tiozn6JoXbDmWAeqsCe0yVaV0dllJZoE= mathewparet@gMac.local
          # End Keys"
       # Be sure to configure the allowed IP addresses too
-      ALLOWED_IPS: "AllowUsers *@127.0.0.1"
+      ALLOWED_IPS: "AllowUsers *@*"
     volumes:
       - tunnel_ssh_host_keys:/etc/ssh/ssh_host_keys
     networks:
