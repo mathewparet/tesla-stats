@@ -62,3 +62,11 @@ jobs:
           DB_USERNAME: "${{ secrets.DB_USERNAME }}"
           DB_PASSWORD: "${{ secrets.DB_PASSWORD }}"
           DEPLOYMENT_IMAGE_PHP: "ghcr.io/${{ github.repository }}:${{ github.ref_name }}"
+
+      - name: Running migrations
+        run: | 
+          php artisan migrate --force
+
+      - name: Restarting queues
+        run: | 
+          php artisan queue:restart
