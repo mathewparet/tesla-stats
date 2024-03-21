@@ -16,7 +16,7 @@
     const form = useForm({});
 
     const unlinkAccount = (provider) => {
-        form.delete(route('tesla-accounts.unlink', { provider: provider }), {
+        form.post(route('tesla-accounts.unlink', { provider: provider }), {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
