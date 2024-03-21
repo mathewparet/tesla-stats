@@ -19,8 +19,7 @@
         form.delete(route('vehicles.destroy', { vehicle: vehicle.hash_id }), {
             preserveScroll: true,
             onSuccess: () => {
-                if(archiveConfirmation.value)
-                    archiveConfirmation.value.show = false;
+                archiveConfirmation.value?.hide();
             },
         });
     }
@@ -81,18 +80,16 @@
                                     <td class="px-6 py-4  text-right">
                                         <ActionConfirmation 
                                             ref="archiveConfirmation"
-                                            confirmation-label="Archive Billing Profile"
-                                            title="Archive Billing Profile"
+                                            confirmation-label="Archive Vehicle"
                                             type="danger"
                                             :key="vehicle.hash_id"
                                             :processing="form.processing"
+                                            :item-name="vehicle.name"
                                             v-if="vehicle.can.delete"
-                                            :confirmation-code="vehicle.name"
-                                            require-confirmation
                                             @confirmed="archiveVehicle(vehicle)"
                                         >
                                             <template #message>
-                                                If you continue, you will no longer see usages for this profile. Are you sure you want to archive this billing profile?
+                                                If you continue, all data related to this vehicle will be archived. Are you sure you want to archive this vehicle?
                                             </template>
                                             <span class="cursor-pointer ml-2 font-medium text-red-600 dark:text-red-500 hover:underline">Archive</span>
                                         </ActionConfirmation>

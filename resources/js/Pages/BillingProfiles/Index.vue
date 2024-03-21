@@ -17,8 +17,7 @@
         form.delete(route('billing-profiles.destroy', { billing_profile: billing_profile.hash_id }), {
             preserveScroll: true,
             onSuccess: () => {
-                if(archiveConfirmation.value)
-                    archiveConfirmation.value.show = false;
+                archiveConfirmation.value?.hide()
             },
         });
     }
@@ -82,13 +81,11 @@
                                         <ActionConfirmation 
                                             ref="archiveConfirmation"
                                             confirmation-label="Archive Billing Profile"
-                                            title="Archive Billing Profile"
                                             type="danger"
                                             :key="billing_profile.hash_id"
                                             :processing="form.processing"
+                                            :item-name="billing_profile.name"
                                             v-if="billing_profile.can.delete"
-                                            :confirmation-code="billing_profile.name"
-                                            require-confirmation
                                             @confirmed="deleteProfile(billing_profile)"
                                         >
                                             <template #message>

@@ -3,7 +3,7 @@
     import DangerButton from '@/Components/DangerButton.vue';
     import SecondaryButton from '@/Components/SecondaryButton.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
     import TextInput from '@/Components/TextInput.vue';
     import InputError from '@/Components/InputError.vue';
     import InputLabel from '@/Components/InputLabel.vue';
@@ -19,10 +19,9 @@
         code: null
     })
 
-    defineProps({
+    const props = defineProps({
         title: {
             type: String,
-            default: 'Confirmation Required'
         },
         message: {
             type: String,
@@ -53,13 +52,17 @@
         },
         confirmationCode: {
             type: String,
-            default: 'CONFIRM'
         },
         when: {
             type: Boolean,
             default: true
+        },
+        itemName: {
+            type: String,
         }
     });
+
+    const confirmationCodeText = computed(() => props.confirmationCode ? props.confirmationCode : (props.itemName ? props.itemName : 'CONFIRM'));
 
     const confirmed = (requireConfirmation, confirmationCode) => {
         if(requireConfirmation) {
@@ -85,7 +88,9 @@
             emit('confirmed', data.value)
     }
 
-    defineExpose({ data, show});
+    const titleText = computed(() => props.title ? props.title : props.confirmationLabel + (props.itemName ? ' - ' + props.itemName : ''));
+
+    defineExpose({ data, show, close: () => show.value = false});
 
 </script>
 
@@ -95,21 +100,21 @@
         </span>
         <ConfirmationModal :show="show==true" @close="cancel">
             <template #title>
-                <slot name="title">{{title}}</slot>
+                <slot name="title">{{titleText}}</slot>
             </template>
 
             <template #content>
                 <slot name="message">{{message}}</slot>
                 <span v-if="requireConfirmation">
                     <span class="mt-2 flex">
-                        To confirm, please enter <span class="ml-2 mr-2 font-mono bg-gray-100 px-1 rounded">{{confirmationCode}}</span> below.
+                        To confirm, please enter <span class="ml-2 mr-2 font-mono bg-gray-100 px-1 rounded">{{confirmationCodeText}}</span> below.
                     </span>
                     <span class="mt-2">
                         <TextInput
                             v-model="confirmation.code"
                             type="text"
                             class="mt-1 block w-full"
-                            @keyup.enter="confirmed(requireConfirmation, confirmationCode)"
+                            @keyup.enter="confirmed(requireConfirmation, confirmationCodeText)"
                             ref="codeInput"
                         />
                     </span>
@@ -124,18 +129,18 @@
                 <PrimaryButton
                     v-if="type=='primary'"
                     class="ml-3"
-                    :class="{ 'opacity-25': processing  || (requireConfirmation && confirmation.code!=confirmationCode)}"
-                    :disabled="processing || (requireConfirmation && confirmation.code!=confirmationCode)"
-                    @click="confirmed(requireConfirmation, confirmationCode)"
+                    :class="{ 'opacity-25': processing  || (requireConfirmation && confirmation.code!=confirmationCodeText)}"
+                    :disabled="processing || (requireConfirmation && confirmation.code!=confirmationCodeText)"
+                    @click="confirmed(requireConfirmation, confirmationCodeText)"
                 >
                     {{confirmationLabel}}
                 </PrimaryButton>
                 <DangerButton
                     v-if="type=='danger'"
                     class="ml-3"
-                    :class="{ 'opacity-25': processing  || (requireConfirmation && confirmation.code!=confirmationCode)}"
-                    :disabled="processing || (requireConfirmation && confirmation.code!=confirmationCode)"
-                    @click="confirmed(requireConfirmation, confirmationCode)"
+                    :class="{ 'opacity-25': processing  || (requireConfirmation && confirmation.code!=confirmationCodeText)}"
+                    :disabled="processing || (requireConfirmation && confirmation.code!=confirmationCodeText)"
+                    @click="confirmed(requireConfirmation, confirmationCodeText)"
                 >
                     {{confirmationLabel}}
                 </DangerButton>
