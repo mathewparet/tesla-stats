@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Bill;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
 use App\Http\Resources\BillResourceCollection;
 use App\Http\Resources\ChargeResourceCollection;
-use Vinkla\Hashids\Facades\Hashids;
 
 class BillController extends Controller
 {
@@ -32,9 +33,11 @@ class BillController extends Controller
     {
         $this->authorize('view', $bill);
 
-        $charges = new ChargeResourceCollection($bill->getCharges()->orderBy('id', 'desc')->get());
+        $currentTeam = $request->user()->currentTeam;
 
-        $latestBills = Bill::whereIn('billing_profile_id', $request->user()->currentTeam->billingProfiles->pluck('id'))->orderBy('id', 'desc')->limit(2)->get();
+        $charges = Cache::remember('bill-'.$bill->hash_id, 60, fn() => new ChargeResourceCollection($bill->getCharges()->orderBy('id', 'desc')->get()));
+
+        $latestBills = Cache::remember('latest-bills-'.$currentTeam->hash_id, 60, fn() => Bill::whereIn('billing_profile_id', $currentTeam->billingProfiles->pluck('id'))->orderBy('id', 'desc')->take(2)->get());
 
         $isCurrent = $bill->is($latestBills[0]);
         $isLatest = $bill->is($latestBills[1]);
