@@ -11,8 +11,6 @@
 
     const showModal = ref(false);
 
-    const currentSelection = ref(null);
-
     const currentVehicle = ref(null);
 
     defineProps({
@@ -84,7 +82,7 @@
                         :key="billingProfile.id"
                         type="button"
                         class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600"
-                        :class="{'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none rounded-b-none': i > 0 && canCreateNewProfile, 'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none': i > 0 && !canCreateNewProfile , 'rounded-b-none': i != Object.keys(billingProfiles).length - 1}"
+                        :class="{'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none rounded-b-none': i > 0 && canCreateNewProfile, 'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none': i > 0 && !canCreateNewProfile , 'rounded-b-none': i != Object.keys(billingProfiles).length - 1, 'bg-indigo-100': billingProfileIsSelected(billingProfile)}"
                         @click="addRemoveProfile(billingProfile)"
                     >
                         <div >
@@ -92,10 +90,6 @@
                                 <div class="text-sm text-gray-600 dark:text-gray-400" :class="{'font-semibold': billingProfileIsSelected(billingProfile)}">
                                     {{ billingProfile.name }}
                                 </div>
-
-                                <svg v-if="billingProfileIsSelected(billingProfile)" class="ms-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
                             </div>
 
                             <div class="mt-2 text-xs text-gray-600 dark:text-gray-400 text-start">

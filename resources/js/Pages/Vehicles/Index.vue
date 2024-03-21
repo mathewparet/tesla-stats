@@ -1,14 +1,29 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
-    import { Link } from '@inertiajs/vue3';
+    import { Link, useForm } from '@inertiajs/vue3';
     import BillingProfilesPopup from '@/Pages/BillingProfiles/Popup.vue';
     import { ref } from 'vue';
-
+    import ActionConfirmation from '@/Components/ActionConfirmation.vue';
+    import Paginator from '@/Components/Paginator.vue';
+    
     const profileSelector = ref(null);
+
+    const archiveConfirmation = ref(null)
 
     defineProps({
         vehicles: Object,
     });
+
+    const form = useForm({});
+
+    const archiveVehicle = (vehicle) => {
+        form.delete(route('vehicles.destroy', { vehicle: vehicle.hash_id }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                archiveConfirmation.value?.hide();
+            },
+        });
+    }
 
 </script>
 
@@ -64,11 +79,26 @@
                                         </button>
                                     </td>
                                     <td class="px-6 py-4  text-right">
-                                        <Link v-if="vehicle.can.delete" as="button" method="delete" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.destroy', { vehicle: vehicle.hash_id })">Archive</Link>
+                                        <ActionConfirmation 
+                                            ref="archiveConfirmation"
+                                            confirmation-label="Archive Vehicle"
+                                            type="danger"
+                                            :key="vehicle.hash_id"
+                                            :processing="form.processing"
+                                            :item-name="vehicle.name"
+                                            v-if="vehicle.can.delete"
+                                            @confirmed="archiveVehicle(vehicle)"
+                                        >
+                                            <template #message>
+                                                If you continue, all data related to this vehicle will be archived. Are you sure you want to archive this vehicle?
+                                            </template>
+                                            <span class="cursor-pointer ml-2 font-medium text-red-600 dark:text-red-500 hover:underline">Archive</span>
+                                        </ActionConfirmation>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <Paginator :links="vehicles.meta.links" />
                     </div>
                 </div>
             </div>

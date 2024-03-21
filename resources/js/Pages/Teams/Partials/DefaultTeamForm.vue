@@ -5,16 +5,21 @@ import ActionSection from '@/Components/ActionSection.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import ActionConfirmation from '@/Components/ActionConfirmation.vue';
 
 const props = defineProps({
     team: Object,
 });
 
+const makeDefaultConfirmation = ref(null)
+
 const form = useForm({});
 
 const makeDefault = () => {
     form.post(route('teams.make-default', props.team), {
-
+        onSuccess: () => {
+            makeDefaultConfirmation.value?.hide()
+        }
     });
 };
 </script>
@@ -35,9 +40,17 @@ const makeDefault = () => {
             </div>
 
             <div class="mt-5">
-                <PrimaryButton @click="makeDefault" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Make Default
-                </PrimaryButton>
+                <ActionConfirmation 
+                    ref="makeDefaultConfirmation"
+                    confirmation-label="Make Group Default"
+                    type="primary"
+                    :key="team.hash_id"
+                    :processing="form.processing"
+                    :item-name="team.name"
+                    @confirmed="makeDefault"
+                >
+                    <PrimaryButton>Make Default</PrimaryButton>
+                </ActionConfirmation>
             </div>
         </template>
     </ActionSection>
