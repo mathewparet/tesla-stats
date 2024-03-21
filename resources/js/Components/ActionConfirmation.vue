@@ -106,18 +106,20 @@
             <template #content>
                 <slot name="message">{{message}}</slot>
                 <span v-if="requireConfirmation">
-                    <span class="mt-2 flex">
-                        To confirm, please enter <span class="ml-2 mr-2 font-mono bg-gray-100 px-1 rounded">{{confirmationCodeText}}</span> below.
-                    </span>
-                    <span class="mt-2">
-                        <TextInput
-                            v-model="confirmation.code"
-                            type="text"
-                            class="mt-1 block w-full"
-                            @keyup.enter="confirmed(requireConfirmation, confirmationCodeText)"
-                            ref="codeInput"
-                        />
-                    </span>
+                    <div class="grid">
+                        <span class="mt-2 flex">
+                            To confirm, please enter <span class="ml-2 mr-2 font-mono bg-gray-100 px-1 rounded">{{confirmationCodeText}}</span> below.
+                        </span>
+                        <span class="mt-2">
+                            <TextInput
+                                v-model="confirmation.code"
+                                type="text"
+                                class="mt-1 block w-full"
+                                @keyup.enter="confirmed(requireConfirmation, confirmationCodeText)"
+                                ref="codeInput"
+                            />
+                        </span>
+                    </div>
                 </span>
             </template>
 
