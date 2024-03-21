@@ -1,14 +1,29 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
-    import { Link } from '@inertiajs/vue3';
+    import { Link, useForm } from '@inertiajs/vue3';
     import BillingProfilesPopup from '@/Pages/BillingProfiles/Popup.vue';
     import { ref } from 'vue';
+    import ActionConfirmation from '@/Components/ActionConfirmation.vue';
 
     const profileSelector = ref(null);
+
+    const archiveConfirmation = ref(null)
 
     defineProps({
         vehicles: Object,
     });
+
+    const form = useForm({});
+
+    const archiveVehicle = (vehicle) => {
+        form.delete(route('vehicles.destroy', { vehicle: vehicle.hash_id }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                if(archiveConfirmation.value)
+                    archiveConfirmation.value.show = false;
+            },
+        });
+    }
 
 </script>
 
@@ -64,7 +79,23 @@
                                         </button>
                                     </td>
                                     <td class="px-6 py-4  text-right">
-                                        <Link v-if="vehicle.can.delete" as="button" method="delete" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('vehicles.destroy', { vehicle: vehicle.hash_id })">Archive</Link>
+                                        <ActionConfirmation 
+                                            ref="archiveConfirmation"
+                                            confirmation-label="Archive Billing Profile"
+                                            title="Archive Billing Profile"
+                                            type="danger"
+                                            :key="vehicle.hash_id"
+                                            :processing="form.processing"
+                                            v-if="vehicle.can.delete"
+                                            :confirmation-code="vehicle.name"
+                                            require-confirmation
+                                            @confirmed="archiveVehicle(vehicle)"
+                                        >
+                                            <template #message>
+                                                If you continue, you will no longer see usages for this profile. Are you sure you want to archive this billing profile?
+                                            </template>
+                                            <span class="cursor-pointer ml-2 font-medium text-red-600 dark:text-red-500 hover:underline">Archive</span>
+                                        </ActionConfirmation>
                                     </td>
                                 </tr>
                             </tbody>
