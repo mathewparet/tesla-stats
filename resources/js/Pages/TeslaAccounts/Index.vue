@@ -1,13 +1,29 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
-    import { Link } from '@inertiajs/vue3';
+    import { Link, useForm } from '@inertiajs/vue3';
     import ActionSection from '@/Components/ActionSection.vue';
+    import ActionConfirmation from '@/Components/ActionConfirmation.vue';
+    import { ref } from 'vue';
 
     defineProps({
         teslaAccount: Object,
         providers: Array,
         can: Object,
     });
+
+    const unlinkConfirmation = ref(null)
+
+    const form = useForm({});
+
+    const unlinkAccount = (provider) => {
+        form.delete(route('tesla-accounts.unlink', { provider: provider }), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                unlinkConfirmation.value?.hide();
+            }
+        })
+    }
 
 </script>
 
@@ -42,7 +58,22 @@
                                             {{ provider }}
                                         </th>
                                         <td class="px-6 py-4  text-right">
-                                            <Link v-if="teslaAccount?.provider == provider && teslaAccount.can.delete" as="button" method="post" class="font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('tesla-accounts.unlink', { provider: provider })">Unlink</Link>
+                                            <ActionConfirmation 
+                                                ref="unlinkConfirmation"
+                                                confirmation-label="Unlink Account"
+                                                type="danger"
+                                                :key="provider"
+                                                :processing="form.processing"
+                                                :item-name="provider"
+                                                v-if="teslaAccount?.provider == provider && teslaAccount.can.delete"
+                                                require-confirmation
+                                                @confirmed="unlinkAccount(provider)"
+                                            >
+                                                <template #message>
+                                                    If you continue, polling of new data stops and any vehicles attached to this account will not be updated.
+                                                </template>
+                                                <span class="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline">Unlink</span>
+                                            </ActionConfirmation>
                                             <Link v-else-if="!teslaAccount && can.link" class="font-medium text-green-600 dark:text-green-500 hover:underline" :href="route('tesla-accounts.link-form', { provider: provider})">Link</Link>
                                         </td>
                                     </tr>

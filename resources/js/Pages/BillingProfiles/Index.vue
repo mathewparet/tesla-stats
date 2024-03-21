@@ -1,11 +1,26 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
-    import { Link } from '@inertiajs/vue3';
+    import { Link, useForm } from '@inertiajs/vue3';
     import { DateTime } from 'luxon';
+    import ActionConfirmation from '@/Components/ActionConfirmation.vue';
+    import { ref } from 'vue';
 
     defineProps({
         billing_profiles: Object,
     });
+
+    const form = useForm({});
+
+    const archiveConfirmation = ref(null)
+
+    const deleteProfile = (billing_profile) => {
+        form.delete(route('billing-profiles.destroy', { billing_profile: billing_profile.hash_id }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                archiveConfirmation.value?.hide()
+            },
+        });
+    }
 
 </script>
 
@@ -63,7 +78,21 @@
                                     </td>
                                     <td class="px-6 py-4  text-right">
                                         <Link v-if="billing_profile.can.update" class="ml-2 font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('billing-profiles.edit', { billing_profile: billing_profile.hash_id })">Update</Link>
-                                        <Link v-if="billing_profile.can.delete" as="button" method="delete" class="ml-2 font-medium text-red-600 dark:text-red-500 hover:underline" :href="route('billing-profiles.destroy', { billing_profile: billing_profile.hash_id })">Archive</Link>
+                                        <ActionConfirmation 
+                                            ref="archiveConfirmation"
+                                            confirmation-label="Archive Billing Profile"
+                                            type="danger"
+                                            :key="billing_profile.hash_id"
+                                            :processing="form.processing"
+                                            :item-name="billing_profile.name"
+                                            v-if="billing_profile.can.delete"
+                                            @confirmed="deleteProfile(billing_profile)"
+                                        >
+                                            <template #message>
+                                                If you continue, you will no longer see usages for this profile. Are you sure you want to archive this billing profile?
+                                            </template>
+                                            <span class="cursor-pointer ml-2 font-medium text-red-600 dark:text-red-500 hover:underline">Archive</span>
+                                        </ActionConfirmation>
                                     </td>
                                 </tr>
                                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
