@@ -20,8 +20,7 @@ class BillController extends Controller
     public function index(Request $request)
     {
         $this->authorize('viewAny', Bill::class);
-
-        $bills = new BillResourceCollection(Bill::whereIn('billing_profile_id', $request->user()->currentTeam->billingProfiles->pluck('id'))->orderBy('id', 'desc')->paginate());
+        $bills = Cache::remember('bills-'.$request->user()->currentTeam->hash_id.'-'.$request->get('page', 1), 60, fn() => new BillResourceCollection(Bill::whereIn('billing_profile_id', $request->user()->currentTeam->billingProfiles->pluck('id'))->orderBy('id', 'desc')->paginate()));
 
         return Inertia::render('Bills/Index', compact('bills'));
     }
