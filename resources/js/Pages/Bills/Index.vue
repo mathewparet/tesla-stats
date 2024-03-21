@@ -107,22 +107,22 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(bill, i) in bills.data" :key="provider" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <td scope="row" :class="{'text-gray-400 dark:text-gray-500': i==0, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1}" class="px-6 py-4 font-medium  whitespace-nowrap">
+                                    <td scope="row" :class="{'text-gray-400 dark:text-gray-500': i==0 && bills.meta.current_page == 1, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1 && bills.meta.current_page == 1}" class="px-6 py-4 font-medium  whitespace-nowrap">
                                         {{ DateTime.fromISO(bill.from).toLocaleString(DateTime.DATE_MED) }}
                                     </td>
-                                    <td class="px-6 py-4" :class="{'text-gray-400 dark:text-gray-500': i==0, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1}">
+                                    <td class="px-6 py-4" :class="{'text-gray-400 dark:text-gray-500': i==0 && bills.meta.current_page == 1, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1 && bills.meta.current_page == 1}">
                                         {{DateTime.fromISO(bill.to).toLocaleString(DateTime.DATE_MED)}}
                                     </td>
-                                    <td class="px-6 py-4" :class="{'text-gray-400 dark:text-gray-500': i==0, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1}">
+                                    <td class="px-6 py-4" :class="{'text-gray-400 dark:text-gray-500': i==0 && bills.meta.current_page == 1, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1 && bills.meta.current_page == 1}">
                                         {{ bill.billing_profile.name }}
                                     </td>
-                                    <td class="px-6 py-4  text-right" :class="{'text-gray-400 dark:text-gray-500': i==0, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1}">
+                                    <td class="px-6 py-4  text-right" :class="{'text-gray-400 dark:text-gray-500': i==0 && bills.meta.current_page == 1, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1 && bills.meta.current_page == 1}">
                                         {{ bill.billing_profile.currency }} {{ bill.total_cost.toFixed(2) }}
                                     </td>
-                                    <td class="px-6 py-4  text-right" :class="{'text-gray-400 dark:text-gray-500': i==0, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1}">
+                                    <td class="px-6 py-4  text-right" :class="{'text-gray-400 dark:text-gray-500': i==0 && bills.meta.current_page == 1, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1 && bills.meta.current_page == 1}">
                                         {{ bill.energy_consumed.toFixed(2) }} kWh
                                     </td>
-                                    <td class="px-6 py-4  text-right" :class="{'text-gray-400 dark:text-gray-500': i==0, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1}">
+                                    <td class="px-6 py-4  text-right" :class="{'text-gray-400 dark:text-gray-500': i==0 && bills.meta.current_page == 1, 'text-gray-900 dark:text-white': i!=0, 'bg-indigo-200': i==1 && bills.meta.current_page == 1}">
                                         <Link v-if="bill.can.view" :class="{'text-gray-400 dark:text-gray-500': i==0, 'text-blue-600 dark:text-blue-500': i, 'bg-indigo-200': i==1!=0}" class="ml-2 font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="route('bills.show', { bill: bill.hash_id })">Details</Link>
                                     </td>
                                 </tr>
