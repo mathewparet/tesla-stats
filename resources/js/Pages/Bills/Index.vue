@@ -4,6 +4,8 @@
     import { DateTime } from 'luxon';
     import { computed, ref } from 'vue';
     import LineChart from '@/Components/LineChart.vue';
+    import Paginator from '@/Components/Paginator.vue';
+
 
     const props = defineProps({
         bills: Object,
@@ -131,6 +133,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <Paginator :links="bills.meta.links" />
                     </div>
                 </div>
             </div>

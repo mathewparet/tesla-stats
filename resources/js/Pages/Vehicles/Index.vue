@@ -4,7 +4,8 @@
     import BillingProfilesPopup from '@/Pages/BillingProfiles/Popup.vue';
     import { ref } from 'vue';
     import ActionConfirmation from '@/Components/ActionConfirmation.vue';
-
+    import Paginator from '@/Components/Paginator.vue';
+    
     const profileSelector = ref(null);
 
     const archiveConfirmation = ref(null)
@@ -97,6 +98,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <Paginator :links="vehicles.meta.links" />
                     </div>
                 </div>
             </div>

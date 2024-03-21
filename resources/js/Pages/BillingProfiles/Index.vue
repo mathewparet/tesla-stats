@@ -4,6 +4,7 @@
     import { DateTime } from 'luxon';
     import ActionConfirmation from '@/Components/ActionConfirmation.vue';
     import { ref } from 'vue';
+    import Paginator from '@/Components/Paginator.vue';
 
     defineProps({
         billing_profiles: Object,
@@ -105,6 +106,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <Paginator :links="billing_profiles.meta.links" />
                     </div>
                 </div>
             </div>
