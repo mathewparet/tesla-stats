@@ -11,8 +11,6 @@
 
     const showModal = ref(false);
 
-    const currentSelection = ref(null);
-
     const currentVehicle = ref(null);
 
     defineProps({
