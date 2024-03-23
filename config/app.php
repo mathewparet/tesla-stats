@@ -172,6 +172,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
         App\Providers\TeslaAPIServiceProvider::class,
         App\Providers\GeoCodeServiceProvider::class,
+        App\Providers\PasskeyServiceProvider::class,
     ])->toArray(),
 
     /*

@@ -3,6 +3,7 @@
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\BillingProfileController;
 use App\Http\Controllers\DefaultTeamController;
+use App\Http\Controllers\PasskeyController;
 use Inertia\Inertia;
 use App\Models\TeslaAccount;
 use Illuminate\Support\Facades\Route;
@@ -55,5 +56,8 @@ Route::middleware([
     Route::post('/tesla-account/{provider}/unlink', [TeslaAccountController::class, 'unlink'])->name('tesla-accounts.unlink');
 
     Route::post('/teams/{team}/make-default', DefaultTeamController::class)->name('teams.make-default');
+
+    Route::post('/passkeys/registration-options', [PasskeyController::class, 'getRegistrationOptions'])->name('passkeys.registration-options');
+    Route::resource('/passkeys', PasskeyController::class);
 
 });
