@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\HasPasskeys;
+use Laravel\Jetstream\HasTeams;
+use Laravel\Sanctum\HasApiTokens;
+use App\Contracts\Passkey\PasskeyUser;
+use Laravel\Jetstream\HasProfilePhoto;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
-use Laravel\Sanctum\HasApiTokens;
 use mathewparet\LaravelPolicyAbilitiesExport\Traits\ExportsPermissions;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     use HasApiTokens;
     use HasFactory;
@@ -21,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use TwoFactorAuthenticatable;
     use ExportsPermissions;
+    use HasPasskeys;
 
     /**
      * The attributes that are mass assignable.
@@ -60,4 +63,24 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function getUserId()
+    {
+        return $this->id;
+    }
+
+    public function getDisplayName()
+    {
+        return $this->name;
+    }
+
+    public function getUserIcon()
+    {
+        return null;
+    }
 }
