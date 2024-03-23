@@ -19,7 +19,7 @@
             preserveState: true,
             onSuccess: () => {
                 console.log('from server', usePage().props.jetstream.flash.options);
-                startRegistration(usePage().props.jetstream.flash.options)
+                startRegistration(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
                     .then((res) =>{
                         form.passkey = res;
                         console.log(res); 
