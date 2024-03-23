@@ -4,16 +4,43 @@
     import { Link, useForm } from '@inertiajs/vue3';
     import { DateTime } from 'luxon';
     import { usePage } from '@inertiajs/vue3';
+    import DialogModal from "@/Components/DialogModal.vue";
+    import { ref } from "vue";
+    import TextInput from "@/Components/TextInput.vue";
+    import SecondaryButton from "@/Components/SecondaryButton.vue";
+    import PrimaryButton from "@/Components/PrimaryButton.vue";
+    import InputLabel from "@/Components/InputLabel.vue";
 
     const props = defineProps({
         
     });
 
+    const registeringNewPasskey = ref(false)
+
+    const registrationInProgress = ref(false)
+
+    const nameInput = ref(null)
+
     const form = useForm({
         passkey: '',
+        name: '',
     });
 
+    const closeModal = () => {
+        registeringNewPasskey.value = false;
+        form.reset();
+        form.passkey = '';
+        form.name = '';
+        form.clearErrors();
+    }
+
+    const showModal = () => {
+        registeringNewPasskey.value = true;
+        setTimeout(() => nameInput.value?.focus(), 250);
+    }
+
     const register = () => {
+        registrationInProgress.value = true
         form.post(route('passkeys.registration-options'), {
             preserveScroll: true,
             preserveState: true,
@@ -27,7 +54,8 @@
                             preserveScroll: true
                         })
                     })
-                    .catch((err) => console.log(err));
+                    .catch((err) => console.log(err))
+                    .finally(() => registrationInProgress.value = false);
             }
         })
     }
@@ -71,11 +99,39 @@
 
                                 </td>
                             </tr>
-                            <tr><button @click="register" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create Passkey?</button></tr>
+                            <tr><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create Passkey?</button></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </template>
     </ActionSection>
+    <DialogModal :show="registeringNewPasskey" @close="closeModal">
+            <template #title>Create a Passkey</template>
+            <template #content>
+                <span class="mt-2">
+                    <InputLabel for="name" value="Device Name" />
+                    <TextInput
+                        v-model="form.name"
+                        type="text"
+                        ref="nameInput"
+                        class="mt-1 block w-full"
+                    />
+                </span>
+            </template>
+            <template #footer>
+                <SecondaryButton @click="closeModal">
+                    Cancel
+                </SecondaryButton>
+
+                <PrimaryButton
+                    class="ml-3"
+                    :class="{ 'opacity-25': (form.processing || registrationInProgress || form.name?.length == 0)}"
+                    :disabled="(form.processing || registrationInProgress || form.name?.length == 0)"
+                    @click="register"
+                >
+                    Register Passkey
+                </PrimaryButton>
+            </template>
+        </DialogModal>
 </template>

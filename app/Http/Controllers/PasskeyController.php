@@ -46,11 +46,11 @@ class PasskeyController extends Controller
         }
         else
         {
-            dd($request->publicKeyCredentialSource);
-            // $request->user()->passkeys()->create([
-            //     'credential_id' => $request->publicKeyCredentialSource->publicKeyCredentialId,
-            //     'public_key' => $request->publicKeyCredentialSource->jsonSerialize(),
-            // ]);
+            $request->user()->passkeys()->create([
+                'name' => $request->name,
+                'credential_id' => $request->publicKeyCredentialSource->credentialId,
+                'public_key' => $request->publicKeyCredentialSource->jsonData,
+            ]);
         }
     }
 
