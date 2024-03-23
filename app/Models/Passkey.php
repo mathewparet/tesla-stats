@@ -10,9 +10,9 @@ class Passkey extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'public_key' => 'encrypted:json',
-    ];
+    // protected $casts = [
+    //     'public_key' => 'encrypted:json',
+    // ];
 
     protected $fillable = [
         'public_key',

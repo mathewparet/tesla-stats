@@ -34,6 +34,10 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         'name', 'email', 'password',
     ];
 
+    protected $with = [
+        'passkeys',
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
