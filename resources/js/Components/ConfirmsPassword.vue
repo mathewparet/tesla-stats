@@ -8,7 +8,7 @@ import TextInput from './TextInput.vue';
 
 const emit = defineEmits(['confirmed']);
 
-defineProps({
+const props = defineProps({
     title: {
         type: String,
         default: 'Confirm Password',
@@ -21,6 +21,10 @@ defineProps({
         type: String,
         default: 'Confirm',
     },
+    mandatory: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 const confirmingPassword = ref(false);
@@ -35,7 +39,7 @@ const passwordInput = ref(null);
 
 const startConfirmingPassword = () => {
     axios.get(route('password.confirmation')).then(response => {
-        if (response.data.confirmed) {
+        if (response.data.confirmed && !props.mandatory) {
             emit('confirmed');
         } else {
             confirmingPassword.value = true;

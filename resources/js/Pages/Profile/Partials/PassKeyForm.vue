@@ -96,8 +96,8 @@
                             <td class="px-6 py-4">
                                 {{ DateTime.fromISO(passkey.created_at).toLocaleString(DateTime.DATE_MED) }}
                             </td>
-                            <td class="px-6 py-4">
-                                <ConfirmsPassword @confirmed="unregister(passkey)">
+                            <td class="px-6 py-4 text-right">
+                                <ConfirmsPassword @confirmed="unregister(passkey)" mandatory>
                                     <span class="inline-flex items-center font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer">Unregister</span>
                                 </ConfirmsPassword>
                             </td>
