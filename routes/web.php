@@ -32,6 +32,9 @@ Route::get('/', function () {
     ]);
 });
 
+Route::post('/passkeys/authentication-options', [PasskeyController::class, 'getAuthenticationOptions'])->name('passkeys.authentication-options');
+Route::post('/passkeys/login', [PasskeyController::class, 'login'])->name('passkeys.login');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -58,6 +61,7 @@ Route::middleware([
     Route::post('/teams/{team}/make-default', DefaultTeamController::class)->name('teams.make-default');
 
     Route::post('/passkeys/registration-options', [PasskeyController::class, 'getRegistrationOptions'])->name('passkeys.registration-options');
-    Route::resource('/passkeys', PasskeyController::class);
+    Route::post('/passkeys/verify', [PasskeyController::class, 'verify'])->name('passkeys.verify');
+    Route::resource('/passkeys', PasskeyController::class)->only(['store', 'destroy']);
 
 });

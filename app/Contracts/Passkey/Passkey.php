@@ -14,6 +14,13 @@ interface Passkey
     public function registrar();
 
     /**
+     * Get the authenticator instance
+     * 
+     * @return \App\Contracts\Passkey\PasskeyAuthenticator
+     */
+    public function authenticator();
+
+    /**
      * Configure the application identity for passkey to use
      * 
      * @param callable $closure
@@ -42,4 +49,12 @@ interface Passkey
      * @return void
      */
     public static function createModelUsing(callable $closure);
+    
+    /**
+     * Update the passkey model
+     * 
+     * @param callable $closure
+     * @return void
+     */
+    public static function updateModelUsing(callable $closure);
 }

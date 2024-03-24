@@ -3,6 +3,7 @@ namespace App\Tools\Passkey;
 
 use App\Contracts\Passkey\PasskeyRegistrar;
 use App\Contracts\Passkey\Passkey as ContractsPasskey;
+use App\Contracts\Passkey\PasskeyAuthenticator;
 use Laravel\Fortify\Http\Responses\SimpleViewResponse;
 
 class Passkey implements ContractsPasskey
@@ -16,6 +17,11 @@ class Passkey implements ContractsPasskey
      * @var callable|null
      */
     public static $createModelCallback;
+    
+    /**
+     * @var callable|null
+     */
+    public static $updateModelCallback;
 
     /**
      * -----------------------------------------------------------
@@ -24,7 +30,7 @@ class Passkey implements ContractsPasskey
      * 
      * @var \App\Contracts\Passkey\PasskeyRegistrar $registrar
      */
-    public function __construct(private PasskeyRegistrar $registrar) { }
+    public function __construct(private PasskeyRegistrar $registrar, private PasskeyAuthenticator $authenticator) { }
 
     /**
      * Get the registrar instance
@@ -34,6 +40,16 @@ class Passkey implements ContractsPasskey
     public function registrar()
     {
         return $this->registrar;
+    }
+
+    /**
+     * Get the authenticator instance
+     * 
+     * @return \App\Contracts\Passkey\PasskeyAuthenticator
+     */
+    public function authenticator()
+    {
+        return $this->authenticator;
     }
 
     /**
@@ -99,5 +115,21 @@ class Passkey implements ContractsPasskey
     public static function createModelUsing(callable $closure)
     {
         static::$createModelCallback = $closure;
+    }
+    
+    /**
+     * Update the passkey model
+     * 
+     * @param callable $closure
+     * @return void
+     * 
+     * Example:
+     * ```
+     * Passkey::updateModelUsing(fn(Request $request) => App\Models\Passkey::create($request->safe()->all());
+     * ```
+     */
+    public static function updateModelUsing(callable $closure)
+    {
+        static::$updateModelCallback = $closure;
     }
 }

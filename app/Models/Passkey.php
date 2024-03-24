@@ -31,4 +31,14 @@ class Passkey extends Model
             set: fn ($value) => base64_encode($value),
         );
     }
+
+    public function scopeCredential($query, $value)
+    {
+        return $query->where('credential_id', $value);
+    }
+
+    public function scopeUser($query, $value)
+    {
+        return $query->where('passkeyable_id', $value)->where('passkeyable_type', config('passkey.user_model'));
+    }
 }
