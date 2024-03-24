@@ -99,12 +99,12 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <ConfirmsPassword @confirmed="unregister(passkey)">
-                                        <span class="inline-flex items-center font-medium text-red-600 dark:text-red-500 hover:underline">Unregister</span>
+                                        <span class="inline-flex items-center font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer">Unregister</span>
                                     </ConfirmsPassword>
                                 </td>
                             </tr>
                             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <td colspan="3"><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create a Passkey?</button></td>
+                                <td colspan="3" class="text-center"><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create a Passkey?</button></td>
                             </tr>
                         </tbody>
                     </table>
