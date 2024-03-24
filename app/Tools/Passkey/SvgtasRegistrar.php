@@ -5,29 +5,8 @@ use Svgta\WebAuthn\client;
 use App\Contracts\Passkey\PasskeyUser;
 use App\Contracts\Passkey\PasskeyRegistrar;
 
-class SvgtasRegistrar implements PasskeyRegistrar
+class SvgtasRegistrar extends SvgtasPasskey implements PasskeyRegistrar
 {
-    public function __construct(private client $webauthn) 
-    {
-        $this->createApplicationEntity();
-    }
-
-    /**
-     * Creates the application entity
-     * 
-     * @return PublicKeyCredentialRpEntity
-     */
-    private function createApplicationEntity()
-    {
-        $application = Passkey::getApplicationIdentity();
-
-        $this->webauthn->rp->set(
-            $application['name'],
-            $application['domain'],
-            $application['logo']
-        );
-    }
-
     /**
      * Get the supported public key parameters
      * 
@@ -61,6 +40,10 @@ class SvgtasRegistrar implements PasskeyRegistrar
             $passkeyUser->getUserId(),
             $passkeyUser->getDisplayName()
         );
+
+        $passkeyUser->passkeys->each(fn($passkey) => $this->webauthn->excludeCredentials->add($passkey->credential_id));
+
+        return $this;
     }
 
     public function setChallenge(?array $challenge = null)
@@ -72,11 +55,6 @@ class SvgtasRegistrar implements PasskeyRegistrar
     {
         $aaguid = $this->webauthn->register()->aaguid(json_encode($data));
         return $this->webauthn->register()->validate(); //return a json string
-    }
-
-    public function validateSilent(array $data, ?array $challenge = null)
-    {
-        return rescue(fn() => $this->validate($data, $challenge), false);
     }
 
     public static function generateChallengeUsing(callable $closure)

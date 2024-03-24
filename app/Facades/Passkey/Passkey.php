@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getApplicationIdentity() Get the application's identity
  * @method static void useManagementView(string|callable $view)
  * @method static void createModelUsing(callable $closure)
+ * @method static void updateModelUsing(callable $closure)
  */
 class Passkey extends Facade
 {
