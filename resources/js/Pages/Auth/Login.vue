@@ -48,7 +48,7 @@ const submit = () => {
                                 preserveState: true,
                             });
                         })
-                        .error(() => {
+                        .catch(() => {
                             isPasswordLogin.value = true;
                         });
                 }
