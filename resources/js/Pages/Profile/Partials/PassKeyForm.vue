@@ -83,6 +83,9 @@
                             <th scope="col" class="px-6 py-3">
                                 Created At
                             </th>
+                            <th scope="col" class="px-6 py-3">
+                                Last Access
+                            </th>
                             <th scope="col" class="px-6 py-3 text-right">
                                 Action
                             </th>
@@ -95,6 +98,11 @@
                             </th>
                             <td class="px-6 py-4">
                                 {{ DateTime.fromISO(passkey.created_at).toLocaleString(DateTime.DATETIME_MED) }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span v-if="JSON.parse(passkey.public_key)?.date?.lastAccesTs">
+                                    {{ DateTime.fromSeconds(JSON.parse(passkey.public_key).date.lastAccesTs).toLocaleString(DateTime.DATETIME_MED) }}
+                                </span>
                             </td>
                             <td class="px-6 py-4">
                                 <ConfirmsPassword @confirmed="unregister(passkey)" mandatory>
