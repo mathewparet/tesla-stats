@@ -1,10 +1,12 @@
 <script setup>
 import { ref, reactive, nextTick } from 'vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import DialogModal from './DialogModal.vue';
 import InputError from './InputError.vue';
 import PrimaryButton from './PrimaryButton.vue';
 import SecondaryButton from './SecondaryButton.vue';
 import TextInput from './TextInput.vue';
+import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
 
 const emit = defineEmits(['confirmed']);
 
@@ -39,6 +41,11 @@ const form = reactive({
     processing: false,
 });
 
+const passkeyForm = useForm({
+    passkey: '',
+    email: '',
+});
+
 const passwordInput = ref(null);
 
 const startConfirmingPassword = () => {
@@ -46,9 +53,38 @@ const startConfirmingPassword = () => {
         if (response.data.confirmed && !props.mandatory) {
             emit('confirmed');
         } else {
-            confirmingPassword.value = true;
+            passkeyForm.post(route('passkeys.authentication-options'), {
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => {
+                    if(!usePage().props.jetstream.flash.options) {
+                        confirmingPassword.value = true;
 
-            setTimeout(() => passwordInput.value.focus(), 250);
+                        setTimeout(() => passwordInput.value.focus(), 250);
+                    }
+                    else
+                    {
+                        startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
+                            .then((res) =>{
+                                passkeyForm.passkey = res;
+                                passkeyForm.post(route('passkeys.verify'), {
+                                    preserveScroll: true,
+                                    preserveState: true,
+                                    onSuccess: () => {
+                                        if(!usePage().props.jetstream.flash.verified) {
+                                            emit('confirmed');
+                                        }
+                                    }
+                                });
+                            })
+                            .catch(() => {
+                                confirmingPassword.value = true;
+
+                                setTimeout(() => passwordInput.value.focus(), 250);
+                            });
+                    }
+                }
+            });
         }
     });
 };

@@ -73,7 +73,7 @@ class PasskeyController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Verify user using passkey
      */
     public function verify(VerifyPasskeyRequest $request, Passkey $passkey)
     {
@@ -82,10 +82,16 @@ class PasskeyController extends Controller
         }
         else
         {
-            $request->user()->passkeys()->credential($request->publicKeyCredentialSource['credentialId'])->update([
-                'public_key' => $request->publicKeyCredentialSource['jsonData'],
-            ]);
+            Log::debug('updating user');
+            $pk = json_decode($request->publicKeyCredentialSource, true);
+            Passkey::credential($pk['credential']['id'])
+                ->user($pk['userHandle'])
+                ->update([
+                    'public_key' => $request->publicKeyCredentialSource,
+                ]);
         }
+
+        $request->session()->passwordConfirmed();
 
         return back()->with('flash', [
             'verified' => true,
