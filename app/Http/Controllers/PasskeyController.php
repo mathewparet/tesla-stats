@@ -75,6 +75,6 @@ class PasskeyController extends Controller
      */
     public function destroy(Passkey $passkey)
     {
-        //
+        $passkey->delete();
     }
 }
