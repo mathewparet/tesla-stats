@@ -95,11 +95,15 @@ class PasskeyController extends Controller
      */
     public function login(VerifyPasskeyRequest $request, Passkey $passkey)
     {
+        dump("request received");
+        dd($request->publicKeyCredentialSource['userHandle'], $request->publicKeyCredentialSource);
         if(isset(PasskeyTool::$updateModelCallback) && is_callable(PasskeyTool::$updateModelCallback)) {
+            dd('if block');
             app()->call(PasskeyTool::$updateModelCallback);
         }
         else
         {
+            dump("else block");
             Passkey::credential($request->publicKeyCredentialSource['credentialId'])
                 ->user($request->publicKeyCredentialSource['userHandle'])
                 ->update([
