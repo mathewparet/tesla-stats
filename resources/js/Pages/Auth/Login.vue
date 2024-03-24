@@ -48,7 +48,7 @@ const submit = () => {
                                 preserveState: true,
                             });
                         })
-                        .else(() => {
+                        .error(() => {
                             isPasswordLogin.value = true;
                         });
                 }
