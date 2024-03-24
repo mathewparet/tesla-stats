@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import Checkbox from '@/Components/Checkbox.vue';
@@ -7,19 +7,54 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { ref } from "vue";
+import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
 });
 
+const isPasswordLogin = ref(false);
+
 const form = useForm({
     email: '',
     password: '',
+    passkey: '',
     remember: false,
 });
 
 const submit = () => {
+    if(isPasswordLogin.value)
+    {
+        passwordLogin();
+    }
+    else
+    {
+        form.post(route('passkeys.authentication-options'), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                if(!usePage().props.jetstream.flash.options) {
+                    isPasswordLogin.value = true;
+                }
+                else
+                {
+                    startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
+                        .then((res) =>{
+                            form.passkey = res;
+                            form.post(route('passkeys.login'), {
+                                preserveScroll: true,
+                                preserveState: true,
+                            });
+                        })
+                }
+            }
+        })
+    }
+};
+
+const passwordLogin = () => {
     form.transform(data => ({
         ...data,
         remember: form.remember ? 'on' : '',
@@ -56,7 +91,7 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4" v-if="isPasswordLogin">
                 <InputLabel for="password" value="Password" />
                 <TextInput
                     id="password"
@@ -86,7 +121,7 @@ const submit = () => {
                 </Link>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+                    {{ isPasswordLogin ? 'Login' : 'Next' }}
                 </PrimaryButton>
             </div>
         </form>

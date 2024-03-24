@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Passkey;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Fortify;
@@ -65,7 +66,7 @@ class PasskeyController extends Controller
     public function getAuthenticationOptions(PasskeyAuthenticator $passkeyAuthenticator, Request $request)
     {
         return back()->with('flash', [
-            'options' => tap($passkeyAuthenticator->generateOptions($request->user()), fn($options) => logger(json_encode($options))),
+            'options' => User::whereEmail($request->email)->first()->passkeys->count() ? tap($passkeyAuthenticator->generateOptions(User::whereEmail($request->email)->first()), fn($options) => logger(json_encode($options))) : false,
         ]);
     }
 
