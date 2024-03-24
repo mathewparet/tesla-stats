@@ -112,7 +112,7 @@ class PasskeyController extends Controller
                 ]);
         }
         Log::debug('logging in user');
-        Auth::loginUsingId($pk['userHandle']);
+        Auth::loginUsingId($pk['userHandle'], $request->remember == 'on');
 
         return redirect()->intended(route('bills.index'));
     }
