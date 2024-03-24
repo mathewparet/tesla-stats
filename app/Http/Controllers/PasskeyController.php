@@ -55,7 +55,7 @@ class PasskeyController extends Controller
         {
             $request->user()->passkeys()->create([
                 'name' => $request->name,
-                'credential_id' => $request->publicKeyCredentialSource['credentialId'],
+                'credential_id' => $request->publicKeyCredentialSource['credential']['id'],
                 'public_key' => $request->publicKeyCredentialSource['jsonData'],
             ]);
         }
