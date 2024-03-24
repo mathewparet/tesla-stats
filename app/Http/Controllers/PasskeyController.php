@@ -8,6 +8,7 @@ use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\StorePasskeyRequest;
 use App\Contracts\Passkey\PasskeyRegistrar;
@@ -114,7 +115,7 @@ class PasskeyController extends Controller
         Log::debug('logging in user');
         Auth::loginUsingId($pk['userHandle'], $request->remember == 'on');
 
-        return redirect()->intended(route('bills.index'));
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
