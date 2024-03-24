@@ -2,6 +2,7 @@
 namespace App\Tools\Passkey;
 
 use App\Models\Passkey;
+use Illuminate\Support\Facades\Log;
 use App\Contracts\Passkey\PasskeyUser;
 use App\Contracts\Passkey\PasskeyAuthenticator;
 
@@ -43,7 +44,7 @@ class SvgtasAuthenticator extends SvgtasPasskey implements PasskeyAuthenticator
     public function validate(array $data, ?array $challenge = null)
     {
         $response = $this->webauthn->authenticate()->response(json_encode($data));
-
+        Log::debug('Passkey validation for user login completed', compact('response'));
         if($this->passkeyUser)
             $passkey = $this->passkeyUser->passkeys()->credential($response['credentialId'])->firstOrFail();
         else
