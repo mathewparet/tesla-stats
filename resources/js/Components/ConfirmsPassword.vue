@@ -71,7 +71,7 @@ const startConfirmingPassword = () => {
                                     preserveScroll: true,
                                     preserveState: true,
                                     onSuccess: () => {
-                                        if(!usePage().props.jetstream.flash.verified) {
+                                        if(usePage().props.jetstream.flash.verified) {
                                             emit('confirmed');
                                         }
                                     }
