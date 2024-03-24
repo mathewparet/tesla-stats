@@ -49,4 +49,12 @@ interface Passkey
      * @return void
      */
     public static function createModelUsing(callable $closure);
+    
+    /**
+     * Update the passkey model
+     * 
+     * @param callable $closure
+     * @return void
+     */
+    public static function updateModelUsing(callable $closure);
 }

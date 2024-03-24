@@ -31,4 +31,6 @@ return [
      * The session key used to store credential options
      */
     'session' => 'publicKeyCredentialCreationOptions',
+
+    'user_model' => App\Models\User::class,
 ];

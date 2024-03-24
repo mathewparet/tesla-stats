@@ -17,6 +17,11 @@ class Passkey implements ContractsPasskey
      * @var callable|null
      */
     public static $createModelCallback;
+    
+    /**
+     * @var callable|null
+     */
+    public static $updateModelCallback;
 
     /**
      * -----------------------------------------------------------
@@ -110,5 +115,21 @@ class Passkey implements ContractsPasskey
     public static function createModelUsing(callable $closure)
     {
         static::$createModelCallback = $closure;
+    }
+    
+    /**
+     * Update the passkey model
+     * 
+     * @param callable $closure
+     * @return void
+     * 
+     * Example:
+     * ```
+     * Passkey::updateModelUsing(fn(Request $request) => App\Models\Passkey::create($request->safe()->all());
+     * ```
+     */
+    public static function updateModelUsing(callable $closure)
+    {
+        static::$updateModelCallback = $closure;
     }
 }
