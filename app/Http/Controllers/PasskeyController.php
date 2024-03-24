@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Contracts\Passkey\PasskeyAuthenticator;
 use App\Models\Passkey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -55,11 +56,13 @@ class PasskeyController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Get the autnentication options
      */
-    public function authenticationOptions()
+    public function getAuthenticationOptions(PasskeyAuthenticator $passkeyAuthenticator, Request $request)
     {
-        //
+        return back()->with('flash', [
+            'options' => tap($passkeyAuthenticator->generateOptions($request->user()), fn($options) => logger(json_encode($options))),
+        ]);
     }
 
     /**

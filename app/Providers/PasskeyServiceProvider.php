@@ -5,10 +5,11 @@ namespace App\Providers;
 use Inertia\Inertia;
 use App\Tools\Passkey\Passkey;
 use Illuminate\Validation\Rule;
-use App\Tools\Passkey\PasskeyRegistrar;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\Passkey\Passkey as ContractsPasskey;
-use App\Contracts\Passkey\PasskeyRegistrar as ContractsPasskeyRegistrar;
+use App\Contracts\Passkey\PasskeyAuthenticator;
+use App\Contracts\Passkey\PasskeyRegistrar;
+use App\Tools\Passkey\SvgtasAuthenticator;
 use App\Tools\Passkey\SvgtasRegistrar;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,8 @@ class PasskeyServiceProvider extends ServiceProvider
 
     private function bindClasses()
     {
-        $this->app->bind(ContractsPasskeyRegistrar::class, SvgtasRegistrar::class);
+        $this->app->bind(PasskeyRegistrar::class, SvgtasRegistrar::class);
+        $this->app->bind(PasskeyAuthenticator::class, SvgtasAuthenticator::class);
         $this->app->singleton(ContractsPasskey::class, Passkey::class);
     }
 

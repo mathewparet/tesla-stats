@@ -3,6 +3,7 @@ namespace App\Tools\Passkey;
 
 use App\Contracts\Passkey\PasskeyRegistrar;
 use App\Contracts\Passkey\Passkey as ContractsPasskey;
+use App\Contracts\Passkey\PasskeyAuthenticator;
 use Laravel\Fortify\Http\Responses\SimpleViewResponse;
 
 class Passkey implements ContractsPasskey
@@ -24,7 +25,7 @@ class Passkey implements ContractsPasskey
      * 
      * @var \App\Contracts\Passkey\PasskeyRegistrar $registrar
      */
-    public function __construct(private PasskeyRegistrar $registrar) { }
+    public function __construct(private PasskeyRegistrar $registrar, private PasskeyAuthenticator $authenticator) { }
 
     /**
      * Get the registrar instance
@@ -34,6 +35,16 @@ class Passkey implements ContractsPasskey
     public function registrar()
     {
         return $this->registrar;
+    }
+
+    /**
+     * Get the authenticator instance
+     * 
+     * @return \App\Contracts\Passkey\PasskeyAuthenticator
+     */
+    public function authenticator()
+    {
+        return $this->authenticator;
     }
 
     /**
