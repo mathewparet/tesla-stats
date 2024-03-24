@@ -106,6 +106,7 @@ class PasskeyController extends Controller
                     'public_key' => $request->publicKeyCredentialSource['jsonData'],
                 ]);
         }
+        dd($request->publicKeyCredentialSource['userHandle']);
 
         Auth::loginUsingId($request->publicKeyCredentialSource['userHandle']);
 
