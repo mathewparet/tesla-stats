@@ -105,7 +105,7 @@ class PasskeyController extends Controller
         {
             Log::debug('updating user');
             $pk = json_decode($request->publicKeyCredentialSource, true);
-            Passkey::credential($pk['credentialId'])
+            Passkey::credential($pk['credential']['id'])
                 ->user($pk['userHandle'])
                 ->update([
                     'public_key' => $request->publicKeyCredentialSource,
