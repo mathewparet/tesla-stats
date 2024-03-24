@@ -48,7 +48,6 @@ class PasskeyController extends Controller
      */
     public function store(StorePasskeyRequest $request)
     {
-        dd($request->publicKeyCredentialSource);
         if(isset(PasskeyTool::$createModelCallback) && is_callable(PasskeyTool::$createModelCallback)) {
             app()->call(PasskeyTool::$createModelCallback);
         }
@@ -56,7 +55,7 @@ class PasskeyController extends Controller
         {
             $request->user()->passkeys()->create([
                 'name' => $request->name,
-                'credential_id' => $request->publicKeyCredentialSource['credential']['id'],
+                'credential_id' => $request->publicKeyCredentialSource['credentialId'],
                 'public_key' => $request->publicKeyCredentialSource['jsonData'],
             ]);
         }
