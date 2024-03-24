@@ -104,14 +104,15 @@ class PasskeyController extends Controller
         else
         {
             Log::debug('updating user');
-            Passkey::credential($request->publicKeyCredentialSource['credentialId'])
-                ->user($request->publicKeyCredentialSource['userHandle'])
+            $pk = json_decode($request->publicKeyCredentialSource);
+            Passkey::credential($pk['credentialId'])
+                ->user($pk['userHandle'])
                 ->update([
-                    'public_key' => $request->publicKeyCredentialSource['jsonData'],
+                    'public_key' => $request->publicKeyCredentialSource,
                 ]);
         }
         Log::debug('logging in user');
-        Auth::loginUsingId($request->publicKeyCredentialSource['userHandle']);
+        Auth::loginUsingId($pk['userHandle']);
 
         return redirect()->intended(route('bills.index'));
     }
