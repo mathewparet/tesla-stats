@@ -34,7 +34,7 @@ class Passkey extends Model
 
     public function scopeCredential($query, $value)
     {
-        return $query->where('credential_id', $value);
+        return $query->where('credential_id', base64_decode($value));
     }
 
     public function scopeUser($query, $value)
