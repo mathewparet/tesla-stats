@@ -24,6 +24,10 @@ const props = defineProps({
     mandatory: {
         type: Boolean,
         default: false,
+    },
+    seconds: {
+        type: Number,
+        default: 0,
     }
 });
 
@@ -38,7 +42,7 @@ const form = reactive({
 const passwordInput = ref(null);
 
 const startConfirmingPassword = () => {
-    axios.get(route('password.confirmation')).then(response => {
+    axios.get(route('password.confirmation', props.seconds > 0 ? {seconds: props.seconds} : {})).then(response => {
         if (response.data.confirmed && !props.mandatory) {
             emit('confirmed');
         } else {

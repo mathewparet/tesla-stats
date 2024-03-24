@@ -105,7 +105,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <ConfirmsPassword @confirmed="unregister(passkey)">
+                                <ConfirmsPassword :seconds="60" @confirmed="unregister(passkey)">
                                     <div class="text-right">
                                         <span class="inline-flex items-center font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-red-800">Unregister</span>
                                     </div>
@@ -114,7 +114,7 @@
                         </tr>
                         <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <td colspan="4">
-                                <ConfirmsPassword @confirmed="showModal">
+                                <ConfirmsPassword @confirmed="showModal" :seconds="60">
                                     <div class="text-center">
                                         <span class="cursor-pointer inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-blue-800">Create a Passkey?</span>
                                     </div>
