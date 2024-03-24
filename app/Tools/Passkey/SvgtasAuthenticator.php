@@ -43,6 +43,7 @@ class SvgtasAuthenticator extends SvgtasPasskey implements PasskeyAuthenticator
 
     public function validate(array $data, ?array $challenge = null)
     {
+        Log::debug('Passkey validation for user login started');
         $response = $this->webauthn->authenticate()->response(json_encode($data));
         Log::debug('Passkey validation for user login completed', compact('response'));
         if($this->passkeyUser)
