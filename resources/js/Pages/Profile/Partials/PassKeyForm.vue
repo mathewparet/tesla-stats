@@ -10,6 +10,7 @@
     import SecondaryButton from "@/Components/SecondaryButton.vue";
     import PrimaryButton from "@/Components/PrimaryButton.vue";
     import InputLabel from "@/Components/InputLabel.vue";
+    import ConfirmsPassword from "@/Components/ConfirmsPassword.vue";
 
     const props = defineProps({
 
@@ -28,6 +29,7 @@
 
     const closeModal = () => {
         registeringNewPasskey.value = false;
+        registrationInProgress.value = false
         form.reset();
         form.passkey = '';
         form.name = '';
@@ -55,13 +57,13 @@
                         })
                     })
                     .catch((err) => console.log(err))
-                    .finally(() => registrationInProgress.value = false);
+                    .finally(() => closeModal);
             }
         })
     }
 
     const unregister = (passkey) => {
-        form.post(route('passkeys.unregister', {passkey: passkey.id}), {
+        form.delete(route('passkeys.destroy', {passkey: passkey.id}), {
             preserveScroll: true
         })
     }
@@ -96,10 +98,14 @@
                                     {{ DateTime.fromISO(passkey.created_at).toRelative() }}
                                 </td>
                                 <td class="px-6 py-4">
-
+                                    <ConfirmsPassword @confirmed="unregister(passkey)">
+                                        <span class="inline-flex items-center font-medium text-red-600 dark:text-red-500 hover:underline">Unregister</span>
+                                    </ConfirmsPassword>
                                 </td>
                             </tr>
-                            <tr><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create Passkey?</button></tr>
+                            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                <td colspan="3"><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create a Passkey?</button></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
