@@ -57,7 +57,7 @@
                         })
                     })
                     .catch((err) => console.log(err))
-                    .finally(() => closeModal);
+                    .finally(() => closeModal());
             }
         })
     }
@@ -73,42 +73,40 @@
         <template #title>Passkeys</template>
         <template #description>Passkeys are a secure form of authentication which enables you to authenticate with your device's authentication mechanism. With passkeys you will not need to login using your password or 2FA, instead you could just use your passkey.</template>
         <template #content>
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Created At
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-right">
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="passkey in $page.props.auth.user.passkeys" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ passkey.name }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ DateTime.fromISO(passkey.created_at).toRelative() }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <ConfirmsPassword @confirmed="unregister(passkey)">
-                                        <span class="inline-flex items-center font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer">Unregister</span>
-                                    </ConfirmsPassword>
-                                </td>
-                            </tr>
-                            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <td colspan="3" class="text-center"><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create a Passkey?</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Name
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Created At
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-right">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="passkey in $page.props.auth.user.passkeys" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ passkey.name }}
+                            </th>
+                            <td class="px-6 py-4">
+                                {{ DateTime.fromISO(passkey.created_at).toLocaleString(DateTime.DATE_MED) }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <ConfirmsPassword @confirmed="unregister(passkey)">
+                                    <span class="inline-flex items-center font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer">Unregister</span>
+                                </ConfirmsPassword>
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td colspan="3" class="text-center"><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">Create a Passkey?</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </template>
     </ActionSection>
@@ -122,6 +120,7 @@
                         type="text"
                         ref="nameInput"
                         class="mt-1 block w-full"
+                        @keyup.enter="register"
                     />
                 </span>
             </template>
