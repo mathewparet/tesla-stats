@@ -48,6 +48,7 @@ class PasskeyController extends Controller
      */
     public function store(StorePasskeyRequest $request)
     {
+        dd($request->publicKeyCredentialSource);
         if(isset(PasskeyTool::$createModelCallback) && is_callable(PasskeyTool::$createModelCallback)) {
             app()->call(PasskeyTool::$createModelCallback);
         }
