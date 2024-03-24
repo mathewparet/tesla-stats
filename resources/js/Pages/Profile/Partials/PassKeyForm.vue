@@ -94,7 +94,7 @@
                                 {{ passkey.name }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ DateTime.fromISO(passkey.created_at).toLocaleString(DateTime.DATE_MED) }}
+                                {{ DateTime.fromISO(passkey.created_at).toLocaleString(DateTime.DATETIME_MED) }}
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <ConfirmsPassword @confirmed="unregister(passkey)" mandatory>
