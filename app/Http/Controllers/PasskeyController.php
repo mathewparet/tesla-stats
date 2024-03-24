@@ -6,6 +6,7 @@ use App\Models\Passkey;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\StorePasskeyRequest;
@@ -95,23 +96,21 @@ class PasskeyController extends Controller
      */
     public function login(VerifyPasskeyRequest $request, Passkey $passkey)
     {
-        dump("request received");
-        dd($request->publicKeyCredentialSource['userHandle'], $request->publicKeyCredentialSource);
+        Log::debug('Request received');
         if(isset(PasskeyTool::$updateModelCallback) && is_callable(PasskeyTool::$updateModelCallback)) {
-            dd('if block');
+            Log::debug('Overriding login function');
             app()->call(PasskeyTool::$updateModelCallback);
         }
         else
         {
-            dump("else block");
+            Log::debug('updating user');
             Passkey::credential($request->publicKeyCredentialSource['credentialId'])
                 ->user($request->publicKeyCredentialSource['userHandle'])
                 ->update([
                     'public_key' => $request->publicKeyCredentialSource['jsonData'],
                 ]);
         }
-        dd($request->publicKeyCredentialSource['userHandle']);
-
+        Log::debug('logging in user');
         Auth::loginUsingId($request->publicKeyCredentialSource['userHandle']);
 
         return redirect()->intended(route('bills.index'));
