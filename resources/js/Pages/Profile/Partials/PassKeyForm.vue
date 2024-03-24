@@ -105,7 +105,11 @@
                             </td>
                         </tr>
                         <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                            <td colspan="3" class="text-center"><button @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-blue-800">Create a Passkey?</button></td>
+                            <td colspan="3" class="text-center">
+                                <ConfirmsPassword @confirmed="showModal" mandatory>
+                                    <span @click="showModal" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-blue-800">Create a Passkey?</span>
+                                </ConfirmsPassword>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
