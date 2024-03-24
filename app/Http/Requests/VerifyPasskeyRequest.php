@@ -36,7 +36,7 @@ class VerifyPasskeyRequest extends FormRequest
         return [
             function(Validator $validator)
             {
-                Log::debug('Validating passkey...', ['passkey' => $this->passkey]);
+                Log::debug('Verifying passkey...', ['passkey' => $this->passkey]);
                 
                 $this->publicKeyCredentialSource = PasskeyAuthenticator::validate($this->passkey);
                 
