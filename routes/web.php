@@ -60,9 +60,9 @@ Route::middleware([
 
     Route::post('/teams/{team}/make-default', DefaultTeamController::class)->name('teams.make-default');
 
-    Route::middleware('password.confirm:null,60')->post('/passkeys/registration-options', [PasskeyController::class, 'getRegistrationOptions'])->name('passkeys.registration-options');
+    Route::middleware('password.confirm:,60')->post('/passkeys/registration-options', [PasskeyController::class, 'getRegistrationOptions'])->name('passkeys.registration-options');
     Route::post('/passkeys/verify', [PasskeyController::class, 'verify'])->name('passkeys.verify');
-    Route::middleware('password.confirm:null,60')->delete('/passkeys/{passkey}', [PasskeyController::class, 'destroy'])->name('passkeys.destroy');
+    Route::middleware('password.confirm:,60')->delete('/passkeys/{passkey}', [PasskeyController::class, 'destroy'])->name('passkeys.destroy');
     Route::resource('/passkeys', PasskeyController::class)->only(['store']);
 
 });
