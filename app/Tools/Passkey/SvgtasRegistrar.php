@@ -33,7 +33,7 @@ class SvgtasRegistrar implements PasskeyRegistrar
      * 
      * @return PublicKeyCredentialParameters[]
      */
-    private function getSupportedPublicKeyParameters()
+    private function setSupportedPublicKeyParameters()
     {
         return collect(config('passkey.algorithms'))->map(
             fn($algorithm) => $this->webauthn->pubKeyCredParams->add($algorithm::ID)
@@ -49,7 +49,7 @@ class SvgtasRegistrar implements PasskeyRegistrar
         $this->webauthn->authenticatorAttachment->all();
         $this->webauthn->attestation->none();
 
-        // $this->getSupportedPublicKeyParameters();
+        $this->setSupportedPublicKeyParameters();
 
         return json_decode($this->webauthn->register()->toJson(), true);
     }
