@@ -49,7 +49,7 @@ class SvgtasAuthenticator extends SvgtasPasskey implements PasskeyAuthenticator
         if($this->passkeyUser)
             $passkey = $this->passkeyUser->passkeys()->credential($response['credentialId'])->firstOrFail();
         else
-            $passkey = Passkey::credential($response['credentialId'])->first()->user($response['userHandle'])->firstOrFail();
+            $passkey = Passkey::credential($response['credentialId'])->user($response['userHandle'])->firstOrFail();
 
         return $this->webauthn->authenticate()->validate($passkey->public_key);
     }
