@@ -16,6 +16,7 @@ defineProps({
 });
 
 const isPasswordLogin = ref(false);
+const isProcessing = ref(false);
 
 const form = useForm({
     email: '',
@@ -40,6 +41,7 @@ const submit = () => {
                 }
                 else
                 {
+                    isProcessing.value = true;
                     startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
                         .then((res) =>{
                             form.passkey = res;
@@ -50,6 +52,9 @@ const submit = () => {
                         })
                         .catch(() => {
                             isPasswordLogin.value = true;
+                        })
+                        .finally(() => {
+                            isProcessing.value = false;
                         });
                 }
             }
@@ -123,7 +128,7 @@ const passwordLogin = () => {
                     Register
                 </Link>
 
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing || isProcessing }" :disabled="form.processing || isProcessing">
                     {{ isPasswordLogin ? 'Login' : 'Next' }}
                 </PrimaryButton>
             </div>
