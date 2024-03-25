@@ -67,6 +67,10 @@ class PasskeyController extends Controller
      */
     public function getAuthenticationOptions(PasskeyAuthenticator $passkeyAuthenticator, Request $request)
     {
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users,email'],
+        ]);
+
         $email = optional($request->user())->email ?? $request->email;
 
         $user = User::whereEmail($email)->first();
