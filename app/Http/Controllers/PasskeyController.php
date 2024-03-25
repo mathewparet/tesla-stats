@@ -75,7 +75,7 @@ class PasskeyController extends Controller
             'options' => $user->passkeys->count() 
                             ? tap(
                                 $passkeyAuthenticator->generateOptions($user), 
-                                fn($options) => Log::debug("Generated options", json_encode($options))) 
+                                fn($options) => Log::debug("Generated options", compact('options'))) 
                             : false,
         ]);
     }
