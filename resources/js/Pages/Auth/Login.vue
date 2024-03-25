@@ -9,6 +9,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { ref } from "vue";
 import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
+import ConfirmsPasskey from '@/Components/ConfirmsPasskey.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -17,6 +18,8 @@ defineProps({
 
 const isPasswordLogin = ref(false);
 const isProcessing = ref(false);
+
+const passkeyConfirmation = ref(null);
 
 const form = useForm({
     email: '',
@@ -32,33 +35,34 @@ const submit = () => {
     }
     else
     {
-        form.post(route('passkeys.authentication-options'), {
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-                if(!usePage().props.jetstream.flash.options) {
-                    isPasswordLogin.value = true;
-                }
-                else
-                {
-                    isProcessing.value = true;
-                    startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
-                        .then((res) =>{
-                            form.passkey = res;
-                            form.post(route('passkeys.login'), {
-                                preserveScroll: true,
-                                preserveState: true,
-                            });
-                        })
-                        .catch(() => {
-                            isPasswordLogin.value = true;
-                        })
-                        .finally(() => {
-                            isProcessing.value = false;
-                        });
-                }
-            }
-        })
+        // form.post(route('passkeys.authentication-options'), {
+        //     preserveScroll: true,
+        //     preserveState: true,
+        //     onSuccess: () => {
+        //         if(!usePage().props.jetstream.flash.options) {
+        //             isPasswordLogin.value = true;
+        //         }
+        //         else
+        //         {
+        //             isProcessing.value = true;
+        //             startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
+        //                 .then((res) =>{
+        //                     form.passkey = res;
+        //                     form.post(route('passkeys.login'), {
+        //                         preserveScroll: true,
+        //                         preserveState: true,
+        //                     });
+        //                 })
+        //                 .catch(() => {
+        //                     isPasswordLogin.value = true;
+        //                 })
+        //                 .finally(() => {
+        //                     isProcessing.value = false;
+        //                 });
+        //         }
+        //     }
+        // })
+        passkeyConfirmation.value.start();
     }
 };
 
@@ -133,5 +137,6 @@ const passwordLogin = () => {
                 </PrimaryButton>
             </div>
         </form>
+        <ConfirmsPasskey :email="form.email" ref="passkeyConfirmation" @cancelled="() => isPasswordLogin = true"/>
     </AuthenticationCard>
 </template>
