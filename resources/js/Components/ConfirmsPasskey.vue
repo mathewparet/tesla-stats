@@ -1,0 +1,92 @@
+<script setup>
+    import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
+    import { Vue3Lottie } from 'vue3-lottie'
+    import DialogModal from './DialogModal.vue';
+    import { ref } from 'vue';
+    import { useForm, usePage } from '@inertiajs/vue3';
+
+    const emit = defineEmits(['confirmed', 'cancelled']);
+
+    const confirmingPasskey = ref(false);
+
+    const authorityConfirmed = ref(null);
+
+
+    const props = defineProps({
+        title: {
+            type: String,
+            default: 'Confirm Passkey',
+        },
+        content: {
+            type: String,
+            default: 'For your security, please confirm your passkey to continue.',
+        },
+        email: {
+            type: String,
+            default: '',
+        }
+    })
+
+    const passkeyForm = useForm({
+        passkey: '',
+        email: props.email,
+    });
+
+    defineExpose({
+        start: () => {
+            confirmingPasskey.value = true;
+            passkeyForm.post(route('passkeys.authentication-options'), {
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => {
+                    if(!usePage().props.jetstream.flash.options) {
+                        emit('cancelled');
+                    }
+                    else
+                    {
+                        authorityConfirmed.value = null;
+                        confirmingPasskey.value = true;
+                        setTimeout(() => {
+                            startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
+                            .then((res) =>{
+                                passkeyForm.passkey = res;
+                                passkeyForm.post(route('passkeys.verify'), {
+                                    preserveScroll: true,
+                                    preserveState: true,
+                                    onSuccess: () => {
+                                        if(usePage().props.jetstream.flash.verified) {
+                                            authorityConfirmed.value = true;
+                                        }
+                                    }
+                                });
+                            })
+                            .catch(() => {
+                                authorityConfirmed.value = false;
+                            })
+                        }, 1000);
+                    }
+                }
+            });
+        },
+    });
+
+    const operationCancelled = () => {
+        emit('cancelled');
+        confirmingPasskey.value = false;
+    }
+
+</script>
+<template>
+    <DialogModal :show="confirmingPasskey" @close="confirmingPasskey = false" ref="passkey">
+        <template #title>
+            {{ title }}
+        </template>
+
+        <template #content>
+            {{ content }}
+            <Vue3Lottie v-if="authorityConfirmed == null" animationLink="https://lottie.host/f33d7a7d-4521-4838-a056-42fdf900682e/tFltKtktYW.json" background="transparent" speed="1" :height="300" :width="300" style="width: 300px; height: 300px;" loop autoplay></Vue3Lottie>
+            <Vue3Lottie v-else-if="authorityConfirmed" @onComplete="emit('confirmed')" animationLink="https://lottie.host/138db87b-3a2f-49be-9440-d1d90fb0411d/a4Gt9RDCTY.json" background="transparent" speed="1" :height="300" :width="300" style="width: 300px; height: 300px;" :loop="1" autoplay></Vue3Lottie>
+            <Vue3Lottie v-else-if="authorityConfirmed == false" @onComplete="operationCancelled" animationLink="https://lottie.host/c99d756f-90a5-4fc8-a825-2adc03376435/sfGBEGnyKK.json" background="transparent" speed="1" :height="300" :width="300" style="width: 300px; height: 300px;" :loop="1" autoplay></Vue3Lottie>
+        </template>
+    </DialogModal>
+</template>
