@@ -57,6 +57,9 @@
                                         if(usePage().props.jetstream.flash.verified) {
                                             authorityConfirmed.value = true;
                                         }
+                                    },
+                                    onError: () => {
+                                        authorityConfirmed.value = false;
                                     }
                                 });
                             })
@@ -90,7 +93,7 @@
         <template #content>
             {{ content }}
             <Vue3Lottie v-if="authorityConfirmed == null" animationLink="https://lottie.host/f33d7a7d-4521-4838-a056-42fdf900682e/tFltKtktYW.json" background="transparent" speed="1" :height="300" :width="300" style="width: 300px; height: 300px;" loop autoplay></Vue3Lottie>
-            <Vue3Lottie v-else-if="authorityConfirmed" @onComplete="operationSuccess" animationLink="https://lottie.host/138db87b-3a2f-49be-9440-d1d90fb0411d/a4Gt9RDCTY.json" background="transparent" speed="1" :height="300" :width="300" style="width: 300px; height: 300px;" :loop="1" autoplay></Vue3Lottie>
+            <Vue3Lottie v-else-if="authorityConfirmed" @onComplete="operationSuccess" animationLink="https://lottie.host/834754a6-57a2-47e9-8787-96a2de296977/GbEVvxtwjb.json" background="transparent" speed="1" :height="300" :width="300" style="width: 300px; height: 300px;" :loop="1" autoplay></Vue3Lottie>
             <Vue3Lottie v-else-if="authorityConfirmed == false" @onComplete="operationCancelled" animationLink="https://lottie.host/c99d756f-90a5-4fc8-a825-2adc03376435/sfGBEGnyKK.json" background="transparent" speed="1" :height="300" :width="300" style="width: 300px; height: 300px;" :loop="1" autoplay></Vue3Lottie>
         </template>
     </DialogModal>
