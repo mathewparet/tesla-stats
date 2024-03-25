@@ -78,7 +78,8 @@
                                     }
                                 });
                             })
-                            .catch(() => {
+                            .catch((e) => {
+                                console.log(e);
                                 authorityConfirmed.value = false;
                             })
                         }, 1000);
