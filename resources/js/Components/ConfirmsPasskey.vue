@@ -72,7 +72,8 @@
                                             authorityConfirmed.value = true;
                                         }
                                     },
-                                    onError: () => {
+                                    onError: (e) => {
+                                        console.error(e);
                                         authorityConfirmed.value = false;
                                     }
                                 });
