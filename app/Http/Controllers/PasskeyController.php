@@ -67,8 +67,15 @@ class PasskeyController extends Controller
      */
     public function getAuthenticationOptions(PasskeyAuthenticator $passkeyAuthenticator, Request $request)
     {
+        $email = optional($request->user())->email ?? $request->email;
+
         return back()->with('flash', [
-            'options' => User::whereEmail(optional($request->user())->email ?? $request->email)->first()->passkeys->count() ? tap($passkeyAuthenticator->generateOptions(User::whereEmail($request->email)->first()), fn($options) => logger(json_encode($options))) : false,
+            'options' => User::whereEmail($email)
+                                ->first()->passkeys->count() 
+                                    ? tap(
+                                        $passkeyAuthenticator->generateOptions($email), 
+                                        fn($options) => Log::debug("Generated options", json_encode($options))) 
+                                    : false,
         ]);
     }
 
@@ -103,14 +110,11 @@ class PasskeyController extends Controller
      */
     public function login(VerifyPasskeyRequest $request, Passkey $passkey)
     {
-        Log::debug('Request received');
         if(isset(PasskeyTool::$updateModelCallback) && is_callable(PasskeyTool::$updateModelCallback)) {
-            Log::debug('Overriding login function');
             app()->call(PasskeyTool::$updateModelCallback);
         }
         else
         {
-            Log::debug('updating user');
             $pk = json_decode($request->publicKeyCredentialSource, true);
             Passkey::credential($pk['credential']['id'])
                 ->user($pk['userHandle'])
@@ -118,7 +122,6 @@ class PasskeyController extends Controller
                     'public_key' => $request->publicKeyCredentialSource,
                 ]);
         }
-        Log::debug('logging in user');
         Auth::loginUsingId($pk['userHandle'], $request->remember == 'on');
 
         return redirect()->intended(RouteServiceProvider::HOME);
