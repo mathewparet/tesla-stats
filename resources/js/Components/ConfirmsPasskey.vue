@@ -40,6 +40,7 @@
     });
 
     defineExpose({
+        passkeyForm: passkeyForm,
         start: (email = null) => {
             if(email)
                 passkeyForm.email = email;
