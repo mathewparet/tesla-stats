@@ -137,6 +137,6 @@ const passwordLogin = () => {
                 </PrimaryButton>
             </div>
         </form>
-        <ConfirmsPasskey :email="form.email" ref="passkeyConfirmation" @cancelled="() => isPasswordLogin = true"/>
+        <ConfirmsPasskey :email="form.email" ref="passkeyConfirmation" @cancelled="() => isPasswordLogin = true" mode="login"/>
     </AuthenticationCard>
 </template>
