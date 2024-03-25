@@ -62,7 +62,7 @@ const submit = () => {
         //         }
         //     }
         // })
-        passkeyConfirmation.value.start();
+        passkeyConfirmation.value.start(form.email);
     }
 };
 
