@@ -6,18 +6,18 @@ import InputError from './InputError.vue';
 import PrimaryButton from './PrimaryButton.vue';
 import SecondaryButton from './SecondaryButton.vue';
 import TextInput from './TextInput.vue';
-import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
+import ConfirmsPasskey from './ConfirmsPasskey.vue';
 
 const emit = defineEmits(['confirmed']);
 
 const props = defineProps({
     title: {
         type: String,
-        default: 'Confirm Password',
+        default: 'Confirm Authority',
     },
     content: {
         type: String,
-        default: 'For your security, please confirm your password to continue.',
+        default: 'For your security, please confirm your authority to continue.',
     },
     button: {
         type: String,
@@ -35,56 +35,28 @@ const props = defineProps({
 
 const confirmingPassword = ref(false);
 
+const passkeyConfirmation = ref(null);
+
 const form = reactive({
     password: '',
     error: '',
     processing: false,
 });
 
-const passkeyForm = useForm({
-    passkey: '',
-    email: usePage().props.auth.user.email,
-});
-
 const passwordInput = ref(null);
+
+const askForPassword = () => {
+    confirmingPassword.value = true;
+    setTimeout(() => passwordInput.value.focus(), 250);
+
+}
 
 const startConfirmingPassword = () => {
     axios.get(route('password.confirmation', props.seconds > 0 ? {seconds: props.seconds} : {})).then(response => {
         if (response.data.confirmed && !props.mandatory) {
             emit('confirmed');
         } else {
-            passkeyForm.post(route('passkeys.authentication-options'), {
-                preserveScroll: true,
-                preserveState: true,
-                onSuccess: () => {
-                    if(!usePage().props.jetstream.flash.options) {
-                        confirmingPassword.value = true;
-
-                        setTimeout(() => passwordInput.value.focus(), 250);
-                    }
-                    else
-                    {
-                        startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
-                            .then((res) =>{
-                                passkeyForm.passkey = res;
-                                passkeyForm.post(route('passkeys.verify'), {
-                                    preserveScroll: true,
-                                    preserveState: true,
-                                    onSuccess: () => {
-                                        if(usePage().props.jetstream.flash.verified) {
-                                            emit('confirmed');
-                                        }
-                                    }
-                                });
-                            })
-                            .catch(() => {
-                                confirmingPassword.value = true;
-
-                                setTimeout(() => passwordInput.value.focus(), 250);
-                            });
-                    }
-                }
-            });
+            passkeyConfirmation.value.start();
         }
     });
 };
@@ -120,7 +92,9 @@ const closeModal = () => {
             <slot />
         </span>
 
-        <DialogModal :show="confirmingPassword" @close="closeModal">
+        <ConfirmsPasskey :email="$page.props.auth.user.email" ref="passkeyConfirmation" @confirmed="emit('confirmed')" @cancelled="askForPassword"/>
+
+        <DialogModal :show="confirmingPassword" @close="closeModal" ref="password">
             <template #title>
                 {{ title }}
             </template>
