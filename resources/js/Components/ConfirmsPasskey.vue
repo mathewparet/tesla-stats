@@ -39,6 +39,11 @@
         email: props.email,
     });
 
+    const operationCancelled = () => {
+        emit('cancelled');
+        confirmingPasskey.value = false;
+    }
+
     defineExpose({
         passkeyForm: passkeyForm,
         start: (email = null) => {
@@ -79,15 +84,14 @@
                             })
                         }, 1000);
                     }
+                },
+                onError: (e) => {
+                    operationCancelled();
                 }
             });
         },
     });
 
-    const operationCancelled = () => {
-        emit('cancelled');
-        confirmingPasskey.value = false;
-    }
 
     const operationSuccess = () => {
         confirmingPasskey.value = false;
