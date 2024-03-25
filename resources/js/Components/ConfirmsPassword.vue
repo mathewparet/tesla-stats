@@ -43,7 +43,7 @@ const form = reactive({
 
 const passkeyForm = useForm({
     passkey: '',
-    email: '',
+    email: usePage().props.auth.user.email,
 });
 
 const passwordInput = ref(null);
