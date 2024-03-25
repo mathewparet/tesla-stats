@@ -32,12 +32,7 @@
         }
     })
 
-    const authenticationRoute = computed(() => {
-        if(props.mode === 'verify')
-            return route('passkeys.verify');
-        else
-            return route('passkeys.login');
-    })
+    const authenticationRoute = computed(() => props.mode === 'login' ? 'passkeys.login' : 'passkeys.verify');
 
     const passkeyForm = useForm({
         passkey: '',
@@ -64,7 +59,7 @@
                             startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
                             .then((res) =>{
                                 passkeyForm.passkey = res;
-                                passkeyForm.post(authenticationRoute, {
+                                passkeyForm.post(route(authenticationRoute), {
                                     preserveScroll: true,
                                     preserveState: true,
                                     onSuccess: () => {
