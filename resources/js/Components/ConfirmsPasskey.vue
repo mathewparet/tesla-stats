@@ -2,7 +2,7 @@
     import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
     import { Vue3Lottie } from 'vue3-lottie'
     import DialogModal from './DialogModal.vue';
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import { useForm, usePage } from '@inertiajs/vue3';
 
     const emit = defineEmits(['confirmed', 'cancelled']);
@@ -24,7 +24,19 @@
         email: {
             type: String,
             default: '',
+        },
+        mode: {
+            type: String,
+            default: 'verify',
+            validate: (value) => ['login', 'verify'].indexOf(value) !== -1
         }
+    })
+
+    const authenticationRoute = computed(() => {
+        if(props.mode === 'verify')
+            return route('passkeys.verify');
+        else
+            return route('passkeys.login');
     })
 
     const passkeyForm = useForm({
@@ -52,11 +64,11 @@
                             startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
                             .then((res) =>{
                                 passkeyForm.passkey = res;
-                                passkeyForm.post(route('passkeys.verify'), {
+                                passkeyForm.post(route(authenticationRoute), {
                                     preserveScroll: true,
                                     preserveState: true,
                                     onSuccess: () => {
-                                        if(usePage().props.jetstream.flash.verified) {
+                                        if(props.mode == 'login' || usePage().props.jetstream.flash.verified) {
                                             authorityConfirmed.value = true;
                                         }
                                     },
