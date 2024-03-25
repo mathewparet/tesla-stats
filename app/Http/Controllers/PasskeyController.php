@@ -69,13 +69,14 @@ class PasskeyController extends Controller
     {
         $email = optional($request->user())->email ?? $request->email;
 
+        $user = User::whereEmail($email)->first();
+
         return back()->with('flash', [
-            'options' => User::whereEmail($email)
-                                ->first()->passkeys->count() 
-                                    ? tap(
-                                        $passkeyAuthenticator->generateOptions($email), 
-                                        fn($options) => Log::debug("Generated options", json_encode($options))) 
-                                    : false,
+            'options' => $user->passkeys->count() 
+                            ? tap(
+                                $passkeyAuthenticator->generateOptions($user), 
+                                fn($options) => Log::debug("Generated options", json_encode($options))) 
+                            : false,
         ]);
     }
 
