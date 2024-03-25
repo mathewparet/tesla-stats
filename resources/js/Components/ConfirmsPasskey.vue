@@ -44,6 +44,30 @@
         confirmingPasskey.value = false;
     }
 
+    const askForPasskey = () => {
+        startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
+            .then((res) =>{
+                passkeyForm.passkey = res;
+                passkeyForm.post(route(props.mode == 'login' ? 'passkeys.login' : 'passkeys.verify'), {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: () => {
+                        if(props.mode == 'login' || usePage().props.jetstream.flash.verified) {
+                            authorityConfirmed.value = true;
+                        }
+                    },
+                    onError: (e) => {
+                        console.error(e);
+                        authorityConfirmed.value = false;
+                    }
+                });
+            })
+            .catch((e) => {
+                console.log(e);
+                authorityConfirmed.value = false;
+            })
+    }
+
     defineExpose({
         passkeyForm: passkeyForm,
         start: (email = null) => {
@@ -60,29 +84,7 @@
                     {
                         authorityConfirmed.value = null;
                         confirmingPasskey.value = true;
-                        setTimeout(() => {
-                            startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
-                            .then((res) =>{
-                                passkeyForm.passkey = res;
-                                passkeyForm.post(route(props.mode == 'login' ? 'passkeys.login' : 'passkeys.verify'), {
-                                    preserveScroll: true,
-                                    preserveState: true,
-                                    onSuccess: () => {
-                                        if(props.mode == 'login' || usePage().props.jetstream.flash.verified) {
-                                            authorityConfirmed.value = true;
-                                        }
-                                    },
-                                    onError: (e) => {
-                                        console.error(e);
-                                        authorityConfirmed.value = false;
-                                    }
-                                });
-                            })
-                            .catch((e) => {
-                                console.log(e);
-                                authorityConfirmed.value = false;
-                            })
-                        }, 1000);
+                        setTimeout(askForPasskey, 250);
                     }
                 },
                 onError: (e) => {
