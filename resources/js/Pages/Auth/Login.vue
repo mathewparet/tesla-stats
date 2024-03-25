@@ -80,7 +80,7 @@ const cancelPasskeyLogin = () => {
                     autocomplete="username"
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
-                <InputError class="mt-2" :message="passkeyConfirmation.passkeyForm.errors.email" />
+                <InputError class="mt-2" :message="passkeyConfirmation?.passkeyForm?.errors?.email" />
             </div>
 
             <div class="mt-4" v-if="isPasswordLogin">
