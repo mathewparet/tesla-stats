@@ -10,6 +10,9 @@ class SvgtasPasskey
 {
     public function __construct(protected client $webauthn) 
     {
+        if(config('passkey.session', null))
+            $this->webauthn->setSessionKey(config('passkey.session'));
+        
         $this->createApplicationEntity();
     }
     
