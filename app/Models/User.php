@@ -87,4 +87,11 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         return null;
     }
+
+    public static function booted()
+    {
+        static::deleting(function ($user) {
+            $user->passkeys()->delete();
+        });
+    }
 }
