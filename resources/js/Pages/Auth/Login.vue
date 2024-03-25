@@ -35,33 +35,7 @@ const submit = () => {
     }
     else
     {
-        // form.post(route('passkeys.authentication-options'), {
-        //     preserveScroll: true,
-        //     preserveState: true,
-        //     onSuccess: () => {
-        //         if(!usePage().props.jetstream.flash.options) {
-        //             isPasswordLogin.value = true;
-        //         }
-        //         else
-        //         {
-        //             isProcessing.value = true;
-        //             startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
-        //                 .then((res) =>{
-        //                     form.passkey = res;
-        //                     form.post(route('passkeys.login'), {
-        //                         preserveScroll: true,
-        //                         preserveState: true,
-        //                     });
-        //                 })
-        //                 .catch(() => {
-        //                     isPasswordLogin.value = true;
-        //                 })
-        //                 .finally(() => {
-        //                     isProcessing.value = false;
-        //                 });
-        //         }
-        //     }
-        // })
+        isProcessing.value = true;
         passkeyConfirmation.value.start(form.email);
     }
 };
@@ -74,6 +48,11 @@ const passwordLogin = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const cancelPasskeyLogin = () => {
+    isPasswordLogin.value = true
+    isProcessing.value = false
+}
 </script>
 
 <template>
@@ -137,6 +116,6 @@ const passwordLogin = () => {
                 </PrimaryButton>
             </div>
         </form>
-        <ConfirmsPasskey :email="form.email" ref="passkeyConfirmation" @cancelled="() => isPasswordLogin = true" mode="login"/>
+        <ConfirmsPasskey :email="form.email" ref="passkeyConfirmation" @cancelled="cancelPasskeyLogin" mode="login"/>
     </AuthenticationCard>
 </template>

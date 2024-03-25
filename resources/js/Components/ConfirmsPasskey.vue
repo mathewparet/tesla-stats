@@ -41,10 +41,9 @@
 
     defineExpose({
         start: (email = null) => {
-            confirmingPasskey.value = true;
             if(email)
                 passkeyForm.email = email;
-            passkeyForm.post(route('passkeys.authentication-options'), {
+                passkeyForm.post(route('passkeys.authentication-options'), {
                 preserveScroll: true,
                 preserveState: true,
                 onSuccess: () => {
