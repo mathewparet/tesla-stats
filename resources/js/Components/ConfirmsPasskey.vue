@@ -59,7 +59,7 @@
                             startAuthentication(JSON.parse(JSON.stringify(usePage().props.jetstream.flash.options)))
                             .then((res) =>{
                                 passkeyForm.passkey = res;
-                                passkeyForm.post(route(authenticationRoute), {
+                                passkeyForm.post(route(props.mode == 'login' ? 'passkeys.login' : 'passkeys.verify'), {
                                     preserveScroll: true,
                                     preserveState: true,
                                     onSuccess: () => {
