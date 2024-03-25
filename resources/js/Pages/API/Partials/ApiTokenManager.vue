@@ -2,11 +2,11 @@
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
-import ActionSection from '@/Components/ActionSection.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import DialogModal from '@/Components/DialogModal.vue';
+import ActionSection from '@/Components/ActionSection.vue';
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -14,6 +14,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 import TextInput from '@/Components/TextInput.vue';
+import ConfirmsPassword from '@/Components/ConfirmsPassword.vue';
 
 const props = defineProps({
     tokens: Array,
@@ -75,7 +76,7 @@ const deleteApiToken = () => {
 <template>
     <div>
         <!-- Generate API Token -->
-        <FormSection @submitted="createApiToken">
+        <FormSection>
             <template #title>
                 Create API Token
             </template>
@@ -118,9 +119,11 @@ const deleteApiToken = () => {
                     Created.
                 </ActionMessage>
 
-                <PrimaryButton :class="{ 'opacity-25': createApiTokenForm.processing }" :disabled="createApiTokenForm.processing">
-                    Create
-                </PrimaryButton>
+                <ConfirmsPassword @confirmed="createApiToken">
+                    <PrimaryButton :class="{ 'opacity-25': createApiTokenForm.processing }" :disabled="createApiTokenForm.processing">
+                        Create
+                    </PrimaryButton>
+                </ConfirmsPassword>
             </template>
         </FormSection>
 
@@ -215,14 +218,15 @@ const deleteApiToken = () => {
                     Cancel
                 </SecondaryButton>
 
-                <PrimaryButton
-                    class="ms-3"
-                    :class="{ 'opacity-25': updateApiTokenForm.processing }"
-                    :disabled="updateApiTokenForm.processing"
-                    @click="updateApiToken"
-                >
-                    Save
-                </PrimaryButton>
+                <ConfirmsPassword @confirmed="updateApiToken">
+                    <PrimaryButton
+                        class="ms-3"
+                        :class="{ 'opacity-25': updateApiTokenForm.processing }"
+                        :disabled="updateApiTokenForm.processing"
+                    >
+                        Save
+                    </PrimaryButton>
+                </ConfirmsPassword>
             </template>
         </DialogModal>
 
