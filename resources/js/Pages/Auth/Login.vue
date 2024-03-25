@@ -49,8 +49,9 @@ const passwordLogin = () => {
     });
 };
 
-const cancelPasskeyLogin = () => {
-    isPasswordLogin.value = true
+const cancelPasskeyLogin = (failed) => {
+    if(!failed)
+        isPasswordLogin.value = true
     isProcessing.value = false
 }
 </script>

@@ -39,8 +39,8 @@
         email: props.email,
     });
 
-    const operationCancelled = () => {
-        emit('cancelled');
+    const operationCancelled = (failed=false) => {
+        emit('cancelled', failed);
         confirmingPasskey.value = false;
     }
 
@@ -86,7 +86,7 @@
                     }
                 },
                 onError: (e) => {
-                    operationCancelled();
+                    operationCancelled(true);
                 }
             });
         },
