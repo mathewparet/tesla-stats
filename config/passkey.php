@@ -28,9 +28,9 @@ return [
     ],
 
     /**
-     * The session key used to store credential options
+     * The session key to encrypt the session
      */
-    'session' => 'publicKeyCredentialCreationOptions',
+    'session_key' => env('PASSKEY_SESSION_KEY', ''),
 
     'user_model' => App\Models\User::class,
 ];
