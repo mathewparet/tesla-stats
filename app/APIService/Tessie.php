@@ -51,8 +51,7 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
 
         Log::debug('Response received', compact('response'));
 
-        $charges = collect($response->json()['results']);
-
+        $charges = $response->json() ? collect($response->json()['results']) : collect();
 
         return $charges->map(fn($charge) => [
             'started_at' => Carbon::createFromTimestamp($charge['started_at']),
@@ -73,7 +72,7 @@ class Tessie extends APIServiceTeslaAPIService implements TeslaAPIService
                 'url' => $this->config['url'],
             ]));
     
-            $results = collect($response->json()['results']);
+            $results = $response->json() ? collect($response->json()['results']) : collect();
 
             return $results->map(fn($vehicle) => [
                     'plate' => $vehicle['plate'],
