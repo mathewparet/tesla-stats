@@ -97,21 +97,29 @@ services:
 
   task:
     image: ${DEPLOYMENT_IMAGE_PHP}
-    # Switch to "webuser" before running `php artisan`
-    # Declare command in list manner for environment variable expansion
-    # command: ["su", "www-data", "-c", "php artisan schedule:work"]
     command: ["php", "artisan", "schedule:work"]
     environment:
       PHP_FPM_POOL_NAME: "my-app_task"
+    networks:
+      - web-public
+    volumes:
+      - "storage_private:/var/www/html/storage/app/private/"
+      - "storage_public:/var/www/html/storage/app/public/"
+      - "storage_sessions:/var/www/html/storage/framework/sessions"
+      - "storage_logs:/var/www/html/storage/logs"
 
   queue:
     image: ${DEPLOYMENT_IMAGE_PHP}
-    # Switch to "webuser" before running `php artisan`
-    # Declare command in list manner for environment variable expansion
-    # command: ["su", "www-data", "-c", "php artisan queue:work --tries=3"]
     command: ["php", "artisan", "queue:listen"]
     environment:
       PHP_FPM_POOL_NAME: "my-app_queue"
+    networks:
+      - web-public
+    volumes:
+      - "storage_private:/var/www/html/storage/app/private/"
+      - "storage_public:/var/www/html/storage/app/public/"
+      - "storage_sessions:/var/www/html/storage/framework/sessions"
+      - "storage_logs:/var/www/html/storage/logs"
 
 configs:
   traefik:
