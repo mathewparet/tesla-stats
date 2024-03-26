@@ -2,7 +2,7 @@
     import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
     import { Vue3Lottie } from 'vue3-lottie'
     import DialogModal from './DialogModal.vue';
-    import { ref, computed } from 'vue';
+    import { ref, computed, onMounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/vue3';
 
     const emit = defineEmits(['confirmed', 'cancelled']);
@@ -10,7 +10,6 @@
     const confirmingPasskey = ref(false);
 
     const authorityConfirmed = ref(null);
-
 
     const props = defineProps({
         title: {
@@ -71,6 +70,9 @@
     defineExpose({
         passkeyForm: passkeyForm,
         start: (email = null) => {
+            if(!browserSupportsWebAuthn()) {
+                emit('cancelled');
+            }
             if(email)
                 passkeyForm.email = email;
                 passkeyForm.post(route('passkeys.authentication-options'), {
