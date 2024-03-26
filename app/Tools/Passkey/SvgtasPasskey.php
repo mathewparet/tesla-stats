@@ -14,6 +14,8 @@ class SvgtasPasskey
             $this->webauthn->setSessionKey(config('passkey.session'));
         
         $this->createApplicationEntity();
+
+        $this->webauthn->timeout(600000);
     }
     
     /**
