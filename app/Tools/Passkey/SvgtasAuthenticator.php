@@ -34,7 +34,7 @@ class SvgtasAuthenticator extends SvgtasPasskey implements PasskeyAuthenticator
         if($passkeyUser)
             $passkeyUser->passkeys->each(fn($passkey) => $this->webauthn->allowCredentials->add($passkey->credential_id));
         else
-            $this->webauthn->userVerification->required();
+            $this->webauthn->userVerification->discouraged();
 
         $this->passkeyUser = $passkeyUser;
 
