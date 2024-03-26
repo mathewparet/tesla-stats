@@ -43,6 +43,7 @@ defineProps({
                     />
 
                     <SectionBorder />
+                    
                     <PassKeyForm
                         class="mt-10 sm:mt-0"
                     />

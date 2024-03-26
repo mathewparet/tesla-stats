@@ -1,6 +1,5 @@
 <script setup>
 import { ref, reactive, nextTick } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3';
 import DialogModal from './DialogModal.vue';
 import InputError from './InputError.vue';
 import PrimaryButton from './PrimaryButton.vue';
