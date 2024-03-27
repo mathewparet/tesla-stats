@@ -3,14 +3,11 @@
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\BillingProfileController;
 use App\Http\Controllers\DefaultTeamController;
-use App\Http\Controllers\PasskeyController;
 use Inertia\Inertia;
-use App\Models\TeslaAccount;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\TeslaAccountController;
 use App\Http\Controllers\VehicleController;
-use App\Models\BillingProfile;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,9 +28,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
-Route::post('/passkeys/authentication-options', [PasskeyController::class, 'getAuthenticationOptions'])->name('passkeys.authentication-options');
-Route::post('/passkeys/login', [PasskeyController::class, 'login'])->name('passkeys.login');
 
 Route::middleware([
     'auth:sanctum',
@@ -59,10 +53,4 @@ Route::middleware([
     Route::post('/tesla-account/{provider}/unlink', [TeslaAccountController::class, 'unlink'])->name('tesla-accounts.unlink');
 
     Route::post('/teams/{team}/make-default', DefaultTeamController::class)->name('teams.make-default');
-
-    Route::middleware('password.confirm:,60')->post('/passkeys/registration-options', [PasskeyController::class, 'getRegistrationOptions'])->name('passkeys.registration-options');
-    Route::post('/passkeys/verify', [PasskeyController::class, 'verify'])->name('passkeys.verify');
-    Route::middleware('password.confirm:,60')->delete('/passkeys/{passkey}', [PasskeyController::class, 'destroy'])->name('passkeys.destroy');
-    Route::resource('/passkeys', PasskeyController::class)->only(['store']);
-
 });
