@@ -97,7 +97,7 @@ services:
 
   task:
     image: ${DEPLOYMENT_IMAGE_PHP}
-    command: ["runuser", "-u", "www-data", "php artisan schedule:work"]
+    command: runuser -c www-data php artisan schedule:work
     environment:
       PHP_FPM_POOL_NAME: "my-app_task"
     networks:
@@ -110,7 +110,7 @@ services:
 
   queue:
     image: ${DEPLOYMENT_IMAGE_PHP}
-    command: ["runuser", "-u", "www-data", "php artisan queue:work"]
+    command: runuser -c www-data php artisan queue:work
     environment:
       PHP_FPM_POOL_NAME: "my-app_queue"
     networks:
