@@ -12,10 +12,6 @@
     import InputLabel from "@/Components/InputLabel.vue";
     import ConfirmsPassword from "@/Components/ConfirmsPassword.vue";
 
-    const props = defineProps({
-
-    });
-
     const registeringNewPasskey = ref(false)
 
     const registrationInProgress = ref(false)
