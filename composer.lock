@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "79ddce2f502b0803d2795767f9f3d5d6",
+    "content-hash": "7f2c81e558e7ea354696296aa23e88f3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3342,16 +3342,16 @@
         },
         {
             "name": "pioneer-dynamics/laravel-passkey",
-            "version": "v1.0.2",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pioneer-dynamics/laravel-passkey.git",
-                "reference": "46b033569e7877f9441003939d4da0dae38b2296"
+                "reference": "55f35e3adc553fe618180b0acd99a73457a1513c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pioneer-dynamics/laravel-passkey/zipball/46b033569e7877f9441003939d4da0dae38b2296",
-                "reference": "46b033569e7877f9441003939d4da0dae38b2296",
+                "url": "https://api.github.com/repos/pioneer-dynamics/laravel-passkey/zipball/55f35e3adc553fe618180b0acd99a73457a1513c",
+                "reference": "55f35e3adc553fe618180b0acd99a73457a1513c",
                 "shasum": ""
             },
             "require": {
@@ -3384,9 +3384,9 @@
             "description": "Easy Passkey integration for Laravel",
             "support": {
                 "issues": "https://github.com/pioneer-dynamics/laravel-passkey/issues",
-                "source": "https://github.com/pioneer-dynamics/laravel-passkey/tree/v1.0.2"
+                "source": "https://github.com/pioneer-dynamics/laravel-passkey/tree/develop"
             },
-            "time": "2024-03-27T01:53:35+00:00"
+            "time": "2024-03-27T02:45:11+00:00"
         },
         {
             "name": "pragmarx/google2fa",
@@ -10301,7 +10301,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "pioneer-dynamics/laravel-passkey": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
