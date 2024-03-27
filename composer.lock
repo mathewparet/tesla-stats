@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a51956b7e3efc19aa4b6d7262070c70",
+    "content-hash": "79ddce2f502b0803d2795767f9f3d5d6",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3342,23 +3342,22 @@
         },
         {
             "name": "pioneer-dynamics/laravel-passkey",
-            "version": "dev-master",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pioneer-dynamics/laravel-passkey.git",
-                "reference": "16359b5cfef8710abfcc6f3c86c968366d1b0f5b"
+                "reference": "be9869354176278b0f7696cc42cea3027817f5b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pioneer-dynamics/laravel-passkey/zipball/16359b5cfef8710abfcc6f3c86c968366d1b0f5b",
-                "reference": "16359b5cfef8710abfcc6f3c86c968366d1b0f5b",
+                "url": "https://api.github.com/repos/pioneer-dynamics/laravel-passkey/zipball/be9869354176278b0f7696cc42cea3027817f5b7",
+                "reference": "be9869354176278b0f7696cc42cea3027817f5b7",
                 "shasum": ""
             },
             "require": {
                 "laravel/framework": "^10.10",
                 "svgta/webauthn": "^1.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -3385,9 +3384,9 @@
             "description": "Easy Passkey integration for Laravel",
             "support": {
                 "issues": "https://github.com/pioneer-dynamics/laravel-passkey/issues",
-                "source": "https://github.com/pioneer-dynamics/laravel-passkey/tree/master"
+                "source": "https://github.com/pioneer-dynamics/laravel-passkey/tree/v1.0.1"
             },
-            "time": "2024-03-27T01:10:50+00:00"
+            "time": "2024-03-27T01:39:02+00:00"
         },
         {
             "name": "pragmarx/google2fa",
@@ -10302,9 +10301,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "pioneer-dynamics/laravel-passkey": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
