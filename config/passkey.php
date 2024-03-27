@@ -32,5 +32,51 @@ return [
      */
     'session_key' => env('PASSKEY_SESSION_KEY', ''),
 
-    'user_model' => App\Models\User::class,
+    /**
+     * The user account mode to which passkeys are attached
+     */
+    'user_model' => 'App\Models\User',
+
+    /**
+     * -----------------------------------------------------
+     * HOME
+     * -----------------------------------------------------
+     * 
+     * Where should the users be redirected to after login.
+     */
+    'home' => '/dashboard',
+
+    
+    'database' => [
+        /**
+         * -----------------------------------------------------
+         * USERNAME FIELD in database
+         * -----------------------------------------------------
+         */
+        'username' => 'email',
+
+        /**
+         * -----------------------------------------------------
+         * Table where users are stored
+         * -----------------------------------------------------
+         */
+        'table' => 'users',
+    ],
+
+    'routes' => [
+        /**
+         * Use package defined routes?
+         */
+        'enabled' => true,
+
+        /**
+         * What should be the prefix for the package defined routes
+         */
+        'prefix' => '/passkeys',
+    ],
+
+    /**
+     * Password confirmation TTL in seconds
+     */
+    'password_confirmation_ttl' => 60,
 ];
