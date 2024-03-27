@@ -14,7 +14,7 @@
         "laravel/tinker": "^2.8",
         "mathewparet/inertia-config-share": "^1.0",
         "mathewparet/laravel-policy-abilities-export": "^2.0",
-        "pioneer-dynamics/laravel-passkey": "dev-master",
+        "pioneer-dynamics/laravel-passkey": "^1.0",
         "svgta/webauthn": "^1.0",
         "symfony/http-client": "^7.0",
         "symfony/postmark-mailer": "^7.0",
