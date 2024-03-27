@@ -1,7 +1,7 @@
 <script setup>
-    import {browserSupportsWebAuthn, startAuthentication, startRegistration} from "@simplewebauthn/browser";
+    import {startRegistration} from "@simplewebauthn/browser";
     import ActionSection from "@/Components/ActionSection.vue";
-    import { Link, useForm } from '@inertiajs/vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { DateTime } from 'luxon';
     import { usePage } from '@inertiajs/vue3';
     import DialogModal from "@/Components/DialogModal.vue";
@@ -11,10 +11,6 @@
     import PrimaryButton from "@/Components/PrimaryButton.vue";
     import InputLabel from "@/Components/InputLabel.vue";
     import ConfirmsPassword from "@/Components/ConfirmsPassword.vue";
-
-    const props = defineProps({
-
-    });
 
     const registeringNewPasskey = ref(false)
 
