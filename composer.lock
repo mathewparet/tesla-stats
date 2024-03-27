@@ -3346,12 +3346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pioneer-dynamics/laravel-passkey.git",
-                "reference": "bc152617ee005eff8d23fe52da624864ba9dd73d"
+                "reference": "5c8541b95fae23c48219b1338215969cfd2c841e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pioneer-dynamics/laravel-passkey/zipball/bc152617ee005eff8d23fe52da624864ba9dd73d",
-                "reference": "bc152617ee005eff8d23fe52da624864ba9dd73d",
+                "url": "https://api.github.com/repos/pioneer-dynamics/laravel-passkey/zipball/5c8541b95fae23c48219b1338215969cfd2c841e",
+                "reference": "5c8541b95fae23c48219b1338215969cfd2c841e",
                 "shasum": ""
             },
             "require": {
@@ -3386,7 +3386,7 @@
                 "issues": "https://github.com/pioneer-dynamics/laravel-passkey/issues",
                 "source": "https://github.com/pioneer-dynamics/laravel-passkey/tree/develop"
             },
-            "time": "2024-03-27T03:39:44+00:00"
+            "time": "2024-03-27T03:51:15+00:00"
         },
         {
             "name": "pragmarx/google2fa",
