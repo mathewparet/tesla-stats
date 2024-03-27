@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\HasPasskeys;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -10,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use PioneerDynamics\LaravelPasskey\Traits\HasPasskeys;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use PioneerDynamics\LaravelPasskey\Contracts\PasskeyUser;
 use mathewparet\LaravelPolicyAbilitiesExport\Traits\ExportsPermissions;
@@ -67,4 +67,5 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     protected $appends = [
         'profile_photo_url',
     ];
+
 }
